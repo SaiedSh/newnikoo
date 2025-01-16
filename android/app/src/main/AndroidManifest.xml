@@ -1,0 +1,101 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <!-- NOTE: the example app requests USE_EXACT_ALARM to make it easier to run the app.
+         Developers will need to check if their own app needs to use SCHEDULE_EXACT_ALARM instead -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:label="nikoonew"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+      
+        <activity
+        android:name=".MainActivity"
+        android:launchMode="singleTop"
+        android:theme="@style/LaunchTheme"
+        android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+        android:hardwareAccelerated="true"
+        android:windowSoftInputMode="adjustResize"
+        android:showWhenLocked="true"
+        android:turnScreenOn="true"
+        android:exported="true">
+        
+          <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+                 <meta-data
+                 android:name="io.flutter.embedding.android.NormalTheme"
+                 android:resource="@style/NormalTheme"
+                 />
+               <intent-filter>
+                   <!-- <action android:name="android.intent.action.VIEW" /> -->
+                   <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+                   <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+                   <!-- <data android:scheme="https" android:host="yourapp.com" /> -->
+                   <action android:name="android.intent.action.MAIN"/>
+                   <category android:name="android.intent.category.LAUNCHER"/>
+               </intent-filter>
+           </activity>
+           <service
+           android:name="id.flutter.flutter_background_service.BackgroundService"
+           android:foregroundServiceType="location|dataSync"
+       />
+        <!-- Specifies an Android theme to apply to this Activity as soon as
+             the Android process has started. This theme is visible to the user
+             while the Flutter UI initializes. After that, this theme continues
+             to determine the Window background behind the Flutter UI. -->
+             <meta-data
+             android:name="flutterEmbedding"
+             android:value="2" />
+         <!-- If you want your foreground service to be stopped if
+              your app is stopped, set android:stopWithTask to true.
+              See https://developer.android.com/reference/android/R.attr#stopWithTask -->
+              
+              <service
+              android:enabled="true"
+              android:exported="true"
+              android:name=".BackgroundService"
+              android:stopWithTask="false"
+              />
+  
+          <receiver
+              android:name=".WatchdogReceiver"
+              android:enabled="true"
+              android:exported="true"
+              />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.example.towntour.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+</manifest>
