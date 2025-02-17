@@ -35,6 +35,12 @@ void main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
+      create: (context) => ShopCardChargeState(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => SubChargeState(),
+    ),
+    ChangeNotifierProvider(
       create: (context) => CategoryState(),
     ),
     ChangeNotifierProvider(
@@ -425,7 +431,10 @@ class _MyAppState extends State<MyApp> {
         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
           return CustomError();
         };
-        return child!;
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child!,
+        );
       },
       onGenerateRoute: MyRoutes.onGenerateRoute,
       debugShowCheckedModeBanner: false,

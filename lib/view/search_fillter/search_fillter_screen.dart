@@ -1,5 +1,6 @@
 import 'package:bookapp/controller/api/home_items/category_products.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
+import 'package:bookapp/controller/provider/book_list_state.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
 import 'package:bookapp/controller/provider/search_fillter_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
@@ -171,6 +172,12 @@ class _SearchFillterScreenState extends State<SearchFillterScreen> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: BookCardWidget(
+                            discountCount: BookListState
+                                .books[index].discountPercentage
+                                .toString(),
+                            discountPrice: BookListState
+                                .books[index].discountPrice
+                                .toString(),
                             viewCont: 0,
                             bookId: SearchFillterState.subscriptions[index].id
                                 .toString(),

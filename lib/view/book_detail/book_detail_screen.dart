@@ -343,6 +343,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                 ConnectionState.done) {
                                               if (snapshot.hasData) {
                                                 return Image.file(
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Center(
+                                                    child: Text(
+                                                      'خطا در بارگزاری تصویر',
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              color:
+                                                                  Colors.grey),
+                                                    ),
+                                                  ),
                                                   snapshot.data!,
                                                   fit: BoxFit.fill,
                                                 );
@@ -618,12 +629,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                         children: [
                                           Text(
                                             textDirection: TextDirection.rtl,
-                                            BookDetailState
-                                                .bookDetail!.totalPrice
+                                            BookDetailState.bookDetail!.price
                                                 .toString()
                                                 .toPersianNumbers()
                                                 .formatNumber(),
                                             style: GoogleFonts.vazirmatn(
+                                                decoration: BookDetailState
+                                                            .bookDetail!
+                                                            .discountPrice !=
+                                                        0
+                                                    ? TextDecoration.lineThrough
+                                                    : TextDecoration.none,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16,
                                                 color: Colors.black),
@@ -640,6 +656,34 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                       ),
                                     ],
                                   ),
+                                  BookDetailState.bookDetail!.discountPrice != 0
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              textDirection: TextDirection.rtl,
+                                              BookDetailState
+                                                  .bookDetail!.totalPrice
+                                                  .toString()
+                                                  .toPersianNumbers()
+                                                  .formatNumber(),
+                                              style: GoogleFonts.vazirmatn(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                            ),
+                                            Text(
+                                              textDirection: TextDirection.rtl,
+                                              ' تومان ',
+                                              style: GoogleFonts.vazirmatn(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
                                   SizedBox(
                                     height: 10,
                                   ),
@@ -648,6 +692,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
                                           child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'زیر نظر : ',
@@ -655,26 +701,33 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                     color: Color.fromARGB(
                                                         255, 30, 133, 56),
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 11),
+                                                    fontSize: 12),
                                               ),
-                                              AutoSizeText(
-                                                textDirection: getTextDirection(
-                                                    BookDetailState
-                                                        .bookDetail!.zirNazar
-                                                        .toString()),
-                                                minFontSize: 10,
-                                                maxLines: 1,
-                                                BookDetailState.bookDetail!
-                                                            .zirNazar !=
-                                                        null
-                                                    ? BookDetailState
-                                                        .bookDetail!.zirNazar!
-                                                        .replaceAll("*", "")
-                                                    : "",
-                                                style: GoogleFonts.vazirmatn(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: primaryColor),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.5),
+                                                child: AutoSizeText(
+                                                  textDirection:
+                                                      getTextDirection(
+                                                          BookDetailState
+                                                              .bookDetail!
+                                                              .zirNazar
+                                                              .toString()),
+                                                  minFontSize: 10,
+                                                  maxLines: 1,
+                                                  BookDetailState.bookDetail!
+                                                              .zirNazar !=
+                                                          null
+                                                      ? BookDetailState
+                                                          .bookDetail!.zirNazar!
+                                                          .replaceAll("*", "")
+                                                      : "",
+                                                  style: GoogleFonts.vazirmatn(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: primaryColor),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -688,11 +741,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 5),
                                           child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
 
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .center, // آیتم‌ها در یک راستا قرار می‌گیرند
+                                            // آیتم‌ها در یک راستا قرار می‌گیرند
                                             children: [
                                               Text(
                                                 'مترجمین : ',
@@ -700,7 +754,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                   color: const Color.fromARGB(
                                                       255, 30, 133, 56),
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 11,
+                                                  fontSize: 12,
                                                 ),
                                               ),
                                               // حذف Expanded و استفاده از Flexible برای حفظ اندازه متن
@@ -708,7 +762,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                 child: Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          top: 2.5),
+                                                          top: 2),
                                                   child: AutoSizeText(
                                                     BookDetailState
                                                         .bookDetail!.motarjem!
@@ -848,6 +902,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                       setState(() {
                                                         loadingVisible = true;
                                                         shopCardVisible = false;
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                                style: GoogleFonts.vazirmatn(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                                'کتاب با موفقیت به سبد خرید اضافه شد'),
+                                                          ),
+                                                        );
                                                       });
                                                     },
                                                   );
@@ -946,22 +1012,25 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  Column(
+                                  Row(
                                     children: [
-                                      AutoSizeText(
-                                        overflow: TextOverflow.ellipsis,
-                                        textDirection: getTextDirection(
-                                            BookDetailState
-                                                .bookDetail!.description
-                                                .toString()),
-                                        minFontSize: 10,
-                                        maxLines: 5,
-                                        BookDetailState.bookDetail!.description!
-                                            .replaceAll("*", ""),
-                                        style: GoogleFonts.vazirmatn(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            color: primaryColor),
+                                      Expanded(
+                                        child: AutoSizeText(
+                                          overflow: TextOverflow.ellipsis,
+                                          textDirection: getTextDirection(
+                                              BookDetailState
+                                                  .bookDetail!.description
+                                                  .toString()),
+                                          minFontSize: 10,
+                                          maxLines: 5,
+                                          BookDetailState
+                                              .bookDetail!.description!
+                                              .replaceAll("*", ""),
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              color: primaryColor),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -980,82 +1049,87 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(15),
-                                                child: Column(
-                                                  children: [
-                                                    Directionality(
-                                                      textDirection:
-                                                          getTextDirection(
-                                                              BookDetailState
-                                                                  .bookDetail!
-                                                                  .title
-                                                                  .toString()),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 250,
-                                                            child: AutoSizeText(
-                                                              textDirection: getTextDirection(
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .title
-                                                                      .toString()),
-                                                              minFontSize: 12,
-                                                              maxLines: 3,
-                                                              BookDetailState
-                                                                  .bookDetail!
-                                                                  .title!
-                                                                  .replaceAll(
-                                                                      "*", ""),
-                                                              style: GoogleFonts.vazirmatn(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color:
-                                                                      primaryColor),
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    children: [
+                                                      Directionality(
+                                                        textDirection:
+                                                            getTextDirection(
+                                                                BookDetailState
+                                                                    .bookDetail!
+                                                                    .title
+                                                                    .toString()),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child:
+                                                                  AutoSizeText(
+                                                                textDirection: getTextDirection(
+                                                                    BookDetailState
+                                                                        .bookDetail!
+                                                                        .title
+                                                                        .toString()),
+                                                                minFontSize: 12,
+                                                                maxLines: 3,
+                                                                BookDetailState
+                                                                    .bookDetail!
+                                                                    .title!
+                                                                    .replaceAll(
+                                                                        "*",
+                                                                        ""),
+                                                                style: GoogleFonts.vazirmatn(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color:
+                                                                        primaryColor),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          InkWell(
-                                                              onTap: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Icon(
-                                                                Icons.close,
-                                                                size: 20,
-                                                              ))
-                                                        ],
+                                                            InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Icon(
+                                                                  Icons.close,
+                                                                  size: 20,
+                                                                ))
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    AutoSizeText(
-                                                      textDirection:
-                                                          getTextDirection(
-                                                              BookDetailState
-                                                                  .bookDetail!
-                                                                  .description
-                                                                  .toString()),
-                                                      minFontSize: 10,
-                                                      maxLines: 10,
-                                                      BookDetailState
-                                                          .bookDetail!
-                                                          .description!
-                                                          .replaceAll("*", ""),
-                                                      style:
-                                                          GoogleFonts.vazirmatn(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  primaryColor),
-                                                    ),
-                                                  ],
+                                                      SizedBox(
+                                                        height: 20,
+                                                      ),
+                                                      AutoSizeText(
+                                                        textDirection:
+                                                            getTextDirection(
+                                                                BookDetailState
+                                                                    .bookDetail!
+                                                                    .description
+                                                                    .toString()),
+                                                        minFontSize: 10,
+                                                        BookDetailState
+                                                            .bookDetail!
+                                                            .description!
+                                                            .replaceAll(
+                                                                "*", ""),
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color:
+                                                                    primaryColor),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -1860,16 +1934,21 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                                             MainAxisAlignment.spaceBetween,
                                                                         children: [
                                                                           Text(
-                                                                            'قیمت ارزی : ',
+                                                                            'قیمت ارزی ( دلار ) : ',
                                                                             style:
                                                                                 GoogleFonts.vazirmatn(fontWeight: FontWeight.w500, fontSize: 12),
                                                                           ),
-                                                                          Text(
-                                                                            BookDetailState.bookDetail!.qeymatArzi!.toPersianNumbers().formatNumber(),
-                                                                            style: GoogleFonts.vazirmatn(
-                                                                                color: Colors.grey.shade600,
-                                                                                fontWeight: FontWeight.w500,
-                                                                                fontSize: 12),
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                " \$ ",
+                                                                                style: GoogleFonts.vazirmatn(color: Colors.grey.shade600, fontWeight: FontWeight.w500, fontSize: 10),
+                                                                              ),
+                                                                              Text(
+                                                                                BookDetailState.bookDetail!.qeymatArzi!.toPersianNumbers().formatNumber(),
+                                                                                style: GoogleFonts.vazirmatn(color: Colors.grey.shade600, fontWeight: FontWeight.w500, fontSize: 12),
+                                                                              ),
+                                                                            ],
                                                                           ),
                                                                         ],
                                                                       ),
@@ -1893,7 +1972,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                                                 GoogleFonts.vazirmatn(fontWeight: FontWeight.w500, fontSize: 12),
                                                                           ),
                                                                           Text(
-                                                                            BookDetailState.bookDetail!.qeymatChapi!.toPersianNumbers().formatNumber(),
+                                                                            BookDetailState.bookDetail!.qeymatChapi!.toString().toPersianNumbers().formatNumber(),
                                                                             style: GoogleFonts.vazirmatn(
                                                                                 color: Colors.grey.shade600,
                                                                                 fontWeight: FontWeight.w500,
@@ -1976,12 +2055,29 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    size: 20,
-                                    color: Colors.grey,
+                                InkWell(
+                                  onTap:
+                                      BookDetailState.bookDetail!.fehrestUrl !=
+                                              null
+                                          ? () {
+                                              Navigator.pushNamed(
+                                                  context, MyRoutes.listScreen,
+                                                  arguments: BookDetailState
+                                                      .bookDetail!.fehrestUrl
+                                                      .toString());
+                                            }
+                                          : null,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 20,
+                                      color: BookDetailState
+                                                  .bookDetail!.fehrestUrl !=
+                                              null
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
                                   ),
                                 )
                               ],
@@ -2788,6 +2884,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: BookCardWidget(
+                                      discountCount:
+                                          "${((BookDetailState.bookDetail!.similarBooks![index].price! - BookDetailState.bookDetail!.similarBooks![index].totalPrice!) / BookDetailState.bookDetail!.similarBooks![index].price! * 100).toStringAsFixed(0)}",
+                                      discountPrice: BookDetailState.bookDetail!
+                                          .similarBooks![index].totalPrice
+                                          .toString(),
                                       viewCont: BookDetailState.bookDetail!
                                           .similarBooks![index].viewCount!,
                                       bookId: BookDetailState

@@ -7,12 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-Future<StringApiResult> buySubscriptions(
-    {required BuildContext context, String? subId, bool? wallet}) async {
+Future<StringApiResult> shopCardPayment(
+    {required BuildContext context, bool? wallet}) async {
   final api = Tikonline.create(interceptors: [TokenInterceptor('accessToken')]);
 
-  final postResult =
-      await api.apiV1PaymentBuySubscriptionPost(subId: subId, wallet: wallet);
+  final postResult = await api.apiV1PaymentShopCardPaymentPost(wallet: wallet);
   print(postResult);
   if (postResult.isSuccessful == true) {
     print('Right');
@@ -37,7 +36,7 @@ Future<StringApiResult> buySubscriptions(
     );
   }
   final response = StringApiResult.fromJson(postResult.body!.toJson());
-  context.read<SubChargeState>().getLink(value: response.data!);
+  context.read<ShopCardChargeState>().getLink(value: response.data!);
 
   return response;
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/global/global.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +199,9 @@ class _OtpScreenState extends State<OtpScreen> {
                   color: Colors.blue,
                 ),
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, MyRoutes.loginScreen);
+                    },
                     child: Text(
                       'ویرایش شماره موبایل',
                       style: GoogleFonts.vazirmatn(
@@ -209,26 +212,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     )),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  size: 15,
-                  color: Colors.blue,
-                ),
-                TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'ورود با رمز',
-                      style: GoogleFonts.vazirmatn(
-                        color: Colors.blue,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )),
-              ],
-            )
           ],
         ),
       ),

@@ -1,15 +1,17 @@
 import 'package:bookapp/controller/api/home_items/category_products.dart';
 import 'package:bookapp/controller/api/saved/get_saved.dart';
+import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/book_saved_state.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.enums.swagger.dart';
+import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/components/bookcard_widget.dart';
 import 'package:bookapp/model/global/global.dart';
 import 'package:bookapp/view/product/product_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ReadScreen extends StatefulWidget {
   const ReadScreen({super.key});
@@ -26,6 +28,7 @@ class _ReadScreenState extends State<ReadScreen> {
     getSaved(context: context, st: SaveType.read);
   }
 
+  TextEditingController searchNumber = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,33 +113,52 @@ class _ReadScreenState extends State<ReadScreen> {
                     Directionality(
                       textDirection: TextDirection.rtl,
                       child: SizedBox(
-                          height: 45,
-                          width: MediaQuery.of(context).size.width - 30,
-                          child: TextField(
-                            cursorHeight: 20,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  size: 18,
-                                ),
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.never,
-                                floatingLabelAlignment:
-                                    FloatingLabelAlignment.center,
-                                label: Text(
-                                  'جستجو در نیکو بوک',
-                                  style: GoogleFonts.vazirmatn(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                filled: true,
-                                fillColor: backgroundColor,
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(5))),
-                          )),
-                    )
+                        height: 45,
+                        width: MediaQuery.of(context).size.width - 30,
+                        child: TextField(
+                          controller: searchNumber,
+                          onSubmitted: (value) {
+                            searchAndFillter(
+                              context: context,
+                              body: BookSearchDto(name: searchNumber.text),
+                            ).then(
+                              (value) {
+                                Navigator.pushNamed(
+                                    context, MyRoutes.searchFillterScreen);
+                              },
+                            );
+                          },
+                          cursorHeight: 20,
+                          textAlignVertical: TextAlignVertical
+                              .center, // مرکز قرار دادن عمودی متن
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 18,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 12), // تنظیم عمودی محتوا
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            floatingLabelAlignment:
+                                FloatingLabelAlignment.center,
+                            label: Text(
+                              'جستجو در نیکو بوک',
+                              style: GoogleFonts.vazirmatn(
+                                color: Colors.grey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: backgroundColor,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -237,6 +259,11 @@ class _ReadScreenState extends State<ReadScreen> {
                       itemBuilder: (context, index) => Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: BookCardWidget(
+                          discountCount:
+                              "${((BookSavedState.savedBooks[index].price! - BookSavedState.savedBooks[index].totalPrice!) / BookSavedState.savedBooks[index].price! * 100).toStringAsFixed(0)}",
+                          discountPrice: BookSavedState
+                              .savedBooks[index].totalPrice
+                              .toString(),
                           viewCont: BookSavedState.savedBooks[index].viewCount!,
                           bookId:
                               BookSavedState.savedBooks[index].id.toString(),

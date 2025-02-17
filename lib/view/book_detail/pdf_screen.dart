@@ -16,7 +16,6 @@ class PdfScreen extends StatefulWidget {
 
 class _PdfScreenState extends State<PdfScreen> {
   late PdfViewerController _pdfViewerController;
-
   int? _lastPage;
   List<int> _bookmarks = [];
   PdfTextSearchResult _searchResult = PdfTextSearchResult();
@@ -111,6 +110,92 @@ class _PdfScreenState extends State<PdfScreen> {
     }
   }
 
+  void _addNoteToPage(int page) async {
+    TextEditingController noteController = TextEditingController();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? existingNote =
+        prefs.getString('${widget.pdfLink}_page${page}_note');
+
+    if (existingNote != null) {
+      noteController.text = existingNote;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: Text(
+              'یادداشت برای صفحه $page',
+              style: GoogleFonts.vazirmatn(
+                  fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            content: TextField(
+              controller: noteController,
+              maxLines: 5,
+              decoration: InputDecoration(
+                  hintText: 'یادداشت خود را وارد کنید...',
+                  hintStyle: GoogleFonts.vazirmatn(fontSize: 14)),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('لغو'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await prefs.setString('${widget.pdfLink}_page${page}_note',
+                      noteController.text);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('یادداشت ذخیره شد')),
+                  );
+                },
+                child: Text('ذخیره'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // نمایش یادداشت‌های صفحه فعلی
+  void _showNoteForPage(int page) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? note = prefs.getString('${widget.pdfLink}_page${page}_note');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: Text(
+              'یادداشت برای صفحه $page',
+              style: GoogleFonts.vazirmatn(
+                  fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            content: Text(
+              note ?? 'هیچ یادداشتی برای این صفحه وجود ندارد.',
+              style: GoogleFonts.vazirmatn(fontSize: 14),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('بستن'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
   // @override
   // void dispose() {
   //   _searchController
@@ -124,6 +209,18 @@ class _PdfScreenState extends State<PdfScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.note_add),
+            onPressed: () {
+              _addNoteToPage(_pdfViewerController.pageNumber ?? 1);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.note),
+            onPressed: () {
+              _showNoteForPage(_pdfViewerController.pageNumber ?? 1);
+            },
+          ),
           IconButton(
             icon: Icon(Icons.bookmarks),
             onPressed: () {

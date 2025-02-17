@@ -988,6 +988,13 @@
             }
           },
           {
+            "name": "FehrestUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "Title",
             "in": "query",
             "schema": {
@@ -1237,7 +1244,8 @@
             "name": "QeymatChapi",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           },
           {
@@ -1505,6 +1513,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "FehrestFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
                   "ImageFile": {
                     "type": "string",
                     "format": "binary"
@@ -1516,6 +1528,9 @@
                 }
               },
               "encoding": {
+                "FehrestFile": {
+                  "style": "form"
+                },
                 "ImageFile": {
                   "style": "form"
                 },
@@ -2184,6 +2199,90 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "UserId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/Payment/ShopCardPayment": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "Wallet",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringApiResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v1/Payment/VerifyShopCardPayment": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authority",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -2975,6 +3074,15 @@
             "type": "string",
             "nullable": true
           },
+          "fehrestUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "fehrestFile": {
+            "type": "string",
+            "format": "binary",
+            "nullable": true
+          },
           "title": {
             "type": "string",
             "nullable": true
@@ -3122,8 +3230,8 @@
             "nullable": true
           },
           "qeymatChapi": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "salEnteshar": {
             "type": "string",
@@ -3948,6 +4056,10 @@
           "userId": {
             "type": "string",
             "format": "uuid"
+          },
+          "walletAmount": {
+            "type": "integer",
+            "format": "int32"
           },
           "shopCardItems": {
             "type": "array",

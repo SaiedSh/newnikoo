@@ -584,40 +584,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     left: 10,
-                    //   ),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Icon(
-                    //         Icons.arrow_back_ios,
-                    //         size: 14,
-                    //         color: Colors.blue,
-                    //       ),
-                    //       TextButton(
-                    //           onPressed: () {
-                    //             Navigator.pushNamed(
-                    //                 context, MyRoutes.allBooksScreen);
-                    //           },
-                    //           child: Text(
-                    //             'مشاهده همه',
-                    //             style: GoogleFonts.vazirmatn(
-                    //               color: Colors.blue,
-                    //               fontSize: 12,
-                    //               fontWeight: FontWeight.w500,
-                    //             ),
-                    //           )),
-                    //     ],
-                    //   ),
-                    // ),
                     Text(
                       'کتاب های تخصصی دندانپزشکی',
-                      style: GoogleFonts.rubik(
+                      style: GoogleFonts.vazirmatn(
                           fontWeight: FontWeight.bold,
                           color: primaryColor,
-                          fontSize: 14),
+                          fontSize: 16),
                     ),
                   ],
                 ),
@@ -627,7 +599,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 340,
+                height: 370,
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: Consumer<BookListState>(
@@ -636,6 +608,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) => Padding(
                         padding: const EdgeInsets.all(8),
                         child: BookCardWidget(
+                          discountCount:
+                              "${((BookListState.books[index].price! - BookListState.books[index].totalPrice!) / BookListState.books[index].price! * 100).toStringAsFixed(0)}",
+                          discountPrice:
+                              BookListState.books[index].totalPrice.toString(),
                           bookId: BookListState.books[index].id.toString(),
                           bookWriter:
                               BookListState.books[index].nevisande.toString(),
@@ -655,80 +631,133 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // SizedBox(
-              //   height: 30,
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 15),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.only(left: 10),
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             Icon(
-              //               Icons.arrow_back_ios,
-              //               size: 14,
-              //               color: Colors.blue,
-              //             ),
-              //             TextButton(
-              //                 onPressed: () {},
-              //                 child: Text(
-              //                   'مشاهده همه',
-              //                   style: GoogleFonts.vazirmatn(
-              //                     color: Colors.blue,
-              //                     fontSize: 12,
-              //                     fontWeight: FontWeight.w500,
-              //                   ),
-              //                 )),
-              //           ],
-              //         ),
-              //       ),
-              //       Text(
-              //         'کتاب های پزشکی',
-              //         style: GoogleFonts.vazirmatn(
-              //             fontWeight: FontWeight.bold,
-              //             color: primaryColor,
-              //             fontSize: 14),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // Consumer<IndexItemsState>(
-              //   builder: (context, value, child) => SizedBox(
-              //     height: 265,
-              //     width: MediaQuery.of(context).size.width,
-              //     child: ListView.builder(
-              //       itemBuilder: (context, index) => Padding(
-              //         padding: const EdgeInsets.all(15.0),
-              //         child: BookCardWidget(
-              //           bookId: IndexItemsState.IndexLists!.freeBooks![index].id
-              //               .toString(),
-              //           bookWriter: IndexItemsState
-              //               .IndexLists!.freeBooks![index].nevisande
-              //               .toString(),
-              //           bookRate: IndexItemsState
-              //               .IndexLists!.freeBooks![index].rating!
-              //               .toDouble(),
-              //           bookPrice: ' رایگان ',
-              //           bookName: IndexItemsState
-              //               .IndexLists!.freeBooks![index].title
-              //               .toString(),
-              //           bookImage: IndexItemsState
-              //               .IndexLists!.freeBooks![index].imageUrl
-              //               .toString(),
-              //         ),
-              //       ),
-              //       itemCount: IndexItemsState.IndexLists!.freeBooks!.length,
-              //       scrollDirection: Axis.horizontal,
-              //     ),
-              //   ),
-              // ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'تازه ها',
+                      style: GoogleFonts.vazirmatn(
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                          fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
-                height: 50,
-              )
+                height: 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 370,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Consumer<IndexItemsState>(
+                    builder: (context, value, child) => ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: BookCardWidget(
+                          discountCount:
+                              "${((IndexItemsState.IndexLists!.freeBooks![index].price! - IndexItemsState.IndexLists!.freeBooks![index].totalPrice!) / IndexItemsState.IndexLists!.freeBooks![index].price! * 100).toStringAsFixed(0)}",
+                          discountPrice: IndexItemsState
+                              .IndexLists!.freeBooks![index].totalPrice
+                              .toString(),
+                          bookId: IndexItemsState
+                              .IndexLists!.freeBooks![index].id
+                              .toString(),
+                          bookWriter: IndexItemsState
+                              .IndexLists!.freeBooks![index].nevisande
+                              .toString(),
+                          bookRate: IndexItemsState
+                              .IndexLists!.freeBooks![index].rating!
+                              .toDouble(),
+                          bookPrice: IndexItemsState
+                              .IndexLists!.freeBooks![index].price
+                              .toString(),
+                          bookName: IndexItemsState
+                              .IndexLists!.freeBooks![index].title
+                              .toString(),
+                          bookImage: IndexItemsState
+                              .IndexLists!.freeBooks![index].imageUrl
+                              .toString(),
+                          viewCont: IndexItemsState
+                              .IndexLists!.freeBooks![index].viewCount!,
+                        ),
+                      ),
+                      itemCount: IndexItemsState.IndexLists!.freeBooks!.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'پرفروش ها',
+                      style: GoogleFonts.vazirmatn(
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                          fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 370,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Consumer<IndexItemsState>(
+                    builder: (context, value, child) => ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: BookCardWidget(
+                          discountCount:
+                              "${((IndexItemsState.IndexLists!.mostViewedBooks![index].price! - IndexItemsState.IndexLists!.mostViewedBooks![index].totalPrice!) / IndexItemsState.IndexLists!.mostViewedBooks![index].price! * 100).toStringAsFixed(0)}",
+                          discountPrice: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].totalPrice
+                              .toString(),
+                          bookId: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].id
+                              .toString(),
+                          bookWriter: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].nevisande
+                              .toString(),
+                          bookRate: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].rating!
+                              .toDouble(),
+                          bookPrice: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].price
+                              .toString(),
+                          bookName: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].title
+                              .toString(),
+                          bookImage: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].imageUrl
+                              .toString(),
+                          viewCont: IndexItemsState
+                              .IndexLists!.mostViewedBooks![index].viewCount!,
+                        ),
+                      ),
+                      itemCount:
+                          IndexItemsState.IndexLists!.mostViewedBooks!.length,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  ),
+                ),
+              ),
+
               // SizedBox(
               //   height: MediaQuery.of(context).size.height - 100,
               //   width: MediaQuery.of(context).size.width - 10,

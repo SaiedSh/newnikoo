@@ -180,6 +180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  final _formKey = GlobalKey<FormState>();
   // DateTime startDate = DateTime.now();
   String selectedDate = 'تاریخ تولد';
   @override
@@ -278,222 +279,325 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: backgroundColor,
         body: Consumer<ProfileState>(
           builder: (context, value, child) => SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, bottom: 5, top: 15),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              _image == null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: pervImage != null
-                                          ? Image.network(
-                                              pervImage.toString(),
-                                              width: 80,
-                                              height: 80,
-                                            )
-                                          : Image(
-                                              image: AssetImage(
-                                                  'lib/assets/images/profilee.png'),
-                                              width: 80,
-                                              height: 80,
-                                            ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.file(
-                                        File(_image!.path),
-                                        width: 80,
-                                        height: 80,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 5, top: 15),
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                _image == null
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: pervImage != null
+                                            ? Image.network(
+                                                pervImage.toString(),
+                                                width: 80,
+                                                height: 80,
+                                              )
+                                            : Image(
+                                                image: AssetImage(
+                                                    'lib/assets/images/profilee.png'),
+                                                width: 80,
+                                                height: 80,
+                                              ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.file(
+                                          File(_image!.path),
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                // _image == null
+                                //     // ? Image(
+                                //     //     image: AssetImage(
+                                //     //         'lib/assets/images/profilee.png'),
+                                //     //     width: 80,
+                                //     //     height: 80,
+                                //     //   )
+                                //     ? ClipRRect(
+                                //         borderRadius: BorderRadius.circular(100),
+                                //         child: pervImage != null
+                                //             ? Image.network(pervImage.toString())
+                                //             : Image(
+                                //                 image: AssetImage(
+                                //                     'lib/assets/images/profilee.png'),
+                                //                 width: 80,
+                                //                 height: 80,
+                                //               ),
+                                //       )
+                                //     : ClipRRect(
+                                //         borderRadius: BorderRadius.circular(100),
+                                //         child: pervImage != null
+                                //             ? Image.file(
+                                //                 File(_image!.path),
+                                //                 width: 80,
+                                //                 height: 80,
+                                //                 fit: BoxFit.fill,
+                                //               )
+                                //             : Image.network(pervImage.toString()),
+                                //       ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                InkWell(
+                                  onTap: () => _pickImage(ImageSource.gallery),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image(
+                                        image: AssetImage(
+                                            'lib/assets/images/camera.png'),
+                                        width: 12,
+                                        height: 11,
                                         fit: BoxFit.fill,
                                       ),
-                                    ),
-                              // _image == null
-                              //     // ? Image(
-                              //     //     image: AssetImage(
-                              //     //         'lib/assets/images/profilee.png'),
-                              //     //     width: 80,
-                              //     //     height: 80,
-                              //     //   )
-                              //     ? ClipRRect(
-                              //         borderRadius: BorderRadius.circular(100),
-                              //         child: pervImage != null
-                              //             ? Image.network(pervImage.toString())
-                              //             : Image(
-                              //                 image: AssetImage(
-                              //                     'lib/assets/images/profilee.png'),
-                              //                 width: 80,
-                              //                 height: 80,
-                              //               ),
-                              //       )
-                              //     : ClipRRect(
-                              //         borderRadius: BorderRadius.circular(100),
-                              //         child: pervImage != null
-                              //             ? Image.file(
-                              //                 File(_image!.path),
-                              //                 width: 80,
-                              //                 height: 80,
-                              //                 fit: BoxFit.fill,
-                              //               )
-                              //             : Image.network(pervImage.toString()),
-                              //       ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              InkWell(
-                                onTap: () => _pickImage(ImageSource.gallery),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image(
-                                      image: AssetImage(
-                                          'lib/assets/images/camera.png'),
-                                      width: 12,
-                                      height: 11,
-                                      fit: BoxFit.fill,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Text(
-                                      'ویرایش عکس',
-                                      style: GoogleFonts.vazirmatn(
-                                          color:
-                                              Color.fromARGB(255, 0, 174, 212),
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              SizedBox(
-                                height: 45,
-                                child: TextField(
-                                  cursorHeight: 18,
-                                  controller: name,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: Image(
-                                        image: AssetImage(
-                                            'lib/assets/images/iconcm.png'),
-                                        color: Colors.grey,
+                                      SizedBox(
+                                        width: 2,
                                       ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    label: Text(
-                                      'نام',
-                                      style: GoogleFonts.vazirmatn(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
+                                      Text(
+                                        'ویرایش عکس',
+                                        style: GoogleFonts.vazirmatn(
+                                            color: Color.fromARGB(
+                                                255, 0, 174, 212),
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10,
-                                        horizontal: 12), // اضافه شده
+                                    ],
                                   ),
-                                  style: GoogleFonts.vazirmatn(
-                                      fontSize: 14,
-                                      height: 1.5), // تنظیم ارتفاع خط
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              SizedBox(
-                                height: 45,
-                                child: TextField(
-                                  cursorHeight: 18,
-                                  controller: familyName,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: Image(
-                                        image: AssetImage(
-                                            'lib/assets/images/iconcm.png'),
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    label: Text(
-                                      'نام خانوادگی',
-                                      style: GoogleFonts.vazirmatn(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10,
-                                        horizontal: 12), // اضافه شده
-                                  ),
-                                  style: GoogleFonts.vazirmatn(
-                                      fontSize: 14,
-                                      height: 1.5), // تنظیم ارتفاع خط
+                                SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              IgnorePointer(
-                                child: SizedBox(
-                                  height: 45,
-                                  child: TextField(
-                                    controller: phonenumber,
+                                SizedBox(
+                                  height: 45, // ارتفاع ثابت
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return " "; // مقدار خالی نگذارید تا فیلد دچار تغییر سایز نشود
+                                      }
+                                      return null;
+                                    },
+                                    cursorHeight: 18,
+                                    controller: name,
                                     decoration: InputDecoration(
                                       prefixIcon: Padding(
                                         padding: const EdgeInsets.only(
-                                            top: 7, bottom: 5, left: 10),
+                                            top: 10, bottom: 10, left: 10),
                                         child: Image(
                                           image: AssetImage(
-                                              'lib/assets/images/mobilee.png'),
+                                              'lib/assets/images/iconcm.png'),
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.red),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.red),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                      label: Text(
+                                        'نام',
+                                        style: GoogleFonts.vazirmatn(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 12),
+                                      errorStyle: TextStyle(
+                                          fontSize: 0,
+                                          height: 0), // جلوگیری از تغییر ارتفاع
+                                    ),
+                                    style: GoogleFonts.vazirmatn(
+                                      fontSize: 14,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                SizedBox(
+                                  height: 45, // ارتفاع ثابت
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return " "; // مقدار خطا نباید خالی باشد تا تغییر سایز رخ ندهد
+                                      }
+                                      return null;
+                                    },
+                                    cursorHeight: 18,
+                                    controller: familyName,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: Image(
+                                          image: AssetImage(
+                                              'lib/assets/images/iconcm.png'),
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.red),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.red),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                      label: Text(
+                                        'نام خانوادگی',
+                                        style: GoogleFonts.vazirmatn(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 12),
+                                      errorStyle: TextStyle(
+                                          fontSize: 0,
+                                          height: 0), // جلوگیری از تغییر ارتفاع
+                                    ),
+                                    style: GoogleFonts.vazirmatn(
+                                      fontSize: 14,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                IgnorePointer(
+                                  child: SizedBox(
+                                    height: 45,
+                                    child: TextField(
+                                      controller: phonenumber,
+                                      decoration: InputDecoration(
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 7, bottom: 5, left: 10),
+                                          child: Image(
+                                            image: AssetImage(
+                                                'lib/assets/images/mobilee.png'),
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        floatingLabelBehavior:
+                                            FloatingLabelBehavior.always,
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 1, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        label: Text(
+                                          'شماره موبایل',
+                                          style: GoogleFonts.vazirmatn(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 10,
+                                            horizontal: 12), // اضافه‌شده
+                                      ),
+                                      style: GoogleFonts.vazirmatn(
+                                          fontSize: 14,
+                                          height: 1.5), // تنظیم ارتفاع خط
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                SizedBox(
+                                  height: 45,
+                                  child: TextField(
+                                    controller: nationalCode,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10,
+                                            right: 10,
+                                            bottom: 10,
+                                            left: 16),
+                                        child: Image(
+                                          width: 5,
+                                          height: 5,
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              'lib/assets/images/cod.png'),
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -515,7 +619,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       label: Text(
-                                        'شماره موبایل',
+                                        'کد ملی',
                                         style: GoogleFonts.vazirmatn(
                                           fontSize: 14,
                                           color: Colors.grey,
@@ -523,516 +627,463 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         ),
                                       ),
                                       contentPadding: EdgeInsets.symmetric(
-                                          vertical: 10,
-                                          horizontal: 12), // اضافه‌شده
+                                          vertical: 12,
+                                          horizontal: 12), // تنظیم فاصله داخلی
                                     ),
                                     style: GoogleFonts.vazirmatn(
                                         fontSize: 14,
-                                        height: 1.5), // تنظیم ارتفاع خط
+                                        height: 1.5), // تنظیم ارتفاع متن
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              SizedBox(
-                                height: 45,
-                                child: TextField(
-                                  controller: nationalCode,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10,
-                                          right: 10,
-                                          bottom: 10,
-                                          left: 16),
-                                      child: Image(
-                                        width: 5,
-                                        height: 5,
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'lib/assets/images/cod.png'),
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    label: Text(
-                                      'کد ملی',
-                                      style: GoogleFonts.vazirmatn(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 12,
-                                        horizontal: 12), // تنظیم فاصله داخلی
-                                  ),
-                                  style: GoogleFonts.vazirmatn(
-                                      fontSize: 14,
-                                      height: 1.5), // تنظیم ارتفاع متن
+                                SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              // Column(
-                              //   children: [
-                              //     Padding(
-                              //       padding: const EdgeInsets.symmetric(
-                              //           horizontal: 3),
-                              //       child: Row(
-                              //         mainAxisAlignment:
-                              //             MainAxisAlignment.spaceBetween,
-                              //         children: [
-                              //           Text(
-                              //             'رمز ورود',
-                              //             style: GoogleFonts.vazirmatn(
-                              //                 fontSize: 12,
-                              //                 color: Colors.grey,
-                              //                 fontWeight: FontWeight.bold),
-                              //           ),
-                              //           FaIcon(
-                              //             FontAwesomeIcons.penToSquare,
-                              //             size: 20,
-                              //           )
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                              // SizedBox(
-                              //   height: 10,
-                              // ),
-                              // Padding(
-                              //   padding:
-                              //       const EdgeInsets.symmetric(horizontal: 3),
-                              //   child: Row(
-                              //     children: [
-                              //       Text(
-                              //         '*********',
-                              //         style: GoogleFonts.vazirmatn(
-                              //             fontSize: 10,
-                              //             color: Colors.black,
-                              //             fontWeight: FontWeight.bold),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              // SizedBox(
-                              //   height: 18,
-                              // ),
-                              // Row(
-                              //   children: [
-                              //     Padding(
-                              //       padding: const EdgeInsets.symmetric(
-                              //           horizontal: 3),
-                              //       child: Row(
-                              //         mainAxisAlignment:
-                              //             MainAxisAlignment.spaceBetween,
-                              //         children: [
-                              //           Text(
-                              //             'جنسیت',
-                              //             style: GoogleFonts.vazirmatn(
-                              //                 fontSize: 12,
-                              //                 color: Colors.grey.shade800,
-                              //                 fontWeight: FontWeight.w500),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                              // SizedBox(
-                              //   height: 13,
-                              // ),
-                              // Row(
-                              //   children: [
-                              //     Container(
-                              //       height: 28,
-                              //       width: 80,
-                              //       decoration: BoxDecoration(
-                              //           border:
-                              //               Border.all(color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       child: Center(
-                              //         child: Row(
-                              //           mainAxisAlignment:
-                              //               MainAxisAlignment.start,
-                              //           children: [
-                              //             Transform.scale(
-                              //               scale: 0.8,
-                              //               child: Radio<int>(
-                              //                 activeColor: Colors.black,
-                              //                 value: 1,
-                              //                 groupValue: _selectedValue,
-                              //                 onChanged: (int? value) {
-                              //                   setState(() {
-                              //                     _selectedValue = value!;
-                              //                   });
-                              //                 },
-                              //               ),
-                              //             ),
-                              //             Padding(
-                              //               padding: const EdgeInsets.only(
-                              //                   bottom: 4),
-                              //               child: Text(
-                              //                 'مرد',
-                              //                 style: GoogleFonts.vazirmatn(
-                              //                     fontSize: 10,
-                              //                     color: Colors.grey.shade800,
-                              //                     fontWeight:
-                              //                         FontWeight.w500),
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     SizedBox(
-                              //       width: 14,
-                              //     ),
-                              //     Container(
-                              //       height: 28,
-                              //       width: 80,
-                              //       decoration: BoxDecoration(
-                              //           border:
-                              //               Border.all(color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       child: Center(
-                              //         child: Row(
-                              //           mainAxisAlignment:
-                              //               MainAxisAlignment.start,
-                              //           children: [
-                              //             Transform.scale(
-                              //               scale: 0.8,
-                              //               child: Radio<int>(
-                              //                 activeColor: Colors.black,
-                              //                 value: 2,
-                              //                 groupValue: _selectedValue,
-                              //                 onChanged: (int? value) {
-                              //                   setState(() {
-                              //                     _selectedValue = value!;
-                              //                   });
-                              //                 },
-                              //               ),
-                              //             ),
-                              //             Padding(
-                              //               padding: const EdgeInsets.only(
-                              //                   bottom: 4),
-                              //               child: Text(
-                              //                 'زن',
-                              //                 style: GoogleFonts.vazirmatn(
-                              //                     fontSize: 10,
-                              //                     color: Colors.grey.shade800,
-                              //                     fontWeight:
-                              //                         FontWeight.w500),
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
-                              // SizedBox(
-                              //   height: 20,
-                              // ),
-                              // DatePicker(
-                              //     height: 50,
-                              //     selectedDate: selectedDate.persianToEN(),
-                              //     label: selectedDate,
-                              //     onTap: _showPersianDatePicker
-                              //     // final DateTime? dateTime = await showDatePicker(
-                              //     //     context: context,
-                              //     //     initialDate: startDate,
-                              //     //     firstDate: DateTime(1900),
-                              //     //     lastDate: DateTime(3000));
-                              //     // if (dateTime != null) {
-                              //     //   setState(() {
-                              //     //     startDate = dateTime;
-                              //     //   });
-                              //     // }
+                                // Column(
+                                //   children: [
+                                //     Padding(
+                                //       padding: const EdgeInsets.symmetric(
+                                //           horizontal: 3),
+                                //       child: Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             'رمز ورود',
+                                //             style: GoogleFonts.vazirmatn(
+                                //                 fontSize: 12,
+                                //                 color: Colors.grey,
+                                //                 fontWeight: FontWeight.bold),
+                                //           ),
+                                //           FaIcon(
+                                //             FontAwesomeIcons.penToSquare,
+                                //             size: 20,
+                                //           )
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(
+                                //   height: 10,
+                                // ),
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.symmetric(horizontal: 3),
+                                //   child: Row(
+                                //     children: [
+                                //       Text(
+                                //         '*********',
+                                //         style: GoogleFonts.vazirmatn(
+                                //             fontSize: 10,
+                                //             color: Colors.black,
+                                //             fontWeight: FontWeight.bold),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                // SizedBox(
+                                //   height: 18,
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Padding(
+                                //       padding: const EdgeInsets.symmetric(
+                                //           horizontal: 3),
+                                //       child: Row(
+                                //         mainAxisAlignment:
+                                //             MainAxisAlignment.spaceBetween,
+                                //         children: [
+                                //           Text(
+                                //             'جنسیت',
+                                //             style: GoogleFonts.vazirmatn(
+                                //                 fontSize: 12,
+                                //                 color: Colors.grey.shade800,
+                                //                 fontWeight: FontWeight.w500),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(
+                                //   height: 13,
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Container(
+                                //       height: 28,
+                                //       width: 80,
+                                //       decoration: BoxDecoration(
+                                //           border:
+                                //               Border.all(color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       child: Center(
+                                //         child: Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.start,
+                                //           children: [
+                                //             Transform.scale(
+                                //               scale: 0.8,
+                                //               child: Radio<int>(
+                                //                 activeColor: Colors.black,
+                                //                 value: 1,
+                                //                 groupValue: _selectedValue,
+                                //                 onChanged: (int? value) {
+                                //                   setState(() {
+                                //                     _selectedValue = value!;
+                                //                   });
+                                //                 },
+                                //               ),
+                                //             ),
+                                //             Padding(
+                                //               padding: const EdgeInsets.only(
+                                //                   bottom: 4),
+                                //               child: Text(
+                                //                 'مرد',
+                                //                 style: GoogleFonts.vazirmatn(
+                                //                     fontSize: 10,
+                                //                     color: Colors.grey.shade800,
+                                //                     fontWeight:
+                                //                         FontWeight.w500),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     SizedBox(
+                                //       width: 14,
+                                //     ),
+                                //     Container(
+                                //       height: 28,
+                                //       width: 80,
+                                //       decoration: BoxDecoration(
+                                //           border:
+                                //               Border.all(color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       child: Center(
+                                //         child: Row(
+                                //           mainAxisAlignment:
+                                //               MainAxisAlignment.start,
+                                //           children: [
+                                //             Transform.scale(
+                                //               scale: 0.8,
+                                //               child: Radio<int>(
+                                //                 activeColor: Colors.black,
+                                //                 value: 2,
+                                //                 groupValue: _selectedValue,
+                                //                 onChanged: (int? value) {
+                                //                   setState(() {
+                                //                     _selectedValue = value!;
+                                //                   });
+                                //                 },
+                                //               ),
+                                //             ),
+                                //             Padding(
+                                //               padding: const EdgeInsets.only(
+                                //                   bottom: 4),
+                                //               child: Text(
+                                //                 'زن',
+                                //                 style: GoogleFonts.vazirmatn(
+                                //                     fontSize: 10,
+                                //                     color: Colors.grey.shade800,
+                                //                     fontWeight:
+                                //                         FontWeight.w500),
+                                //               ),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(
+                                //   height: 20,
+                                // ),
+                                // DatePicker(
+                                //     height: 50,
+                                //     selectedDate: selectedDate.persianToEN(),
+                                //     label: selectedDate,
+                                //     onTap: _showPersianDatePicker
+                                //     // final DateTime? dateTime = await showDatePicker(
+                                //     //     context: context,
+                                //     //     initialDate: startDate,
+                                //     //     firstDate: DateTime(1900),
+                                //     //     lastDate: DateTime(3000));
+                                //     // if (dateTime != null) {
+                                //     //   setState(() {
+                                //     //     startDate = dateTime;
+                                //     //   });
+                                //     // }
 
-                              //     ),
+                                //     ),
 
-                              // SizedBox(
-                              //   height: 15,
-                              // ),
-                              // Container(
-                              //   height: 45,
-                              //   child: TextField(
-                              //     onTap: _openMultiSelectDialogCategories,
-                              //     controller: TextEditingController(
-                              //       // نمایش نام‌های انتخاب‌شده در TextField
-                              //       text: optionsCategories
-                              //           .where((option) =>
-                              //               _selectedOptionIdsCategories
-                              //                   .contains(option.id))
-                              //           .map((e) => e.title)
-                              //           .join(','),
-                              //     ),
-                              //     enabled: true,
-                              //     textAlignVertical: TextAlignVertical.center,
-                              //     decoration: InputDecoration(
-                              //       suffixIcon: Padding(
-                              //         padding: const EdgeInsets.all(9),
-                              //         child: Container(
-                              //           decoration: BoxDecoration(
-                              //               border: Border.all(
-                              //                   color: Color.fromARGB(
-                              //                       255, 0, 174, 212)),
-                              //               borderRadius:
-                              //                   BorderRadius.circular(8)),
-                              //           child: InkWell(
-                              //             onTap:
-                              //                 _openMultiSelectDialogCategories,
-                              //             child: Icon(Icons.add,
-                              //                 size: 15,
-                              //                 color: Color.fromARGB(
-                              //                     255, 0, 174, 212)),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //       label: Text(
-                              //         'دسته مورد علاقه',
-                              //         style: GoogleFonts.vazirmatn(
-                              //             fontSize: 10,
-                              //             fontWeight: FontWeight.w500,
-                              //             color: Colors.grey),
-                              //       ),
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       enabledBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       floatingLabelBehavior:
-                              //           FloatingLabelBehavior.auto,
-                              //       border: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //     ),
-                              //   ),
-                              // ),
-                              // SizedBox(
-                              //   height: 15,
-                              // ),
-                              // Container(
-                              //   height: 45,
-                              //   child: TextField(
-                              //     onTap: () async {
-                              //       // نمایش دیالوگ و انتظار برای انتخاب
-                              //       final selectedItem =
-                              //           await _openSingleSelectDialog(
-                              //               context, optionsExpertises);
-                              //       if (selectedItem != null) {
-                              //         // تنظیم آیتم انتخاب شده در تکست فیلد
-                              //         expertiseController.text =
-                              //             selectedItem.name.toString();
-                              //         _selectedOptionIdsExpertises =
-                              //             selectedItem.id;
-                              //       }
-                              //     },
-                              //     controller: expertiseController,
-                              //     enabled: true,
-                              //     textAlignVertical: TextAlignVertical.center,
-                              //     decoration: InputDecoration(
-                              //       suffixIcon: Padding(
-                              //         padding: const EdgeInsets.all(9),
-                              //         child: Container(
-                              //           decoration: BoxDecoration(
-                              //               border: Border.all(
-                              //                   color: Color.fromARGB(
-                              //                       255, 0, 174, 212)),
-                              //               borderRadius:
-                              //                   BorderRadius.circular(8)),
-                              //           child: InkWell(
-                              //             onTap: () async {
-                              //               // نمایش دیالوگ و انتظار برای انتخاب
-                              //               final selectedItem =
-                              //                   await _openSingleSelectDialog(
-                              //                       context,
-                              //                       optionsExpertises);
-                              //               if (selectedItem != null) {
-                              //                 // تنظیم آیتم انتخاب شده در تکست فیلد
-                              //                 expertiseController.text =
-                              //                     selectedItem.name
-                              //                         .toString();
-                              //                 _selectedOptionIdsExpertises =
-                              //                     selectedItem.id;
-                              //               }
-                              //             },
-                              //             child: Icon(Icons.add,
-                              //                 size: 15,
-                              //                 color: Color.fromARGB(
-                              //                     255, 0, 174, 212)),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //       label: Text(
-                              //         'تخصص',
-                              //         style: GoogleFonts.vazirmatn(
-                              //             fontSize: 10,
-                              //             fontWeight: FontWeight.w500,
-                              //             color: Colors.grey),
-                              //       ),
-                              //       focusedBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       enabledBorder: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //       floatingLabelBehavior:
-                              //           FloatingLabelBehavior.auto,
-                              //       border: OutlineInputBorder(
-                              //           borderSide: BorderSide(
-                              //               width: 1, color: Colors.grey),
-                              //           borderRadius:
-                              //               BorderRadius.circular(8)),
-                              //     ),
-                              //   ),
-                              // ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 55,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 50, right: 50, top: 8, bottom: 8),
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 20,
-                                    child: RawMaterialButton(
-                                      fillColor:
-                                          Color.fromARGB(255, 0, 174, 212),
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 0),
-                                        child: Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: Text(
-                                            'ثبت',
-                                            style: GoogleFonts.vazirmatn(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16),
+                                // SizedBox(
+                                //   height: 15,
+                                // ),
+                                // Container(
+                                //   height: 45,
+                                //   child: TextField(
+                                //     onTap: _openMultiSelectDialogCategories,
+                                //     controller: TextEditingController(
+                                //       // نمایش نام‌های انتخاب‌شده در TextField
+                                //       text: optionsCategories
+                                //           .where((option) =>
+                                //               _selectedOptionIdsCategories
+                                //                   .contains(option.id))
+                                //           .map((e) => e.title)
+                                //           .join(','),
+                                //     ),
+                                //     enabled: true,
+                                //     textAlignVertical: TextAlignVertical.center,
+                                //     decoration: InputDecoration(
+                                //       suffixIcon: Padding(
+                                //         padding: const EdgeInsets.all(9),
+                                //         child: Container(
+                                //           decoration: BoxDecoration(
+                                //               border: Border.all(
+                                //                   color: Color.fromARGB(
+                                //                       255, 0, 174, 212)),
+                                //               borderRadius:
+                                //                   BorderRadius.circular(8)),
+                                //           child: InkWell(
+                                //             onTap:
+                                //                 _openMultiSelectDialogCategories,
+                                //             child: Icon(Icons.add,
+                                //                 size: 15,
+                                //                 color: Color.fromARGB(
+                                //                     255, 0, 174, 212)),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       label: Text(
+                                //         'دسته مورد علاقه',
+                                //         style: GoogleFonts.vazirmatn(
+                                //             fontSize: 10,
+                                //             fontWeight: FontWeight.w500,
+                                //             color: Colors.grey),
+                                //       ),
+                                //       focusedBorder: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       enabledBorder: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       floatingLabelBehavior:
+                                //           FloatingLabelBehavior.auto,
+                                //       border: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //     ),
+                                //   ),
+                                // ),
+                                // SizedBox(
+                                //   height: 15,
+                                // ),
+                                // Container(
+                                //   height: 45,
+                                //   child: TextField(
+                                //     onTap: () async {
+                                //       // نمایش دیالوگ و انتظار برای انتخاب
+                                //       final selectedItem =
+                                //           await _openSingleSelectDialog(
+                                //               context, optionsExpertises);
+                                //       if (selectedItem != null) {
+                                //         // تنظیم آیتم انتخاب شده در تکست فیلد
+                                //         expertiseController.text =
+                                //             selectedItem.name.toString();
+                                //         _selectedOptionIdsExpertises =
+                                //             selectedItem.id;
+                                //       }
+                                //     },
+                                //     controller: expertiseController,
+                                //     enabled: true,
+                                //     textAlignVertical: TextAlignVertical.center,
+                                //     decoration: InputDecoration(
+                                //       suffixIcon: Padding(
+                                //         padding: const EdgeInsets.all(9),
+                                //         child: Container(
+                                //           decoration: BoxDecoration(
+                                //               border: Border.all(
+                                //                   color: Color.fromARGB(
+                                //                       255, 0, 174, 212)),
+                                //               borderRadius:
+                                //                   BorderRadius.circular(8)),
+                                //           child: InkWell(
+                                //             onTap: () async {
+                                //               // نمایش دیالوگ و انتظار برای انتخاب
+                                //               final selectedItem =
+                                //                   await _openSingleSelectDialog(
+                                //                       context,
+                                //                       optionsExpertises);
+                                //               if (selectedItem != null) {
+                                //                 // تنظیم آیتم انتخاب شده در تکست فیلد
+                                //                 expertiseController.text =
+                                //                     selectedItem.name
+                                //                         .toString();
+                                //                 _selectedOptionIdsExpertises =
+                                //                     selectedItem.id;
+                                //               }
+                                //             },
+                                //             child: Icon(Icons.add,
+                                //                 size: 15,
+                                //                 color: Color.fromARGB(
+                                //                     255, 0, 174, 212)),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       label: Text(
+                                //         'تخصص',
+                                //         style: GoogleFonts.vazirmatn(
+                                //             fontSize: 10,
+                                //             fontWeight: FontWeight.w500,
+                                //             color: Colors.grey),
+                                //       ),
+                                //       focusedBorder: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       enabledBorder: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //       floatingLabelBehavior:
+                                //           FloatingLabelBehavior.auto,
+                                //       border: OutlineInputBorder(
+                                //           borderSide: BorderSide(
+                                //               width: 1, color: Colors.grey),
+                                //           borderRadius:
+                                //               BorderRadius.circular(8)),
+                                //     ),
+                                //   ),
+                                // ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 55,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 50, right: 50, top: 8, bottom: 8),
+                                    child: SizedBox(
+                                      width: 100,
+                                      height: 20,
+                                      child: RawMaterialButton(
+                                        fillColor:
+                                            Color.fromARGB(255, 0, 174, 212),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 0),
+                                          child: Directionality(
+                                            textDirection: TextDirection.rtl,
+                                            child: Text(
+                                              'ثبت',
+                                              style: GoogleFonts.vazirmatn(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16),
+                                            ),
                                           ),
                                         ),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        onPressed: () async {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            filesHTTP(
+                                              phoneNumber: phonenumber.text,
+                                              // sex: _selectedValue == 1
+                                              //     ? Sex.male
+                                              //     : Sex.female,
+                                              // birthDay: finalDate.toString(),
+                                              // expertiesId:
+                                              //     _selectedOptionIdsExpertises !=
+                                              //             null
+                                              //         ? _selectedOptionIdsExpertises
+                                              //         : "",
+                                              // likedCategories:
+                                              //     _selectedOptionIdsCategories !=
+                                              //             null
+                                              //         ? _selectedOptionIdsCategories
+                                              //             .toString()
+                                              //         : "",
+                                              nationalCode: nationalCode.text,
+                                              context: context,
+                                              UserAvatarFile: _image,
+                                              firstName: name.text,
+                                              lastName: familyName.text,
+                                            ).then(
+                                              (value) {
+                                                Navigator.pushNamed(context,
+                                                    MyRoutes.profileScreen);
+                                              },
+                                            );
+                                            // فرم معتبر است، پردازش انجام شود
+                                          }
+                                        },
                                       ),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      onPressed: () async {
-                                        filesHTTP(
-                                          phoneNumber: phonenumber.text,
-                                          // sex: _selectedValue == 1
-                                          //     ? Sex.male
-                                          //     : Sex.female,
-                                          // birthDay: finalDate.toString(),
-                                          // expertiesId:
-                                          //     _selectedOptionIdsExpertises !=
-                                          //             null
-                                          //         ? _selectedOptionIdsExpertises
-                                          //         : "",
-                                          // likedCategories:
-                                          //     _selectedOptionIdsCategories !=
-                                          //             null
-                                          //         ? _selectedOptionIdsCategories
-                                          //             .toString()
-                                          //         : "",
-                                          nationalCode: nationalCode.text,
-                                          context: context,
-                                          UserAvatarFile: _image,
-                                          firstName: name.text,
-                                          lastName: familyName.text,
-                                        ).then(
-                                          (value) {
-                                            Navigator.pushNamed(context,
-                                                MyRoutes.profileScreen);
-                                          },
-                                        );
-                                      },
                                     ),
                                   ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(0),
+                                      color: Colors.white),
                                 ),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          // Container(
-                          //   height: 40,
-                          //   child: TextField(
-                          //     enabled: true,
-                          //     textAlignVertical: TextAlignVertical.center,
-                          //     decoration: InputDecoration(
-                          //       label: Text(
-                          //         'تاریخ تولد',
-                          //         style: GoogleFonts.vazirmatn(
-                          //             fontSize: 10,
-                          //             fontWeight: FontWeight.w500,
-                          //             color: Colors.grey),
-                          //       ),
-                          //       prefixIcon: Padding(
-                          //         padding: const EdgeInsets.only(
-                          //             top: 10, bottom: 8, left: 8, right: 8),
-                          //         child: Image(
-                          //           image: AssetImage(
-                          //               'lib/assets/images/birth.png'),
-                          //           fit: BoxFit.fill,
-                          //         ),
-                          //       ),
-                          //       focusedBorder: OutlineInputBorder(
-                          //           borderSide: BorderSide(
-                          //               width: 1, color: Colors.grey),
-                          //           borderRadius: BorderRadius.circular(8)),
-                          //       enabledBorder: OutlineInputBorder(
-                          //           borderSide: BorderSide(
-                          //               width: 1, color: Colors.grey),
-                          //           borderRadius: BorderRadius.circular(8)),
-                          //       floatingLabelBehavior:
-                          //           FloatingLabelBehavior.auto,
-                          //       border: OutlineInputBorder(
-                          //           borderSide: BorderSide(
-                          //               width: 1, color: Colors.grey),
-                          //           borderRadius: BorderRadius.circular(8)),
-                          //     ),
-                          //   ),
-                          // ),
-                        )))
-              ],
+                              ],
+                            ),
+                            // Container(
+                            //   height: 40,
+                            //   child: TextField(
+                            //     enabled: true,
+                            //     textAlignVertical: TextAlignVertical.center,
+                            //     decoration: InputDecoration(
+                            //       label: Text(
+                            //         'تاریخ تولد',
+                            //         style: GoogleFonts.vazirmatn(
+                            //             fontSize: 10,
+                            //             fontWeight: FontWeight.w500,
+                            //             color: Colors.grey),
+                            //       ),
+                            //       prefixIcon: Padding(
+                            //         padding: const EdgeInsets.only(
+                            //             top: 10, bottom: 8, left: 8, right: 8),
+                            //         child: Image(
+                            //           image: AssetImage(
+                            //               'lib/assets/images/birth.png'),
+                            //           fit: BoxFit.fill,
+                            //         ),
+                            //       ),
+                            //       focusedBorder: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //               width: 1, color: Colors.grey),
+                            //           borderRadius: BorderRadius.circular(8)),
+                            //       enabledBorder: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //               width: 1, color: Colors.grey),
+                            //           borderRadius: BorderRadius.circular(8)),
+                            //       floatingLabelBehavior:
+                            //           FloatingLabelBehavior.auto,
+                            //       border: OutlineInputBorder(
+                            //           borderSide: BorderSide(
+                            //               width: 1, color: Colors.grey),
+                            //           borderRadius: BorderRadius.circular(8)),
+                            //     ),
+                            //   ),
+                            // ),
+                          )))
+                ],
+              ),
             ),
           ),
         ),

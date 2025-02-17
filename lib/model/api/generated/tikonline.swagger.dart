@@ -457,6 +457,7 @@ abstract class Tikonline extends ChopperService {
   ///@param DiscountPercentage
   ///@param PhysicalLink
   ///@param SamplePdfLink
+  ///@param FehrestUrl
   ///@param Title
   ///@param Description
   ///@param ImageUrl
@@ -534,6 +535,7 @@ abstract class Tikonline extends ChopperService {
     int? discountPercentage,
     String? physicalLink,
     String? samplePdfLink,
+    String? fehrestUrl,
     String? title,
     String? description,
     String? imageUrl,
@@ -569,7 +571,7 @@ abstract class Tikonline extends ChopperService {
     String? zamanMotalee,
     String? zaban,
     String? qeymatArzi,
-    String? qeymatChapi,
+    int? qeymatChapi,
     String? salEnteshar,
     int? rating,
     int? price,
@@ -603,6 +605,7 @@ abstract class Tikonline extends ChopperService {
     List<BookReviewDto>? bookReviewss,
     List<BookCategoryDto>? bookCategories,
     String? id,
+    List<int>? FehrestFile,
     List<int>? ImageFile,
     List<int>? PdfFile,
   }) {
@@ -616,6 +619,7 @@ abstract class Tikonline extends ChopperService {
         discountPercentage: discountPercentage,
         physicalLink: physicalLink,
         samplePdfLink: samplePdfLink,
+        fehrestUrl: fehrestUrl,
         title: title,
         description: description,
         imageUrl: imageUrl,
@@ -685,6 +689,7 @@ abstract class Tikonline extends ChopperService {
         bookReviewss: bookReviewss,
         bookCategories: bookCategories,
         id: id,
+        FehrestFile: FehrestFile,
         ImageFile: ImageFile,
         PdfFile: PdfFile);
   }
@@ -697,6 +702,7 @@ abstract class Tikonline extends ChopperService {
   ///@param DiscountPercentage
   ///@param PhysicalLink
   ///@param SamplePdfLink
+  ///@param FehrestUrl
   ///@param Title
   ///@param Description
   ///@param ImageUrl
@@ -779,6 +785,7 @@ abstract class Tikonline extends ChopperService {
     @Query('DiscountPercentage') int? discountPercentage,
     @Query('PhysicalLink') String? physicalLink,
     @Query('SamplePdfLink') String? samplePdfLink,
+    @Query('FehrestUrl') String? fehrestUrl,
     @Query('Title') String? title,
     @Query('Description') String? description,
     @Query('ImageUrl') String? imageUrl,
@@ -814,7 +821,7 @@ abstract class Tikonline extends ChopperService {
     @Query('ZamanMotalee') String? zamanMotalee,
     @Query('Zaban') String? zaban,
     @Query('QeymatArzi') String? qeymatArzi,
-    @Query('QeymatChapi') String? qeymatChapi,
+    @Query('QeymatChapi') int? qeymatChapi,
     @Query('SalEnteshar') String? salEnteshar,
     @Query('Rating') int? rating,
     @Query('Price') int? price,
@@ -848,6 +855,7 @@ abstract class Tikonline extends ChopperService {
     @Query('BookReviewss') List<BookReviewDto>? bookReviewss,
     @Query('BookCategories') List<BookCategoryDto>? bookCategories,
     @Query('Id') String? id,
+    @PartFile() List<int>? FehrestFile,
     @PartFile() List<int>? ImageFile,
     @PartFile() List<int>? PdfFile,
   });
@@ -1079,6 +1087,49 @@ abstract class Tikonline extends ChopperService {
     @Query('Status') String? status,
     @Query('authority') String? authority,
     @Query('SubId') String? subId,
+    @Query('UserId') String? userId,
+  });
+
+  ///
+  ///@param Wallet
+  Future<chopper.Response<StringApiResult>> apiV1PaymentShopCardPaymentPost(
+      {bool? wallet}) {
+    generatedMapping.putIfAbsent(
+        StringApiResult, () => StringApiResult.fromJsonFactory);
+
+    return _apiV1PaymentShopCardPaymentPost(wallet: wallet);
+  }
+
+  ///
+  ///@param Wallet
+  @Post(
+    path: 'https://api.tikonline.net/api/v1/Payment/ShopCardPayment',
+    optionalBody: true,
+  )
+  Future<chopper.Response<StringApiResult>> _apiV1PaymentShopCardPaymentPost(
+      {@Query('Wallet') bool? wallet});
+
+  ///
+  ///@param Status
+  ///@param authority
+  ///@param UserId
+  Future<chopper.Response> apiV1PaymentVerifyShopCardPaymentGet({
+    String? status,
+    String? authority,
+    String? userId,
+  }) {
+    return _apiV1PaymentVerifyShopCardPaymentGet(
+        status: status, authority: authority, userId: userId);
+  }
+
+  ///
+  ///@param Status
+  ///@param authority
+  ///@param UserId
+  @Get(path: 'https://api.tikonline.net/api/v1/Payment/VerifyShopCardPayment')
+  Future<chopper.Response> _apiV1PaymentVerifyShopCardPaymentGet({
+    @Query('Status') String? status,
+    @Query('authority') String? authority,
     @Query('UserId') String? userId,
   });
 

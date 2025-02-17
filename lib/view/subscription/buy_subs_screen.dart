@@ -2,12 +2,15 @@ import 'package:bookapp/controller/api/payment/buy_subscriptions.dart';
 import 'package:bookapp/controller/api/payment/get_subscriptions.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/subscriptions_state.dart';
+import 'package:bookapp/controller/provider/wallet_payment.dart';
 import 'package:bookapp/controller/routes/routes.dart';
+import 'package:bookapp/controller/service/split_number.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BuySubsScreen extends StatefulWidget {
   const BuySubsScreen({
@@ -27,6 +30,43 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
   }
 
   TextEditingController searchNumber = TextEditingController();
+  Future<void> handlePayment(BuildContext context, String subId) async {
+    try {
+      final finalSubId = subId;
+      if (subId == null) {
+        // اگر مقدار قیمت معتبر نبود، کاری انجام نده
+        return;
+      }
+
+      final value = await buySubscriptions(
+        wallet: false,
+        context: context,
+        subId: finalSubId,
+      );
+
+      final String paymentUrl =
+          SubChargeState.link.toString(); // لینک درگاه پرداخت
+
+      // باز کردن لینک با Custom Tabs
+      await launchUrl(
+        Uri.parse(paymentUrl),
+        mode: LaunchMode
+            .externalApplication, // باز کردن در برنامه‌های خارجی مانند کروم
+      );
+
+      // پس از باز شدن درگاه پرداخت، کاربر را به صفحه دیگری هدایت می‌کنیم
+      Navigator.pushNamed(
+        context,
+        MyRoutes.navigationBarScreen,
+      );
+    } catch (e) {
+      // در صورت بروز خطا، پیام خطا را نشان بده
+      print("Error: $e");
+    } finally {
+      // در نهایت، فیلد قیمت را پاک می‌کنیم
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -239,7 +279,8 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
                                               Text(
                                                 SubscriptionsState
                                                     .subscriptions[index].price
-                                                    .toString(),
+                                                    .toString()
+                                                    .formatNumber(),
                                                 style: GoogleFonts.vazirmatn(
                                                   decoration: TextDecoration
                                                       .lineThrough,
@@ -254,7 +295,8 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
                                                 SubscriptionsState
                                                     .subscriptions[index]
                                                     .discountPrice
-                                                    .toString(),
+                                                    .toString()
+                                                    .formatNumber(),
                                                 style: GoogleFonts.vazirmatn(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
@@ -301,12 +343,11 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
                                                       BorderRadius.circular(5)),
                                               fillColor: secondaryColor,
                                               onPressed: () {
-                                                buySubscriptions(
-                                                    context: context,
-                                                    wallet: true,
-                                                    subId: SubscriptionsState
-                                                        .subscriptions[index]
-                                                        .id);
+                                                handlePayment(
+                                                    context,
+                                                    SubscriptionsState
+                                                        .subscriptions[index].id
+                                                        .toString());
                                               },
                                             ),
                                           ),
@@ -317,14 +358,14 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
                                 ),
                               ),
                             ),
-                            Positioned(
-                                left: 17,
-                                child: Image(
-                                  image: AssetImage(
-                                      'lib/assets/images/discount.png'),
-                                  width: 25,
-                                  height: 25,
-                                ))
+                            // Positioned(
+                            //     left: 17,
+                            //     child: Image(
+                            //       image: AssetImage(
+                            //           'lib/assets/images/discount.png'),
+                            //       width: 25,
+                            //       height: 25,
+                            //     ))
                           ],
                         ),
                       ),

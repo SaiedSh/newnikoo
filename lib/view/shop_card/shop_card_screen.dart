@@ -2,8 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookapp/controller/api/payment/shop_card/buy_book.dart';
 import 'package:bookapp/controller/api/payment/shop_card/final_payment.dart';
 import 'package:bookapp/controller/api/payment/shop_card/get_shopcard_list.dart';
+import 'package:bookapp/controller/api/payment/shop_card/payment.dart';
+import 'package:bookapp/controller/api/profile/get_profile.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
+import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/provider/shop_card_state.dart';
+import 'package:bookapp/controller/provider/wallet_payment.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/controller/service/replace.dart';
 import 'package:bookapp/controller/service/split_number.dart';
@@ -13,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ShopCardScreen extends StatefulWidget {
   const ShopCardScreen({
@@ -29,6 +34,9 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getUserProfile(
+      context: context,
+    );
     getShopCardList(context: context).then(
       (value) {
         setState(() {
@@ -47,6 +55,42 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
     }
     // اگر حروف لاتین باشد
     return TextDirection.ltr;
+  }
+
+  Future<void> handlePayment(BuildContext context) async {
+    try {
+      // final finalSubId = price;
+      // if (price == null) {
+      //   // اگر مقدار قیمت معتبر نبود، کاری انجام نده
+      //   return;
+      // }
+
+      final value = await shopCardPayment(
+        wallet: false,
+        context: context,
+      );
+
+      final String paymentUrl =
+          ShopCardChargeState.link.toString(); // لینک درگاه پرداخت
+
+      // باز کردن لینک با Custom Tabs
+      await launchUrl(
+        Uri.parse(paymentUrl),
+        mode: LaunchMode
+            .externalApplication, // باز کردن در برنامه‌های خارجی مانند کروم
+      );
+
+      // پس از باز شدن درگاه پرداخت، کاربر را به صفحه دیگری هدایت می‌کنیم
+      Navigator.pushNamed(
+        context,
+        MyRoutes.navigationBarScreen,
+      );
+    } catch (e) {
+      // در صورت بروز خطا، پیام خطا را نشان بده
+      print("Error: $e");
+    } finally {
+      // در نهایت، فیلد قیمت را پاک می‌کنیم
+    }
   }
 
   TextEditingController searchNumber = TextEditingController();
@@ -121,11 +165,91 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(3)),
               onPressed: () async {
-                payment(context: context, wallet: true).then(
-                  (value) {
-                    getShopCardList(context: context);
-                  },
-                );
+                ProfileState.profile!.walletAmount! >
+                        ShopCardState.shopCardList!.totalPrice!
+                    ? showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          child: Container(
+                            height: 400,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 3),
+                                        child: Text(
+                                          'موجودی کیف پول : ',
+                                          style: GoogleFonts.vazirmatn(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ),
+                                      Text(
+                                        ProfileState.profile!.walletAmount
+                                            .toString()
+                                            .formatNumber(),
+                                        style: GoogleFonts.vazirmatn(
+                                            fontSize: 15, color: Colors.black),
+                                      ),
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        'تومان',
+                                        style: GoogleFonts.vazirmatn(
+                                            fontSize: 14, color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 100,
+                                ),
+                                MaterialButton(
+                                  color: Colors.black,
+                                  minWidth: 180,
+                                  child: Text(
+                                    'پرداخت با کیف پول',
+                                    style: GoogleFonts.vazirmatn(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: () {
+                                    payment(context: context, wallet: true);
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                MaterialButton(
+                                  color: Colors.black,
+                                  minWidth: 180,
+                                  child: Text(
+                                    'پرداخت با درگاه',
+                                    style: GoogleFonts.vazirmatn(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: () {
+                                    handlePayment(context);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    : handlePayment(context);
+                ;
               },
             ),
           ),
@@ -378,8 +502,10 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                                                   .shopCardItems![index]
                                                   .bookNevisande
                                                   .toString()),
-                                          ShopCardState.shopCardList!
-                                                      .shopCardItems !=
+                                          ShopCardState
+                                                      .shopCardList!
+                                                      .shopCardItems![index]
+                                                      .bookNevisande !=
                                                   null
                                               ? ShopCardState
                                                   .shopCardList!

@@ -308,6 +308,7 @@ class _NavigationbarScreenState extends State<NavigationbarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {

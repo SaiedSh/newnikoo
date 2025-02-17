@@ -639,6 +639,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: BookCardWidget(
+                                      discountCount: ProductsState
+                                          .books[index].discountPercentage
+                                          .toString(),
+                                      discountPrice: ProductsState
+                                          .books[index].discountPrice
+                                          .toString(),
                                       viewCont:
                                           ProductsState.books[index].viewCount!,
                                       bookId: ProductsState.books[index].id
@@ -670,7 +676,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         return ListTile(
                           title: Text(category.title.toString(),
                               style: GoogleFonts.vazirmatn(fontSize: 14)),
-                          trailing: Icon(Icons.arrow_forward),
+                          trailing: Icon(
+                            Icons.arrow_forward,
+                            size: 18,
+                          ),
                           onTap: () => _loadSubcategoriesOrBooks(category.id
                               .toString()), // بارگذاری زیرمجموعه‌ها یا کتاب‌ها
                         );
@@ -1203,6 +1212,12 @@ class _AllBooksScreenState extends State<AllBooksScreen> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: BookCardWidget(
+                            discountCount: BookListState
+                                .books[index].discountPercentage
+                                .toString(),
+                            discountPrice: BookListState
+                                .books[index].discountPrice
+                                .toString(),
                             viewCont: BookListState.books[index].viewCount!,
                             bookId: BookListState.books[index].id.toString(),
                             bookWriter:

@@ -361,6 +361,8 @@ class BookDto {
     this.discountPercentage,
     this.physicalLink,
     this.samplePdfLink,
+    this.fehrestUrl,
+    this.fehrestFile,
     this.title,
     this.description,
     this.imageUrl,
@@ -434,6 +436,10 @@ class BookDto {
   final String? physicalLink;
   @JsonKey(name: 'samplePdfLink', includeIfNull: false)
   final String? samplePdfLink;
+  @JsonKey(name: 'fehrestUrl', includeIfNull: false)
+  final String? fehrestUrl;
+  @JsonKey(name: 'fehrestFile', includeIfNull: false)
+  final String? fehrestFile;
   @JsonKey(name: 'title', includeIfNull: false)
   final String? title;
   @JsonKey(name: 'description', includeIfNull: false)
@@ -509,7 +515,7 @@ class BookDto {
   @JsonKey(name: 'qeymatArzi', includeIfNull: false)
   final String? qeymatArzi;
   @JsonKey(name: 'qeymatChapi', includeIfNull: false)
-  final String? qeymatChapi;
+  final int? qeymatChapi;
   @JsonKey(name: 'salEnteshar', includeIfNull: false)
   final String? salEnteshar;
   @JsonKey(name: 'rating', includeIfNull: false)
@@ -567,6 +573,12 @@ class BookDto {
             (identical(other.samplePdfLink, samplePdfLink) ||
                 const DeepCollectionEquality()
                     .equals(other.samplePdfLink, samplePdfLink)) &&
+            (identical(other.fehrestUrl, fehrestUrl) ||
+                const DeepCollectionEquality()
+                    .equals(other.fehrestUrl, fehrestUrl)) &&
+            (identical(other.fehrestFile, fehrestFile) ||
+                const DeepCollectionEquality()
+                    .equals(other.fehrestFile, fehrestFile)) &&
             (identical(other.title, title) ||
                 const DeepCollectionEquality().equals(other.title, title)) &&
             (identical(other.description, description) ||
@@ -612,12 +624,8 @@ class BookDto {
             (identical(other.sarparastMotarjem, sarparastMotarjem) ||
                 const DeepCollectionEquality()
                     .equals(other.sarparastMotarjem, sarparastMotarjem)) &&
-            (identical(other.sarparastMoalef, sarparastMoalef) ||
-                const DeepCollectionEquality()
-                    .equals(other.sarparastMoalef, sarparastMoalef)) &&
-            (identical(other.baHamkari, baHamkari) ||
-                const DeepCollectionEquality()
-                    .equals(other.baHamkari, baHamkari)) &&
+            (identical(other.sarparastMoalef, sarparastMoalef) || const DeepCollectionEquality().equals(other.sarparastMoalef, sarparastMoalef)) &&
+            (identical(other.baHamkari, baHamkari) || const DeepCollectionEquality().equals(other.baHamkari, baHamkari)) &&
             (identical(other.beKooshesh, beKooshesh) || const DeepCollectionEquality().equals(other.beKooshesh, beKooshesh)) &&
             (identical(other.gerdAvariVaTaalif, gerdAvariVaTaalif) || const DeepCollectionEquality().equals(other.gerdAvariVaTaalif, gerdAvariVaTaalif)) &&
             (identical(other.baMoqadameVaNezarat, baMoqadameVaNezarat) || const DeepCollectionEquality().equals(other.baMoqadameVaNezarat, baMoqadameVaNezarat)) &&
@@ -664,6 +672,8 @@ class BookDto {
       const DeepCollectionEquality().hash(discountPercentage) ^
       const DeepCollectionEquality().hash(physicalLink) ^
       const DeepCollectionEquality().hash(samplePdfLink) ^
+      const DeepCollectionEquality().hash(fehrestUrl) ^
+      const DeepCollectionEquality().hash(fehrestFile) ^
       const DeepCollectionEquality().hash(title) ^
       const DeepCollectionEquality().hash(description) ^
       const DeepCollectionEquality().hash(imageUrl) ^
@@ -727,6 +737,8 @@ extension $BookDtoExtension on BookDto {
       int? discountPercentage,
       String? physicalLink,
       String? samplePdfLink,
+      String? fehrestUrl,
+      String? fehrestFile,
       String? title,
       String? description,
       String? imageUrl,
@@ -764,7 +776,7 @@ extension $BookDtoExtension on BookDto {
       String? zamanMotalee,
       String? zaban,
       String? qeymatArzi,
-      String? qeymatChapi,
+      int? qeymatChapi,
       String? salEnteshar,
       int? rating,
       int? price,
@@ -786,6 +798,8 @@ extension $BookDtoExtension on BookDto {
         discountPercentage: discountPercentage ?? this.discountPercentage,
         physicalLink: physicalLink ?? this.physicalLink,
         samplePdfLink: samplePdfLink ?? this.samplePdfLink,
+        fehrestUrl: fehrestUrl ?? this.fehrestUrl,
+        fehrestFile: fehrestFile ?? this.fehrestFile,
         title: title ?? this.title,
         description: description ?? this.description,
         imageUrl: imageUrl ?? this.imageUrl,
@@ -847,6 +861,8 @@ extension $BookDtoExtension on BookDto {
       Wrapped<int?>? discountPercentage,
       Wrapped<String?>? physicalLink,
       Wrapped<String?>? samplePdfLink,
+      Wrapped<String?>? fehrestUrl,
+      Wrapped<String?>? fehrestFile,
       Wrapped<String?>? title,
       Wrapped<String?>? description,
       Wrapped<String?>? imageUrl,
@@ -884,7 +900,7 @@ extension $BookDtoExtension on BookDto {
       Wrapped<String?>? zamanMotalee,
       Wrapped<String?>? zaban,
       Wrapped<String?>? qeymatArzi,
-      Wrapped<String?>? qeymatChapi,
+      Wrapped<int?>? qeymatChapi,
       Wrapped<String?>? salEnteshar,
       Wrapped<int?>? rating,
       Wrapped<int?>? price,
@@ -910,6 +926,9 @@ extension $BookDtoExtension on BookDto {
             (physicalLink != null ? physicalLink.value : this.physicalLink),
         samplePdfLink:
             (samplePdfLink != null ? samplePdfLink.value : this.samplePdfLink),
+        fehrestUrl: (fehrestUrl != null ? fehrestUrl.value : this.fehrestUrl),
+        fehrestFile:
+            (fehrestFile != null ? fehrestFile.value : this.fehrestFile),
         title: (title != null ? title.value : this.title),
         description:
             (description != null ? description.value : this.description),
@@ -3584,6 +3603,7 @@ class ShopCardDto {
     this.totalPrice,
     this.rawPrice,
     this.userId,
+    this.walletAmount,
     this.shopCardItems,
     this.id,
   });
@@ -3600,6 +3620,8 @@ class ShopCardDto {
   final int? rawPrice;
   @JsonKey(name: 'userId', includeIfNull: false)
   final String? userId;
+  @JsonKey(name: 'walletAmount', includeIfNull: false)
+  final int? walletAmount;
   @JsonKey(
       name: 'shopCardItems',
       includeIfNull: false,
@@ -3621,6 +3643,9 @@ class ShopCardDto {
                     .equals(other.rawPrice, rawPrice)) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.walletAmount, walletAmount) ||
+                const DeepCollectionEquality()
+                    .equals(other.walletAmount, walletAmount)) &&
             (identical(other.shopCardItems, shopCardItems) ||
                 const DeepCollectionEquality()
                     .equals(other.shopCardItems, shopCardItems)) &&
@@ -3636,6 +3661,7 @@ class ShopCardDto {
       const DeepCollectionEquality().hash(totalPrice) ^
       const DeepCollectionEquality().hash(rawPrice) ^
       const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(walletAmount) ^
       const DeepCollectionEquality().hash(shopCardItems) ^
       const DeepCollectionEquality().hash(id) ^
       runtimeType.hashCode;
@@ -3646,12 +3672,14 @@ extension $ShopCardDtoExtension on ShopCardDto {
       {int? totalPrice,
       int? rawPrice,
       String? userId,
+      int? walletAmount,
       List<ShopCardItemDto>? shopCardItems,
       String? id}) {
     return ShopCardDto(
         totalPrice: totalPrice ?? this.totalPrice,
         rawPrice: rawPrice ?? this.rawPrice,
         userId: userId ?? this.userId,
+        walletAmount: walletAmount ?? this.walletAmount,
         shopCardItems: shopCardItems ?? this.shopCardItems,
         id: id ?? this.id);
   }
@@ -3660,12 +3688,15 @@ extension $ShopCardDtoExtension on ShopCardDto {
       {Wrapped<int?>? totalPrice,
       Wrapped<int?>? rawPrice,
       Wrapped<String?>? userId,
+      Wrapped<int?>? walletAmount,
       Wrapped<List<ShopCardItemDto>?>? shopCardItems,
       Wrapped<String?>? id}) {
     return ShopCardDto(
         totalPrice: (totalPrice != null ? totalPrice.value : this.totalPrice),
         rawPrice: (rawPrice != null ? rawPrice.value : this.rawPrice),
         userId: (userId != null ? userId.value : this.userId),
+        walletAmount:
+            (walletAmount != null ? walletAmount.value : this.walletAmount),
         shopCardItems:
             (shopCardItems != null ? shopCardItems.value : this.shopCardItems),
         id: (id != null ? id.value : this.id));
@@ -5193,6 +5224,7 @@ extension $ApiV1AuthenticationCompleteProfilePost$RequestBodyExtension
 @JsonSerializable(explicitToJson: true)
 class ApiV1BookAddPost$RequestBody {
   const ApiV1BookAddPost$RequestBody({
+    this.fehrestFile,
     this.imageFile,
     this.pdfFile,
   });
@@ -5203,6 +5235,8 @@ class ApiV1BookAddPost$RequestBody {
   static const toJsonFactory = _$ApiV1BookAddPost$RequestBodyToJson;
   Map<String, dynamic> toJson() => _$ApiV1BookAddPost$RequestBodyToJson(this);
 
+  @JsonKey(name: 'FehrestFile', includeIfNull: false)
+  final String? fehrestFile;
   @JsonKey(name: 'ImageFile', includeIfNull: false)
   final String? imageFile;
   @JsonKey(name: 'PdfFile', includeIfNull: false)
@@ -5213,6 +5247,9 @@ class ApiV1BookAddPost$RequestBody {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other is ApiV1BookAddPost$RequestBody &&
+            (identical(other.fehrestFile, fehrestFile) ||
+                const DeepCollectionEquality()
+                    .equals(other.fehrestFile, fehrestFile)) &&
             (identical(other.imageFile, imageFile) ||
                 const DeepCollectionEquality()
                     .equals(other.imageFile, imageFile)) &&
@@ -5225,6 +5262,7 @@ class ApiV1BookAddPost$RequestBody {
 
   @override
   int get hashCode =>
+      const DeepCollectionEquality().hash(fehrestFile) ^
       const DeepCollectionEquality().hash(imageFile) ^
       const DeepCollectionEquality().hash(pdfFile) ^
       runtimeType.hashCode;
@@ -5232,15 +5270,21 @@ class ApiV1BookAddPost$RequestBody {
 
 extension $ApiV1BookAddPost$RequestBodyExtension
     on ApiV1BookAddPost$RequestBody {
-  ApiV1BookAddPost$RequestBody copyWith({String? imageFile, String? pdfFile}) {
+  ApiV1BookAddPost$RequestBody copyWith(
+      {String? fehrestFile, String? imageFile, String? pdfFile}) {
     return ApiV1BookAddPost$RequestBody(
+        fehrestFile: fehrestFile ?? this.fehrestFile,
         imageFile: imageFile ?? this.imageFile,
         pdfFile: pdfFile ?? this.pdfFile);
   }
 
   ApiV1BookAddPost$RequestBody copyWithWrapped(
-      {Wrapped<String?>? imageFile, Wrapped<String?>? pdfFile}) {
+      {Wrapped<String?>? fehrestFile,
+      Wrapped<String?>? imageFile,
+      Wrapped<String?>? pdfFile}) {
     return ApiV1BookAddPost$RequestBody(
+        fehrestFile:
+            (fehrestFile != null ? fehrestFile.value : this.fehrestFile),
         imageFile: (imageFile != null ? imageFile.value : this.imageFile),
         pdfFile: (pdfFile != null ? pdfFile.value : this.pdfFile));
   }

@@ -18,6 +18,8 @@ class BookCardWidget extends StatefulWidget {
   final double bookRate;
   final String bookId;
   final int viewCont;
+  final String discountPrice;
+  final String discountCount;
   BookCardWidget(
       {super.key,
       required this.bookImage,
@@ -26,7 +28,9 @@ class BookCardWidget extends StatefulWidget {
       required this.bookWriter,
       required this.bookRate,
       required this.bookId,
-      required this.viewCont});
+      required this.viewCont,
+      required this.discountPrice,
+      required this.discountCount});
 
   @override
   State<BookCardWidget> createState() => _BookCardWidgetState();
@@ -84,7 +88,7 @@ class _BookCardWidgetState extends State<BookCardWidget> {
           );
         },
         child: Container(
-          height: 290,
+          height: 320,
           width: 180,
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
@@ -168,12 +172,12 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                     )
                   ]),
                   SizedBox(
-                    height: 80,
+                    height: 90,
                     child: Column(
                       crossAxisAlignment: getColumnAlignment(widget.bookName),
                       children: [
                         SizedBox(
-                          height: 30,
+                          height: 40,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -182,13 +186,13 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                                   widget.bookName.replaceAll("*", ""),
                                   textDirection:
                                       getTextDirection(widget.bookName),
-                                  minFontSize: 10,
+                                  minFontSize: 14,
                                   maxLines:
                                       2, // حداکثر تعداد خطوط را به 2 محدود می‌کنیم
                                   overflow: TextOverflow
                                       .ellipsis, // متن بیش از حد را با سه نقطه نشان می‌دهد
-                                  style: GoogleFonts.rubik(
-                                    fontSize: 12,
+                                  style: GoogleFonts.vazirmatn(
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                     color: primaryColor,
                                   ),
@@ -209,15 +213,15 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                                     : "",
                                 textDirection:
                                     getTextDirection(widget.bookWriter),
-                                minFontSize: 6,
+                                minFontSize: 10,
                                 maxLines:
                                     2, // حداکثر تعداد خطوط را به 2 محدود می‌کنیم
                                 overflow: TextOverflow
                                     .ellipsis, // متن بیش از حد را با سه نقطه نشان می‌دهد
-                                style: GoogleFonts.rubik(
-                                  fontSize: 10,
+                                style: GoogleFonts.vazirmatn(
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
+                                  color: Colors.grey.shade800,
                                 ),
                               ),
                             ),
@@ -276,6 +280,9 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                             textDirection: TextDirection.rtl,
                             widget.bookPrice.formatNumber().toPersianNumbers(),
                             style: GoogleFonts.vazirmatn(
+                              decoration: widget.discountCount != "0"
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey.shade800,
@@ -293,6 +300,38 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                       ],
                     ),
                   ),
+                  widget.discountCount != '0'
+                      ? Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 1.5),
+                                child: Text(
+                                  textDirection: TextDirection.rtl,
+                                  widget.discountPrice
+                                      .formatNumber()
+                                      .toPersianNumbers(),
+                                  style: GoogleFonts.vazirmatn(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                textDirection: TextDirection.rtl,
+                                ' تومان ',
+                                style: GoogleFonts.vazirmatn(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade800,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(horizontal: 5),
                   //   child: Row(
@@ -320,34 +359,36 @@ class _BookCardWidgetState extends State<BookCardWidget> {
             )),
       ),
       Visibility(
-        visible: discountVisible,
+        visible: widget.discountCount != "0" ? true : false,
         child: Positioned(
           child: Container(
             child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '20',
-                    style:
-                        GoogleFonts.aBeeZee(color: Colors.white, fontSize: 10),
-                  ),
-                  Text(
-                    '%',
-                    style:
-                        GoogleFonts.vazirmatn(color: Colors.white, fontSize: 8),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '%',
+                      style: GoogleFonts.vazirmatn(
+                          color: Colors.white, fontSize: 10),
+                    ),
+                    Text(
+                      widget.discountCount,
+                      style: GoogleFonts.aBeeZee(
+                          color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
               ),
             ),
-            width: 20,
             height: 27,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('lib/assets/images/discount.png'),
                     fit: BoxFit.fill)),
           ),
-          left: 35,
+          left: 17,
         ),
       )
     ]);

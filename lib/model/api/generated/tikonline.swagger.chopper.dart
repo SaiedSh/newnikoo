@@ -361,6 +361,7 @@ final class _$Tikonline extends Tikonline {
     int? discountPercentage,
     String? physicalLink,
     String? samplePdfLink,
+    String? fehrestUrl,
     String? title,
     String? description,
     String? imageUrl,
@@ -396,7 +397,7 @@ final class _$Tikonline extends Tikonline {
     String? zamanMotalee,
     String? zaban,
     String? qeymatArzi,
-    String? qeymatChapi,
+    int? qeymatChapi,
     String? salEnteshar,
     int? rating,
     int? price,
@@ -430,6 +431,7 @@ final class _$Tikonline extends Tikonline {
     List<BookReviewDto>? bookReviewss,
     List<BookCategoryDto>? bookCategories,
     String? id,
+    List<int>? FehrestFile,
     List<int>? ImageFile,
     List<int>? PdfFile,
   }) {
@@ -442,6 +444,7 @@ final class _$Tikonline extends Tikonline {
       'DiscountPercentage': discountPercentage,
       'PhysicalLink': physicalLink,
       'SamplePdfLink': samplePdfLink,
+      'FehrestUrl': fehrestUrl,
       'Title': title,
       'Description': description,
       'ImageUrl': imageUrl,
@@ -513,6 +516,10 @@ final class _$Tikonline extends Tikonline {
       'Id': id,
     };
     final List<PartValue> $parts = <PartValue>[
+      PartValueFile<List<int>?>(
+        'FehrestFile',
+        FehrestFile,
+      ),
       PartValueFile<List<int>?>(
         'ImageFile',
         ImageFile,
@@ -732,6 +739,43 @@ final class _$Tikonline extends Tikonline {
       'Status': status,
       'authority': authority,
       'SubId': subId,
+      'UserId': userId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<StringApiResult>> _apiV1PaymentShopCardPaymentPost(
+      {bool? wallet}) {
+    final Uri $url =
+        Uri.parse('https://api.tikonline.net/api/v1/Payment/ShopCardPayment');
+    final Map<String, dynamic> $params = <String, dynamic>{'Wallet': wallet};
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<StringApiResult, StringApiResult>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> _apiV1PaymentVerifyShopCardPaymentGet({
+    String? status,
+    String? authority,
+    String? userId,
+  }) {
+    final Uri $url = Uri.parse(
+        'https://api.tikonline.net/api/v1/Payment/VerifyShopCardPayment');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'Status': status,
+      'authority': authority,
       'UserId': userId,
     };
     final Request $request = Request(

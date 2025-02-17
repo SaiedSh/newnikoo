@@ -81,6 +81,8 @@ BookDto _$BookDtoFromJson(Map<String, dynamic> json) => BookDto(
       discountPercentage: (json['discountPercentage'] as num?)?.toInt(),
       physicalLink: json['physicalLink'] as String?,
       samplePdfLink: json['samplePdfLink'] as String?,
+      fehrestUrl: json['fehrestUrl'] as String?,
+      fehrestFile: json['fehrestFile'] as String?,
       title: json['title'] as String?,
       description: json['description'] as String?,
       imageUrl: json['imageUrl'] as String?,
@@ -118,7 +120,7 @@ BookDto _$BookDtoFromJson(Map<String, dynamic> json) => BookDto(
       zamanMotalee: json['zamanMotalee'] as String?,
       zaban: json['zaban'] as String?,
       qeymatArzi: json['qeymatArzi'] as String?,
-      qeymatChapi: json['qeymatChapi'] as String?,
+      qeymatChapi: (json['qeymatChapi'] as num?)?.toInt(),
       salEnteshar: json['salEnteshar'] as String?,
       rating: (json['rating'] as num?)?.toInt(),
       price: (json['price'] as num?)?.toInt(),
@@ -154,6 +156,8 @@ Map<String, dynamic> _$BookDtoToJson(BookDto instance) => <String, dynamic>{
         'discountPercentage': value,
       if (instance.physicalLink case final value?) 'physicalLink': value,
       if (instance.samplePdfLink case final value?) 'samplePdfLink': value,
+      if (instance.fehrestUrl case final value?) 'fehrestUrl': value,
+      if (instance.fehrestFile case final value?) 'fehrestFile': value,
       if (instance.title case final value?) 'title': value,
       if (instance.description case final value?) 'description': value,
       if (instance.imageUrl case final value?) 'imageUrl': value,
@@ -818,6 +822,7 @@ ShopCardDto _$ShopCardDtoFromJson(Map<String, dynamic> json) => ShopCardDto(
       totalPrice: (json['totalPrice'] as num?)?.toInt(),
       rawPrice: (json['rawPrice'] as num?)?.toInt(),
       userId: json['userId'] as String?,
+      walletAmount: (json['walletAmount'] as num?)?.toInt(),
       shopCardItems: (json['shopCardItems'] as List<dynamic>?)
               ?.map((e) => ShopCardItemDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -830,6 +835,7 @@ Map<String, dynamic> _$ShopCardDtoToJson(ShopCardDto instance) =>
       if (instance.totalPrice case final value?) 'totalPrice': value,
       if (instance.rawPrice case final value?) 'rawPrice': value,
       if (instance.userId case final value?) 'userId': value,
+      if (instance.walletAmount case final value?) 'walletAmount': value,
       if (instance.shopCardItems?.map((e) => e.toJson()).toList()
           case final value?)
         'shopCardItems': value,
@@ -1177,6 +1183,7 @@ Map<String, dynamic> _$ApiV1AuthenticationCompleteProfilePost$RequestBodyToJson(
 ApiV1BookAddPost$RequestBody _$ApiV1BookAddPost$RequestBodyFromJson(
         Map<String, dynamic> json) =>
     ApiV1BookAddPost$RequestBody(
+      fehrestFile: json['FehrestFile'] as String?,
       imageFile: json['ImageFile'] as String?,
       pdfFile: json['PdfFile'] as String?,
     );
@@ -1184,6 +1191,7 @@ ApiV1BookAddPost$RequestBody _$ApiV1BookAddPost$RequestBodyFromJson(
 Map<String, dynamic> _$ApiV1BookAddPost$RequestBodyToJson(
         ApiV1BookAddPost$RequestBody instance) =>
     <String, dynamic>{
+      if (instance.fehrestFile case final value?) 'FehrestFile': value,
       if (instance.imageFile case final value?) 'ImageFile': value,
       if (instance.pdfFile case final value?) 'PdfFile': value,
     };

@@ -6,6 +6,7 @@ import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/provider/wallet_payment.dart';
 import 'package:bookapp/controller/routes/routes.dart';
+import 'package:bookapp/controller/service/split_number.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/global/global.dart';
 import 'package:flutter/material.dart';
@@ -438,7 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               builder:
                                                   (context, value, child) =>
                                                       Text(
-                                                '${ProfileState.profile!.walletAmount.toString()} تومان',
+                                                '${ProfileState.profile!.walletAmount.toString().formatNumber()} تومان',
                                                 style: GoogleFonts.vazirmatn(
                                                     fontSize: 12,
                                                     color: Colors.grey.shade700,
@@ -1038,64 +1039,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Divider(),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, MyRoutes.myRatingScreen);
-                            },
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 4),
-                                      child: Image(
-                                        image: AssetImage(
-                                            'lib/assets/images/pmm.png'),
-                                        fit: BoxFit.fill,
-                                        width: 17,
-                                        height: 21,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      'نقد‌ها و امتیاز‌ها',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.grey,
-                                  size: 15,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
                         ),
                       ],
                     ),

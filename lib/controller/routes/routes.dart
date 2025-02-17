@@ -2,6 +2,7 @@ import 'package:bookapp/init_screen.dart';
 import 'package:bookapp/view/auth/login_screen.dart';
 import 'package:bookapp/view/auth/otp_screen.dart';
 import 'package:bookapp/view/book_detail/book_detail_screen.dart';
+import 'package:bookapp/view/book_detail/list_screen.dart';
 import 'package:bookapp/view/book_detail/pdf_screen.dart';
 import 'package:bookapp/view/buy/mybag_screen.dart';
 import 'package:bookapp/view/home/all_books.dart';
@@ -52,6 +53,7 @@ class MyRoutes {
   static const String searchFillterScreen = "/searchFillterScreen";
   static const String nikooRatingScreen = "/nikooRatingScreen";
   static const String questionScreen = "/questionScreen";
+  static const String listScreen = "/listScreen";
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -91,6 +93,17 @@ class MyRoutes {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (_, __, ___) => PdfScreen(
+            pdfLink: arg,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        );
+      case listScreen:
+        var arg = settings.arguments as String;
+        print(arg.toString() + " this");
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (_, __, ___) => ListScreen(
             pdfLink: arg,
           ),
           transitionsBuilder: (_, a, __, c) =>
