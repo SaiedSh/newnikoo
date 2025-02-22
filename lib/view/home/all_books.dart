@@ -1212,11 +1212,9 @@ class _AllBooksScreenState extends State<AllBooksScreen> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: BookCardWidget(
-                            discountCount: BookListState
-                                .books[index].discountPercentage
-                                .toString(),
-                            discountPrice: BookListState
-                                .books[index].discountPrice
+                            discountCount:
+                                "${((BookListState.books[index].price! - BookListState.books[index].totalPrice!) / BookListState.books[index].price! * 100).toStringAsFixed(0)}",
+                            discountPrice: BookListState.books[index].totalPrice
                                 .toString(),
                             viewCont: BookListState.books[index].viewCount!,
                             bookId: BookListState.books[index].id.toString(),

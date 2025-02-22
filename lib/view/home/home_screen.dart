@@ -637,12 +637,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'تازه ها',
-                      style: GoogleFonts.vazirmatn(
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
-                          fontSize: 16),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, MyRoutes.tazeHa,
+                            arguments: IndexItemsState.IndexLists!.freeBooks);
+                      },
+                      child: Text(
+                        'تازه ها',
+                        style: GoogleFonts.vazirmatn(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                            fontSize: 16),
+                      ),
                     ),
                   ],
                 ),
@@ -699,12 +705,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'پرفروش ها',
-                      style: GoogleFonts.vazirmatn(
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
-                          fontSize: 16),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, MyRoutes.porForoshHa,
+                            arguments:
+                                IndexItemsState.IndexLists!.mostViewedBooks);
+                      },
+                      child: Text(
+                        'پرفروش ها',
+                        style: GoogleFonts.vazirmatn(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                            fontSize: 16),
+                      ),
                     ),
                   ],
                 ),

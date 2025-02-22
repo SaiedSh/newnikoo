@@ -1,4 +1,5 @@
 import 'package:bookapp/init_screen.dart';
+import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/view/auth/login_screen.dart';
 import 'package:bookapp/view/auth/otp_screen.dart';
 import 'package:bookapp/view/book_detail/book_detail_screen.dart';
@@ -8,6 +9,8 @@ import 'package:bookapp/view/buy/mybag_screen.dart';
 import 'package:bookapp/view/home/all_books.dart';
 import 'package:bookapp/view/home/home_screen.dart';
 import 'package:bookapp/view/home/navigationbar_screen.dart';
+import 'package:bookapp/view/home/por_forosh/por_forosh.dart';
+import 'package:bookapp/view/home/taze_ha/taze_ha.dart';
 import 'package:bookapp/view/init_pages/page_two_screen.dart';
 import 'package:bookapp/view/init_pages/pageview_screen.dart';
 import 'package:bookapp/view/profile/edit_profile.dart';
@@ -54,6 +57,8 @@ class MyRoutes {
   static const String nikooRatingScreen = "/nikooRatingScreen";
   static const String questionScreen = "/questionScreen";
   static const String listScreen = "/listScreen";
+  static const String porForoshHa = "/porForoshHa";
+  static const String tazeHa = "/tazeHa";
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -262,6 +267,26 @@ class MyRoutes {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (_, __, ___) => SearchFillterScreen(),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        );
+      case porForoshHa:
+        var arg = settings.arguments as List<BookDto>;
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (_, __, ___) => PorForoshScreen(
+            bookDto: arg,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        );
+      case tazeHa:
+        var arg = settings.arguments as List<BookDto>;
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (_, __, ___) => TazeHa(
+            bookDto: arg,
+          ),
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
         );
