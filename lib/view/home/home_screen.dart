@@ -246,6 +246,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 45,
                           width: MediaQuery.of(context).size.width - 30,
                           child: TextField(
+                            style: GoogleFonts.vazirmatn(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                             controller: searchNumber,
                             onSubmitted: (value) {
                               searchAndFillter(
@@ -599,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 370,
+                height: 342,
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: Consumer<BookListState>(
@@ -632,16 +636,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, MyRoutes.tazeHa,
-                            arguments: IndexItemsState.IndexLists!.freeBooks);
-                      },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.tazeHa,
+                          arguments: IndexItemsState.IndexLists!.freeBooks);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
                       child: Text(
                         'تازه ها',
                         style: GoogleFonts.vazirmatn(
@@ -650,15 +654,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 16),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 20,
-              ),
+
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 370,
+                height: 342,
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: Consumer<IndexItemsState>(
@@ -700,17 +702,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, MyRoutes.porForoshHa,
-                            arguments:
-                                IndexItemsState.IndexLists!.mostViewedBooks);
-                      },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.porForoshHa,
+                          arguments:
+                              IndexItemsState.IndexLists!.mostViewedBooks);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
                       child: Text(
                         'پرفروش ها',
                         style: GoogleFonts.vazirmatn(
@@ -719,12 +721,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 16),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 20,
-              ),
+
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 370,

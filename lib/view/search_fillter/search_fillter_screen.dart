@@ -1,6 +1,5 @@
 import 'package:bookapp/controller/api/home_items/category_products.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
-import 'package:bookapp/controller/provider/book_list_state.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
 import 'package:bookapp/controller/provider/search_fillter_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
@@ -109,6 +108,10 @@ class _SearchFillterScreenState extends State<SearchFillterScreen> {
                           height: 45,
                           width: MediaQuery.of(context).size.width - 30,
                           child: TextField(
+                            style: GoogleFonts.vazirmatn(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                             controller: searchNumber,
                             onSubmitted: (value) {
                               context.read<SearchFillterState>().reset();
@@ -172,11 +175,10 @@ class _SearchFillterScreenState extends State<SearchFillterScreen> {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: BookCardWidget(
-                            discountCount: BookListState
-                                .books[index].discountPercentage
-                                .toString(),
-                            discountPrice: BookListState
-                                .books[index].discountPrice
+                            discountCount:
+                                "${((SearchFillterState.subscriptions[index].price! - SearchFillterState.subscriptions[index].totalPrice!) / SearchFillterState.subscriptions[index].price! * 100).toStringAsFixed(0)}",
+                            discountPrice: SearchFillterState
+                                .subscriptions[index].totalPrice
                                 .toString(),
                             viewCont: 0,
                             bookId: SearchFillterState.subscriptions[index].id

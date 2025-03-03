@@ -355,6 +355,7 @@ extension $BookCategoryDtoExtension on BookCategoryDto {
 class BookDto {
   const BookDto({
     this.code,
+    this.orderCount,
     this.niko,
     this.online,
     this.physical,
@@ -374,6 +375,7 @@ class BookDto {
     this.read,
     this.shelf,
     this.buy,
+    this.shopCard,
     this.nevisande,
     this.entesharat,
     this.motarjem,
@@ -424,6 +426,8 @@ class BookDto {
 
   @JsonKey(name: 'code', includeIfNull: false)
   final String? code;
+  @JsonKey(name: 'orderCount', includeIfNull: false)
+  final int? orderCount;
   @JsonKey(name: 'niko', includeIfNull: false)
   final bool? niko;
   @JsonKey(name: 'online', includeIfNull: false)
@@ -462,6 +466,8 @@ class BookDto {
   final bool? shelf;
   @JsonKey(name: 'buy', includeIfNull: false)
   final bool? buy;
+  @JsonKey(name: 'shopCard', includeIfNull: false)
+  final bool? shopCard;
   @JsonKey(name: 'nevisande', includeIfNull: false)
   final String? nevisande;
   @JsonKey(name: 'entesharat', includeIfNull: false)
@@ -557,6 +563,9 @@ class BookDto {
         (other is BookDto &&
             (identical(other.code, code) ||
                 const DeepCollectionEquality().equals(other.code, code)) &&
+            (identical(other.orderCount, orderCount) ||
+                const DeepCollectionEquality()
+                    .equals(other.orderCount, orderCount)) &&
             (identical(other.niko, niko) ||
                 const DeepCollectionEquality().equals(other.niko, niko)) &&
             (identical(other.online, online) ||
@@ -607,6 +616,9 @@ class BookDto {
                 const DeepCollectionEquality().equals(other.shelf, shelf)) &&
             (identical(other.buy, buy) ||
                 const DeepCollectionEquality().equals(other.buy, buy)) &&
+            (identical(other.shopCard, shopCard) ||
+                const DeepCollectionEquality()
+                    .equals(other.shopCard, shopCard)) &&
             (identical(other.nevisande, nevisande) ||
                 const DeepCollectionEquality()
                     .equals(other.nevisande, nevisande)) &&
@@ -618,12 +630,8 @@ class BookDto {
                     .equals(other.motarjem, motarjem)) &&
             (identical(other.moalef, moalef) ||
                 const DeepCollectionEquality().equals(other.moalef, moalef)) &&
-            (identical(other.zirNazar, zirNazar) ||
-                const DeepCollectionEquality()
-                    .equals(other.zirNazar, zirNazar)) &&
-            (identical(other.sarparastMotarjem, sarparastMotarjem) ||
-                const DeepCollectionEquality()
-                    .equals(other.sarparastMotarjem, sarparastMotarjem)) &&
+            (identical(other.zirNazar, zirNazar) || const DeepCollectionEquality().equals(other.zirNazar, zirNazar)) &&
+            (identical(other.sarparastMotarjem, sarparastMotarjem) || const DeepCollectionEquality().equals(other.sarparastMotarjem, sarparastMotarjem)) &&
             (identical(other.sarparastMoalef, sarparastMoalef) || const DeepCollectionEquality().equals(other.sarparastMoalef, sarparastMoalef)) &&
             (identical(other.baHamkari, baHamkari) || const DeepCollectionEquality().equals(other.baHamkari, baHamkari)) &&
             (identical(other.beKooshesh, beKooshesh) || const DeepCollectionEquality().equals(other.beKooshesh, beKooshesh)) &&
@@ -666,6 +674,7 @@ class BookDto {
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(code) ^
+      const DeepCollectionEquality().hash(orderCount) ^
       const DeepCollectionEquality().hash(niko) ^
       const DeepCollectionEquality().hash(online) ^
       const DeepCollectionEquality().hash(physical) ^
@@ -685,6 +694,7 @@ class BookDto {
       const DeepCollectionEquality().hash(read) ^
       const DeepCollectionEquality().hash(shelf) ^
       const DeepCollectionEquality().hash(buy) ^
+      const DeepCollectionEquality().hash(shopCard) ^
       const DeepCollectionEquality().hash(nevisande) ^
       const DeepCollectionEquality().hash(entesharat) ^
       const DeepCollectionEquality().hash(motarjem) ^
@@ -731,6 +741,7 @@ class BookDto {
 extension $BookDtoExtension on BookDto {
   BookDto copyWith(
       {String? code,
+      int? orderCount,
       bool? niko,
       bool? online,
       bool? physical,
@@ -750,6 +761,7 @@ extension $BookDtoExtension on BookDto {
       bool? read,
       bool? shelf,
       bool? buy,
+      bool? shopCard,
       String? nevisande,
       String? entesharat,
       String? motarjem,
@@ -792,6 +804,7 @@ extension $BookDtoExtension on BookDto {
       String? id}) {
     return BookDto(
         code: code ?? this.code,
+        orderCount: orderCount ?? this.orderCount,
         niko: niko ?? this.niko,
         online: online ?? this.online,
         physical: physical ?? this.physical,
@@ -811,6 +824,7 @@ extension $BookDtoExtension on BookDto {
         read: read ?? this.read,
         shelf: shelf ?? this.shelf,
         buy: buy ?? this.buy,
+        shopCard: shopCard ?? this.shopCard,
         nevisande: nevisande ?? this.nevisande,
         entesharat: entesharat ?? this.entesharat,
         motarjem: motarjem ?? this.motarjem,
@@ -855,6 +869,7 @@ extension $BookDtoExtension on BookDto {
 
   BookDto copyWithWrapped(
       {Wrapped<String?>? code,
+      Wrapped<int?>? orderCount,
       Wrapped<bool?>? niko,
       Wrapped<bool?>? online,
       Wrapped<bool?>? physical,
@@ -874,6 +889,7 @@ extension $BookDtoExtension on BookDto {
       Wrapped<bool?>? read,
       Wrapped<bool?>? shelf,
       Wrapped<bool?>? buy,
+      Wrapped<bool?>? shopCard,
       Wrapped<String?>? nevisande,
       Wrapped<String?>? entesharat,
       Wrapped<String?>? motarjem,
@@ -916,6 +932,7 @@ extension $BookDtoExtension on BookDto {
       Wrapped<String?>? id}) {
     return BookDto(
         code: (code != null ? code.value : this.code),
+        orderCount: (orderCount != null ? orderCount.value : this.orderCount),
         niko: (niko != null ? niko.value : this.niko),
         online: (online != null ? online.value : this.online),
         physical: (physical != null ? physical.value : this.physical),
@@ -941,6 +958,7 @@ extension $BookDtoExtension on BookDto {
         read: (read != null ? read.value : this.read),
         shelf: (shelf != null ? shelf.value : this.shelf),
         buy: (buy != null ? buy.value : this.buy),
+        shopCard: (shopCard != null ? shopCard.value : this.shopCard),
         nevisande: (nevisande != null ? nevisande.value : this.nevisande),
         entesharat: (entesharat != null ? entesharat.value : this.entesharat),
         motarjem: (motarjem != null ? motarjem.value : this.motarjem),

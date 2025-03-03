@@ -107,6 +107,10 @@ class _PorForoshScreenState extends State<PorForoshScreen> {
                         height: 45,
                         width: MediaQuery.of(context).size.width - 30,
                         child: TextField(
+                          style: GoogleFonts.vazirmatn(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
                           controller: searchNumber,
                           onSubmitted: (value) {
                             searchAndFillter(

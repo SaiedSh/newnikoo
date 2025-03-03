@@ -945,6 +945,14 @@
             }
           },
           {
+            "name": "OrderCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "Niko",
             "in": "query",
             "schema": {
@@ -1052,6 +1060,13 @@
           },
           {
             "name": "Buy",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ShopCard",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -3053,6 +3068,10 @@
             "type": "string",
             "nullable": true
           },
+          "orderCount": {
+            "type": "integer",
+            "format": "int32"
+          },
           "niko": {
             "type": "boolean"
           },
@@ -3123,6 +3142,9 @@
             "type": "boolean"
           },
           "buy": {
+            "type": "boolean"
+          },
+          "shopCard": {
             "type": "boolean"
           },
           "nevisande": {

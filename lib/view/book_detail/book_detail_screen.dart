@@ -38,6 +38,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     // TODO: implement initState
     super.initState();
     _loadBookDetails();
+
     // getBookDetails(context: context, bookId: widget.bookId).then(
     //   (value) {
     //     url = BookDetailState.bookDetail!.imageUrl.toString();
@@ -81,8 +82,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       await getBookDetails(context: context, bookId: widget.bookId);
 
       if (BookDetailState.bookDetail != null) {
+        BookDetailState.bookDetail!.like == true ? saveVisible = false : true;
         // مقداردهی به URL تصویر
         url = BookDetailState.bookDetail!.imageUrl.toString();
+        BookDetailState.bookDetail!.shopCard == true
+            ? shopCardVisible = false
+            : true;
 
         // بارگذاری تصویر کش شده
         setState(() {
@@ -250,6 +255,10 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           height: 45,
                           width: MediaQuery.of(context).size.width - 30,
                           child: TextField(
+                            style: GoogleFonts.vazirmatn(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                             controller: searchNumber,
                             onSubmitted: (value) {
                               searchAndFillter(
@@ -490,7 +499,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                               BookDetailState.bookDetail!.id,
                                           st: SaveType.like);
                                     },
-                                    child: Icon(Icons.bookmark),
+                                    child: Icon(Icons.bookmark_outline),
                                   ),
                                   replacement: InkWell(
                                     onTap: () {
@@ -504,7 +513,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           st: SaveType.like);
                                     },
                                     child: Icon(
-                                      Icons.bookmark_outline,
+                                      Icons.bookmark,
                                       size: 28,
                                     ),
                                   ),
@@ -636,8 +645,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                             style: GoogleFonts.vazirmatn(
                                                 decoration: BookDetailState
                                                             .bookDetail!
-                                                            .discountPrice !=
-                                                        0
+                                                            .totalPrice !=
+                                                        BookDetailState
+                                                            .bookDetail!.price
                                                     ? TextDecoration.lineThrough
                                                     : TextDecoration.none,
                                                 fontWeight: FontWeight.bold,
@@ -656,7 +666,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                       ),
                                     ],
                                   ),
-                                  BookDetailState.bookDetail!.discountPrice != 0
+                                  BookDetailState.bookDetail!.totalPrice !=
+                                          BookDetailState.bookDetail!.price
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -900,12 +911,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                       .then(
                                                     (value) {
                                                       setState(() {
+                                                        BookDetailState
+                                                                .bookDetail!
+                                                                .shopCard ==
+                                                            true;
                                                         loadingVisible = true;
                                                         shopCardVisible = false;
                                                         ScaffoldMessenger.of(
                                                                 context)
                                                             .showSnackBar(
                                                           SnackBar(
+                                                            duration: Duration(
+                                                                seconds: 1),
                                                             content: Text(
                                                                 style: GoogleFonts.vazirmatn(
                                                                     fontWeight:

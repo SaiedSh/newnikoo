@@ -639,11 +639,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   itemBuilder: (context, index) => Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: BookCardWidget(
-                                      discountCount: ProductsState
-                                          .books[index].discountPercentage
-                                          .toString(),
+                                      discountCount:
+                                          "${((ProductsState.books[index].price! - ProductsState.books[index].totalPrice!) / ProductsState.books[index].price! * 100).toStringAsFixed(0)}",
                                       discountPrice: ProductsState
-                                          .books[index].discountPrice
+                                          .books[index].totalPrice
                                           .toString(),
                                       viewCont:
                                           ProductsState.books[index].viewCount!,

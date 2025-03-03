@@ -355,6 +355,7 @@ final class _$Tikonline extends Tikonline {
   @override
   Future<Response<ApiResult>> _apiV1BookAddPost({
     String? code,
+    int? orderCount,
     bool? niko,
     bool? online,
     bool? physical,
@@ -371,6 +372,7 @@ final class _$Tikonline extends Tikonline {
     bool? read,
     bool? shelf,
     bool? buy,
+    bool? shopCard,
     String? nevisande,
     String? entesharat,
     String? motarjem,
@@ -438,6 +440,7 @@ final class _$Tikonline extends Tikonline {
     final Uri $url = Uri.parse('https://api.tikonline.net/api/v1/Book/Add');
     final Map<String, dynamic> $params = <String, dynamic>{
       'Code': code,
+      'OrderCount': orderCount,
       'Niko': niko,
       'Online': online,
       'Physical': physical,
@@ -454,6 +457,7 @@ final class _$Tikonline extends Tikonline {
       'Read': read,
       'Shelf': shelf,
       'Buy': buy,
+      'ShopCard': shopCard,
       'Nevisande': nevisande,
       'Entesharat': entesharat,
       'Motarjem': motarjem,

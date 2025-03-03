@@ -75,6 +75,7 @@ Map<String, dynamic> _$BookCategoryDtoToJson(BookCategoryDto instance) =>
 
 BookDto _$BookDtoFromJson(Map<String, dynamic> json) => BookDto(
       code: json['code'] as String?,
+      orderCount: (json['orderCount'] as num?)?.toInt(),
       niko: json['niko'] as bool?,
       online: json['online'] as bool?,
       physical: json['physical'] as bool?,
@@ -94,6 +95,7 @@ BookDto _$BookDtoFromJson(Map<String, dynamic> json) => BookDto(
       read: json['read'] as bool?,
       shelf: json['shelf'] as bool?,
       buy: json['buy'] as bool?,
+      shopCard: json['shopCard'] as bool?,
       nevisande: json['nevisande'] as String?,
       entesharat: json['entesharat'] as String?,
       motarjem: json['motarjem'] as String?,
@@ -149,6 +151,7 @@ BookDto _$BookDtoFromJson(Map<String, dynamic> json) => BookDto(
 
 Map<String, dynamic> _$BookDtoToJson(BookDto instance) => <String, dynamic>{
       if (instance.code case final value?) 'code': value,
+      if (instance.orderCount case final value?) 'orderCount': value,
       if (instance.niko case final value?) 'niko': value,
       if (instance.online case final value?) 'online': value,
       if (instance.physical case final value?) 'physical': value,
@@ -169,6 +172,7 @@ Map<String, dynamic> _$BookDtoToJson(BookDto instance) => <String, dynamic>{
       if (instance.read case final value?) 'read': value,
       if (instance.shelf case final value?) 'shelf': value,
       if (instance.buy case final value?) 'buy': value,
+      if (instance.shopCard case final value?) 'shopCard': value,
       if (instance.nevisande case final value?) 'nevisande': value,
       if (instance.entesharat case final value?) 'entesharat': value,
       if (instance.motarjem case final value?) 'motarjem': value,

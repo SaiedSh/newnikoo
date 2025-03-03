@@ -451,6 +451,7 @@ abstract class Tikonline extends ChopperService {
 
   ///
   ///@param Code
+  ///@param OrderCount
   ///@param Niko
   ///@param Online
   ///@param Physical
@@ -467,6 +468,7 @@ abstract class Tikonline extends ChopperService {
   ///@param Read
   ///@param Shelf
   ///@param Buy
+  ///@param ShopCard
   ///@param Nevisande
   ///@param Entesharat
   ///@param Motarjem
@@ -529,6 +531,7 @@ abstract class Tikonline extends ChopperService {
   ///@param Id
   Future<chopper.Response<ApiResult>> apiV1BookAddPost({
     String? code,
+    int? orderCount,
     bool? niko,
     bool? online,
     bool? physical,
@@ -545,6 +548,7 @@ abstract class Tikonline extends ChopperService {
     bool? read,
     bool? shelf,
     bool? buy,
+    bool? shopCard,
     String? nevisande,
     String? entesharat,
     String? motarjem,
@@ -613,6 +617,7 @@ abstract class Tikonline extends ChopperService {
 
     return _apiV1BookAddPost(
         code: code,
+        orderCount: orderCount,
         niko: niko,
         online: online,
         physical: physical,
@@ -629,6 +634,7 @@ abstract class Tikonline extends ChopperService {
         read: read,
         shelf: shelf,
         buy: buy,
+        shopCard: shopCard,
         nevisande: nevisande,
         entesharat: entesharat,
         motarjem: motarjem,
@@ -696,6 +702,7 @@ abstract class Tikonline extends ChopperService {
 
   ///
   ///@param Code
+  ///@param OrderCount
   ///@param Niko
   ///@param Online
   ///@param Physical
@@ -712,6 +719,7 @@ abstract class Tikonline extends ChopperService {
   ///@param Read
   ///@param Shelf
   ///@param Buy
+  ///@param ShopCard
   ///@param Nevisande
   ///@param Entesharat
   ///@param Motarjem
@@ -779,6 +787,7 @@ abstract class Tikonline extends ChopperService {
   @Multipart()
   Future<chopper.Response<ApiResult>> _apiV1BookAddPost({
     @Query('Code') String? code,
+    @Query('OrderCount') int? orderCount,
     @Query('Niko') bool? niko,
     @Query('Online') bool? online,
     @Query('Physical') bool? physical,
@@ -795,6 +804,7 @@ abstract class Tikonline extends ChopperService {
     @Query('Read') bool? read,
     @Query('Shelf') bool? shelf,
     @Query('Buy') bool? buy,
+    @Query('ShopCard') bool? shopCard,
     @Query('Nevisande') String? nevisande,
     @Query('Entesharat') String? entesharat,
     @Query('Motarjem') String? motarjem,
