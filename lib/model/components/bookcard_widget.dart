@@ -303,33 +303,47 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                   widget.discountCount != '0'
                       ? Directionality(
                           textDirection: TextDirection.rtl,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 1.5),
-                                child: Text(
-                                  textDirection: TextDirection.rtl,
-                                  widget.discountPrice
-                                      .formatNumber()
-                                      .toPersianNumbers(),
-                                  style: GoogleFonts.vazirmatn(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey.shade800,
-                                  ),
+                          child: widget.discountPrice != "0"
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1.5),
+                                      child: Text(
+                                        textDirection: TextDirection.rtl,
+                                        widget.discountPrice
+                                            .formatNumber()
+                                            .toPersianNumbers(),
+                                        style: GoogleFonts.vazirmatn(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      textDirection: TextDirection.rtl,
+                                      ' تومان ',
+                                      style: GoogleFonts.vazirmatn(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      textDirection: TextDirection.rtl,
+                                      ' رایگان ',
+                                      style: GoogleFonts.vazirmatn(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade800,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text(
-                                textDirection: TextDirection.rtl,
-                                ' تومان ',
-                                style: GoogleFonts.vazirmatn(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade800,
-                                ),
-                              ),
-                            ],
-                          ),
                         )
                       : SizedBox.shrink(),
                   // Padding(
@@ -371,12 +385,16 @@ class _BookCardWidgetState extends State<BookCardWidget> {
                     Text(
                       '%',
                       style: GoogleFonts.vazirmatn(
-                          color: Colors.white, fontSize: 10),
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       widget.discountCount,
-                      style: GoogleFonts.aBeeZee(
-                          color: Colors.white, fontSize: 10),
+                      style: GoogleFonts.vazirmatn(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

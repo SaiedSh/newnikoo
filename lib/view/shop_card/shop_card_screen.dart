@@ -171,7 +171,7 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3)),
                 onPressed: () async {
-                  ProfileState.profile!.walletAmount! >
+                  ProfileState.profile!.walletAmount! >=
                           ShopCardState.shopCardList!.totalPrice!
                       ? showDialog(
                           context: context,

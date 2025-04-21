@@ -33,6 +33,9 @@ class BookDetailScreen extends StatefulWidget {
 class _BookDetailScreenState extends State<BookDetailScreen> {
   Future<File>? _cachedImageFuture;
   bool isLoading = true;
+  // bool saveDone = false;
+  // bool shelfDone = false;
+  // bool readDone = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -672,26 +675,61 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            Text(
-                                              textDirection: TextDirection.rtl,
-                                              BookDetailState
-                                                  .bookDetail!.totalPrice
-                                                  .toString()
-                                                  .toPersianNumbers()
-                                                  .formatNumber(),
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color: Colors.black),
-                                            ),
-                                            Text(
-                                              textDirection: TextDirection.rtl,
-                                              ' تومان ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12,
-                                                  color: Colors.black),
-                                            ),
+                                            BookDetailState.bookDetail!
+                                                        .totalPrice !=
+                                                    0
+                                                ? Row(
+                                                    children: [
+                                                      Text(
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        BookDetailState
+                                                            .bookDetail!
+                                                            .totalPrice
+                                                            .toString()
+                                                            .toPersianNumbers()
+                                                            .formatNumber(),
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black),
+                                                      ),
+                                                      Text(
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        ' تومان ',
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .black),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      Text(
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        ' رایگان ',
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .black),
+                                                      ),
+                                                    ],
+                                                  ),
                                           ],
                                         )
                                       : SizedBox.shrink(),
@@ -826,10 +864,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                 .toString());
                                       },
                                     ),
-                                    visible:
-                                        BookDetailState.bookDetail!.buy == true
-                                            ? false
-                                            : true,
+                                    visible: BookDetailState.bookDetail!.buy ==
+                                                true ||
+                                            BookDetailState
+                                                    .bookDetail!.totalPrice ==
+                                                0
+                                        ? false
+                                        : true,
                                     child: Column(
                                       children: [
                                         IgnorePointer(
@@ -1264,7 +1305,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                               fontSize: 12),
                                         ),
                                         SizedBox(
-                                          width: 0,
+                                          width: 1,
                                         ),
                                         Text(
                                           'مگابایت',
@@ -2140,11 +2181,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      'مطالعه شده',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'مطالعه شده',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11),
+                                        ),
+                                        BookDetailState.bookDetail!.read == true
+                                            ? Icon(
+                                                Icons.done,
+                                                size: 12,
+                                              )
+                                            : SizedBox.shrink()
+                                      ],
                                     )
                                   ],
                                 ),
@@ -2179,11 +2232,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      'نشان شده',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'نشان شده',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11),
+                                        ),
+                                        BookDetailState.bookDetail!.like == true
+                                            ? Icon(
+                                                Icons.done,
+                                                size: 12,
+                                              )
+                                            : SizedBox.shrink()
+                                      ],
                                     )
                                   ],
                                 ),
@@ -2209,11 +2274,24 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      'کتابخانه',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'کتابخانه',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11),
+                                        ),
+                                        BookDetailState.bookDetail!.shelf ==
+                                                true
+                                            ? Icon(
+                                                Icons.done,
+                                                size: 12,
+                                              )
+                                            : SizedBox.shrink()
+                                      ],
                                     )
                                   ],
                                 ),
