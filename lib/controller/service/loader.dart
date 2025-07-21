@@ -7,6 +7,7 @@ class Loader {
     showDialog(
       context: context,
       builder: (context) => const AlertDialog.adaptive(
+        backgroundColor: Colors.transparent,
         content: SizedBox(
           height: 100,
           child: Padding(

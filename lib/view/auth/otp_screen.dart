@@ -11,7 +11,11 @@ import '../../controller/api/auth/login_controller_post.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phonenumber;
-  OtpScreen({super.key, required this.phonenumber});
+
+  OtpScreen({
+    super.key,
+    required this.phonenumber,
+  });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -23,7 +27,7 @@ class _OtpScreenState extends State<OtpScreen> {
   DateTime dateTime = DateTime.now();
 
   Timer? _timer;
-
+  bool visible = true;
   int _start = 60;
   // Set the initial countdown value (30 seconds)
   @override
@@ -39,7 +43,13 @@ class _OtpScreenState extends State<OtpScreen> {
       (Timer timer) {
         if (_start == 0) {
           setState(() {
-            timer.cancel(); // Stop the timer when countdown is finished
+            timer.cancel();
+
+            setState(() {
+              visible = false;
+              _start = 60;
+            });
+            // Stop the timer when countdown is finished
           });
         } else {
           setState(() {
@@ -139,50 +149,99 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                       ),
                     )),
-                SizedBox(
-                  width: 300,
-                  height: 45,
-                  child: RawMaterialButton(
-                    fillColor: secondaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$_start ثانیه',
-                              style: GoogleFonts.vazirmatn(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'تا پایان اعتبار کد',
-                              style: GoogleFonts.vazirmatn(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ],
+                Visibility(
+                  replacement: SizedBox(
+                    width: 300,
+                    height: 45,
+                    child: RawMaterialButton(
+                      fillColor: secondaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'ارسال مجدد',
+                                style: GoogleFonts.vazirmatn(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () async {
-                      loginOtp(
-                        context: context,
-                        body: TempUserDto(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      onPressed: () {
+                        setState(() {
+                          visible = true;
+                          startTimer();
+                        });
+                        login(
                           phoneNumber: widget.phonenumber,
-                          otp: otp.text,
+                          context: context,
+                        );
+
+                        // loginOtp(
+                        //   route: widget.route!,
+                        //   context: context,
+                        //   body: TempUserDto(
+                        //     phoneNumber: widget.phonenumber,
+                        //     otp: otp.text,
+                        //   ),
+                        // );
+                      },
+                    ),
+                  ),
+                  visible: visible,
+                  child: SizedBox(
+                    width: 300,
+                    height: 45,
+                    child: RawMaterialButton(
+                      fillColor: secondaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '$_start ثانیه',
+                                style: GoogleFonts.vazirmatn(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'تا پایان اعتبار کد',
+                                style: GoogleFonts.vazirmatn(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    },
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      onPressed: () async {
+                        loginOtp(
+                          context: context,
+                          body: TempUserDto(
+                            phoneNumber: widget.phonenumber,
+                            otp: otp.text,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 )
               ],

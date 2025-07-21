@@ -2,6 +2,7 @@ import 'package:bookapp/controller/api/home_items/category_products.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/book_saved_state.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
+import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/global/global.dart';
@@ -34,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
       },
       child: Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(120),
+            preferredSize: Size.fromHeight(110),
             child: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: backgroundColor,
@@ -46,8 +47,11 @@ class _MainScreenState extends State<MainScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 25,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 30),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -61,23 +65,69 @@ class _MainScreenState extends State<MainScreen> {
                                     icon: Image(
                                       image: AssetImage(
                                           'lib/assets/images/miniicon.png'),
-                                      width: 15,
+                                      width: 17,
                                     )),
                                 SizedBox(
                                   height: 20,
                                   width: 1,
                                   child: VerticalDivider(),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, MyRoutes.shopCardScreen);
-                                    },
-                                    icon: Image(
-                                      image: AssetImage(
-                                          'lib/assets/images/handbag.png'),
-                                      width: 15,
-                                    )),
+                                Consumer<ShopCardState>(
+                                  builder: (context, cartProvider, child) {
+                                    int itemCount = 0;
+
+                                    if (ShopCardState.shopCardList != null &&
+                                        ShopCardState
+                                                .shopCardList!.shopCardItems !=
+                                            null) {
+                                      itemCount = ShopCardState
+                                          .shopCardList!.shopCardItems!.length;
+                                    }
+
+                                    return Stack(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () async {
+                                            Navigator.pushNamed(context,
+                                                MyRoutes.shopCardScreen);
+                                          },
+                                          icon: Image.asset(
+                                            'lib/assets/images/handbag.png',
+                                            width: 17,
+                                          ),
+                                        ),
+                                        if (itemCount > 0)
+                                          Positioned(
+                                            right: 4,
+                                            top: 4,
+                                            child: Container(
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                minWidth: 16,
+                                                minHeight: 16,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10.5,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                             Padding(
@@ -102,6 +152,9 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ],
                         ),
+                      ),
+                      SizedBox(
+                        height: 5,
                       ),
                       Directionality(
                         textDirection: TextDirection.rtl,
@@ -228,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'خوانده شده',
+                        'مطالعه ی من',
                         style: GoogleFonts.vazirmatn(
                           color: Colors.white,
                           fontSize: 20,

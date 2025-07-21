@@ -1421,6 +1421,27 @@ abstract class Tikonline extends ChopperService {
     @Query('Id') String? id,
     @PartFile() List<int>? UserAvatarFile,
   });
+
+  ///
+  ///@param u
+  ///@param p
+  Future<chopper.Response<ApiResult>> apiV1UserChangePassGet({
+    String? u,
+    String? p,
+  }) {
+    generatedMapping.putIfAbsent(ApiResult, () => ApiResult.fromJsonFactory);
+
+    return _apiV1UserChangePassGet(u: u, p: p);
+  }
+
+  ///
+  ///@param u
+  ///@param p
+  @Get(path: 'https://api.tikonline.net/api/v1/User/ChangePass')
+  Future<chopper.Response<ApiResult>> _apiV1UserChangePassGet({
+    @Query('u') String? u,
+    @Query('p') String? p,
+  });
 }
 
 typedef $JsonFactory<T> = T Function(Map<String, dynamic> json);

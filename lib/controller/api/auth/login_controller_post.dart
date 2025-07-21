@@ -1,3 +1,5 @@
+import 'package:bookapp/controller/api/payment/shop_card/get_shopcard_list.dart'
+    show getShopCardList;
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.swagger.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,7 @@ Future<AccessToken> loginOtp({
     final response = AccessToken.fromJson(postResult.body!.toJson());
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setString("accessToken", response.accessToken.toString());
+    getShopCardList(context: context);
 
     Navigator.pushNamed(context, MyRoutes.navigationBarScreen);
   } else if (postResult.statusCode == 401) {
@@ -71,11 +74,10 @@ Future<AccessToken> loginOtp({
     );
   } else {
     QuickAlert.show(
-      context: context,
-      type: QuickAlertType.error,
-      title: 'Oops...',
-      text: postResult.error.toString(),
-    );
+        context: context,
+        type: QuickAlertType.error,
+        title: 'کد وارد شده اشتباه است',
+        confirmBtnText: 'باشه');
   }
   final response = AccessToken.fromJson(postResult.body!.toJson());
 

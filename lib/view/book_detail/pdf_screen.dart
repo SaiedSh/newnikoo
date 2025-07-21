@@ -39,6 +39,8 @@ class _PdfScreenState extends State<PdfScreen> {
     }
   }
 
+  final ValueNotifier<int> totalPagesNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(1);
   Future<String> _getCachedPdfFile(String url) async {
     // استفاده از cache manager برای دانلود و کش کردن فایل
     var file = await DefaultCacheManager().getSingleFile(url);
@@ -89,7 +91,7 @@ class _PdfScreenState extends State<PdfScreen> {
     super.dispose();
   }
 
-  final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(1);
+  // final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(1);
   late int totalPages = 0;
   void _goToBookmark(int page) {
     _pdfViewerController.jumpToPage(page);
@@ -163,6 +165,64 @@ class _PdfScreenState extends State<PdfScreen> {
     );
   }
 
+  void _showAllNotes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys();
+
+    final fileKeyPrefix = '${widget.pdfLink}_page';
+    final notes = keys.where((key) => key.startsWith(fileKeyPrefix)).toList();
+
+    if (notes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('هیچ یادداشتی برای این فایل ثبت نشده')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: Text('یادداشت‌های این فایل',
+                style: GoogleFonts.vazirmatn(fontWeight: FontWeight.bold)),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  final key = notes[index];
+                  final note = prefs.getString(key) ?? '';
+                  final page = key.split('_page').last.split('_').first;
+
+                  return ListTile(
+                    leading: Icon(Icons.note),
+                    title: Text('صفحه $page',
+                        style: GoogleFonts.vazirmatn(fontSize: 14)),
+                    subtitle:
+                        Text(note, style: GoogleFonts.vazirmatn(fontSize: 12)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pdfViewerController.jumpToPage(int.parse(page));
+                    },
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('بستن'),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   // نمایش یادداشت‌های صفحه فعلی
   void _showNoteForPage(int page) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -211,16 +271,28 @@ class _PdfScreenState extends State<PdfScreen> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.note_add),
+            tooltip: 'افزودن یادداشت به این صفحه',
             onPressed: () {
               _addNoteToPage(_pdfViewerController.pageNumber ?? 1);
             },
           ),
           IconButton(
-            icon: Icon(Icons.note),
-            onPressed: () {
-              _showNoteForPage(_pdfViewerController.pageNumber ?? 1);
-            },
+            icon: Icon(Icons.sticky_note_2_outlined),
+            tooltip: 'مشاهده همه یادداشت‌ها',
+            onPressed: _showAllNotes,
           ),
+          // IconButton(
+          //   icon: Icon(Icons.note_add),
+          //   onPressed: () {
+          //     _addNoteToPage(_pdfViewerController.pageNumber ?? 1);
+          //   },
+          // ),
+          // IconButton(
+          //   icon: Icon(Icons.note),
+          //   onPressed: () {
+          //     _showNoteForPage(_pdfViewerController.pageNumber ?? 1);
+          //   },
+          // ),
           IconButton(
             icon: Icon(Icons.bookmarks),
             onPressed: () {
@@ -235,8 +307,7 @@ class _PdfScreenState extends State<PdfScreen> {
           ),
           IconButton(
             icon: Icon(
-              Icons.directions,
-              color: Colors.black,
+              Icons.menu_book,
             ),
             onPressed: () {
               setState(() {
@@ -254,6 +325,12 @@ class _PdfScreenState extends State<PdfScreen> {
               return Stack(
                 children: [
                   SfPdfViewer.file(
+                    onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                      totalPagesNotifier.value = details.document.pages.count;
+                      currentPageNotifier.value =
+                          _pdfViewerController.pageNumber;
+                      _loadSavedPage();
+                    },
                     canShowPaginationDialog: true,
                     canShowScrollHead: true,
                     canShowScrollStatus: true,
@@ -263,37 +340,45 @@ class _PdfScreenState extends State<PdfScreen> {
                     scrollDirection: isVertical
                         ? PdfScrollDirection.vertical
                         : PdfScrollDirection.horizontal,
-                    onPageChanged: (details) {
-                      _saveCurrentPage(details.newPageNumber);
+                    onPageChanged: (PdfPageChangedDetails details) {
                       currentPageNotifier.value = details.newPageNumber;
-                      totalPages = _pdfViewerController.pageCount;
-                      // setState(() {
-                      //   currentPage = details.newPageNumber;
-                      // });
+                      _saveCurrentPage(details.newPageNumber);
                     },
                   ),
                   Positioned(
                     bottom: 16,
                     right: 0,
                     child: ValueListenableBuilder<int>(
-                      valueListenable: currentPageNotifier,
-                      builder: (context, currentPage, _) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade400,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20)),
-                          ),
-                          child: Text(
-                            'صفحه $currentPage از ${totalPages ?? 0}',
-                            style: GoogleFonts.vazirmatn(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
+                      valueListenable: totalPagesNotifier,
+                      builder: (context, totalPages, _) {
+                        return ValueListenableBuilder<int>(
+                          valueListenable: currentPageNotifier,
+                          builder: (context, currentPage, _) {
+                            String pageText =
+                                (totalPages == 0 || currentPage == 0)
+                                    ? 'در حال بارگذاری...'
+                                    : 'صفحه $currentPage از $totalPages';
+
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade400,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20),
+                                ),
+                              ),
+                              child: Text(
+                                pageText,
+                                style: GoogleFonts.vazirmatn(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

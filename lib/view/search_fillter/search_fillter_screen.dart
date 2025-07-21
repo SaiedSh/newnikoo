@@ -2,6 +2,7 @@ import 'package:bookapp/controller/api/home_items/category_products.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
 import 'package:bookapp/controller/provider/search_fillter_state.dart';
+import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/components/bookcard_widget.dart';
@@ -21,6 +22,13 @@ class SearchFillterScreen extends StatefulWidget {
 TextEditingController searchNumber = TextEditingController();
 
 class _SearchFillterScreenState extends State<SearchFillterScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchNumber.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,13 +67,62 @@ class _SearchFillterScreenState extends State<SearchFillterScreen> {
                                 width: 1,
                                 child: VerticalDivider(),
                               ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Image(
-                                    image: AssetImage(
-                                        'lib/assets/images/handbag.png'),
-                                    width: 15,
-                                  )),
+                              Consumer<ShopCardState>(
+                                builder: (context, cartProvider, child) {
+                                  int itemCount = 0;
+
+                                  if (ShopCardState.shopCardList != null &&
+                                      ShopCardState
+                                              .shopCardList!.shopCardItems !=
+                                          null) {
+                                    itemCount = ShopCardState
+                                        .shopCardList!.shopCardItems!.length;
+                                  }
+
+                                  return Stack(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          Navigator.pushNamed(
+                                              context, MyRoutes.shopCardScreen);
+                                        },
+                                        icon: Image.asset(
+                                          'lib/assets/images/handbag.png',
+                                          width: 17,
+                                        ),
+                                      ),
+                                      if (itemCount > 0)
+                                        Positioned(
+                                          right: 4,
+                                          top: 4,
+                                          child: Container(
+                                            padding: EdgeInsets.all(2),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            constraints: BoxConstraints(
+                                              minWidth: 16,
+                                              minHeight: 16,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10.5,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ],
                           ),
                           Padding(
@@ -160,69 +217,80 @@ class _SearchFillterScreenState extends State<SearchFillterScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Center(
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height - 160,
-                    width: MediaQuery.of(context).size.width - 40,
-                    child: Consumer<SearchFillterState>(
-                      builder: (context, value, child) => GridView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: SearchFillterState.subscriptions.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 0.5, crossAxisCount: 2),
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: BookCardWidget(
-                            discountCount:
-                                "${((SearchFillterState.subscriptions[index].price! - SearchFillterState.subscriptions[index].totalPrice!) / SearchFillterState.subscriptions[index].price! * 100).toStringAsFixed(0)}",
-                            discountPrice: SearchFillterState
-                                .subscriptions[index].totalPrice
-                                .toString(),
-                            viewCont: 0,
-                            bookId: SearchFillterState.subscriptions[index].id
-                                .toString(),
-                            bookWriter: SearchFillterState
-                                        .subscriptions[index].nevisande !=
-                                    null
-                                ? SearchFillterState
-                                    .subscriptions[index].nevisande
-                                    .toString()
-                                : "",
-                            bookRate: SearchFillterState
-                                        .subscriptions[index].rating !=
-                                    null
-                                ? SearchFillterState
-                                    .subscriptions[index].rating!
-                                    .toDouble()
-                                : 0,
-                            bookPrice: SearchFillterState
-                                        .subscriptions[index].price !=
-                                    null
-                                ? SearchFillterState.subscriptions[index].price
-                                    .toString()
-                                : "",
-                            bookName: SearchFillterState
-                                        .subscriptions[index].title !=
-                                    null
-                                ? SearchFillterState.subscriptions[index].title
-                                    .toString()
-                                : "",
-                            bookImage: SearchFillterState
-                                        .subscriptions[index].imageUrl !=
-                                    null
-                                ? SearchFillterState
-                                    .subscriptions[index].imageUrl
-                                    .toString()
-                                : "",
+              SearchFillterState.subscriptions.length != 0
+                  ? Center(
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height - 160,
+                          width: MediaQuery.of(context).size.width - 40,
+                          child: Consumer<SearchFillterState>(
+                            builder: (context, value, child) =>
+                                GridView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount:
+                                  SearchFillterState.subscriptions.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 0.5, crossAxisCount: 2),
+                              itemBuilder: (context, index) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: BookCardWidget(
+                                  discountCount:
+                                      "${((SearchFillterState.subscriptions[index].price! - SearchFillterState.subscriptions[index].totalPrice!) / SearchFillterState.subscriptions[index].price! * 100).toStringAsFixed(0)}",
+                                  discountPrice: SearchFillterState
+                                      .subscriptions[index].totalPrice
+                                      .toString(),
+                                  viewCont: 0,
+                                  bookId: SearchFillterState
+                                      .subscriptions[index].id
+                                      .toString(),
+                                  bookWriter: SearchFillterState
+                                              .subscriptions[index].nevisande !=
+                                          null
+                                      ? SearchFillterState
+                                          .subscriptions[index].nevisande
+                                          .toString()
+                                      : "",
+                                  bookRate: SearchFillterState
+                                              .subscriptions[index].rating !=
+                                          null
+                                      ? SearchFillterState
+                                          .subscriptions[index].rating!
+                                          .toDouble()
+                                      : 0,
+                                  bookPrice: SearchFillterState
+                                              .subscriptions[index].price !=
+                                          null
+                                      ? SearchFillterState
+                                          .subscriptions[index].price
+                                          .toString()
+                                      : "",
+                                  bookName: SearchFillterState
+                                              .subscriptions[index].title !=
+                                          null
+                                      ? SearchFillterState
+                                          .subscriptions[index].title
+                                          .toString()
+                                      : "",
+                                  bookImage: SearchFillterState
+                                              .subscriptions[index].imageUrl !=
+                                          null
+                                      ? SearchFillterState
+                                          .subscriptions[index].imageUrl
+                                          .toString()
+                                      : "",
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                    )
+                  : Text(
+                      'موردی یافت نشد',
+                      style: GoogleFonts.vazirmatn(fontSize: 24),
                     ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

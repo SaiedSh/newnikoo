@@ -5,6 +5,7 @@ import 'package:bookapp/controller/api/payment/shop_card/buy_book.dart';
 import 'package:bookapp/controller/api/payment/shop_card/get_shopcard_list.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/book_detail_state.dart';
+import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/controller/service/replace.dart';
 import 'package:bookapp/controller/service/split_number.dart';
@@ -150,7 +151,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100,
+          toolbarHeight: 110,
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           flexibleSpace: Directionality(
@@ -160,15 +161,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 color: Colors.white,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 15,
+                        height: 25,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -182,23 +183,69 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     icon: Image(
                                       image: AssetImage(
                                           'lib/assets/images/miniicon.png'),
-                                      width: 15,
+                                      width: 17,
                                     )),
                                 SizedBox(
                                   height: 20,
                                   width: 1,
                                   child: VerticalDivider(),
                                 ),
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, MyRoutes.shopCardScreen);
-                                    },
-                                    icon: Image(
-                                      image: AssetImage(
-                                          'lib/assets/images/handbag.png'),
-                                      width: 15,
-                                    )),
+                                Consumer<ShopCardState>(
+                                  builder: (context, cartProvider, child) {
+                                    int itemCount = 0;
+
+                                    if (ShopCardState.shopCardList != null &&
+                                        ShopCardState
+                                                .shopCardList!.shopCardItems !=
+                                            null) {
+                                      itemCount = ShopCardState
+                                          .shopCardList!.shopCardItems!.length;
+                                    }
+
+                                    return Stack(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () async {
+                                            Navigator.pushNamed(context,
+                                                MyRoutes.shopCardScreen);
+                                          },
+                                          icon: Image.asset(
+                                            'lib/assets/images/handbag.png',
+                                            width: 17,
+                                          ),
+                                        ),
+                                        if (itemCount > 0)
+                                          Positioned(
+                                            right: 4,
+                                            top: 4,
+                                            child: Container(
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                minWidth: 16,
+                                                minHeight: 16,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10.5,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  },
+                                ),
                                 SizedBox(
                                   height: 20,
                                   width: 1,
@@ -251,6 +298,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             // )
                           ],
                         ),
+                      ),
+                      SizedBox(
+                        height: 5,
                       ),
                       Directionality(
                         textDirection: TextDirection.rtl,
@@ -2403,514 +2453,527 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 15, right: 15, bottom: 5, top: 5),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: backgroundColor,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 5),
-                                          child: Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                        ),
-                                        Text(
-                                          '  ${BookDetailState.bookDetail!.rating.toString()}' +
-                                              " از " +
-                                              "5",
-                                          style: GoogleFonts.vazirmatn(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 5),
-                                      child: Text(
-                                        "بر اساس رأی ${BookDetailState.bookDetail!.bookReviewss!.length.toString()} مخاطب",
-                                        style: GoogleFonts.vazirmatn(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 165,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '5  ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 10),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: LinearProgressIndicator(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                value: List.generate(
-                                                        BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length,
-                                                        (index) =>
-                                                            BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .where(
-                                                              (element) =>
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .bookReviewss![
-                                                                          index]
-                                                                      .rate ==
-                                                                  5,
-                                                            )).length /
-                                                    (BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .length !=
-                                                            0
-                                                        ? BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length
-                                                        : 1),
-                                                minHeight: 5,
-                                                color: Colors.amber,
-                                                backgroundColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '4  ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 10),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: LinearProgressIndicator(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                value: List.generate(
-                                                        BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length,
-                                                        (index) =>
-                                                            BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .where(
-                                                              (element) =>
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .bookReviewss![
-                                                                          index]
-                                                                      .rate ==
-                                                                  4,
-                                                            )).length /
-                                                    (BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .length !=
-                                                            0
-                                                        ? BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length
-                                                        : 1),
-                                                minHeight: 5,
-                                                color: Colors.amber,
-                                                backgroundColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '3  ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 10),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: LinearProgressIndicator(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                value: List.generate(
-                                                        BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length,
-                                                        (index) =>
-                                                            BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .where(
-                                                              (element) =>
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .bookReviewss![
-                                                                          index]
-                                                                      .rate ==
-                                                                  3,
-                                                            )).length /
-                                                    (BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .length !=
-                                                            0
-                                                        ? BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length
-                                                        : 1),
-                                                minHeight: 5,
-                                                color: Colors.amber,
-                                                backgroundColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '2  ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 10),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: LinearProgressIndicator(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                value: List.generate(
-                                                        BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length,
-                                                        (index) =>
-                                                            BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .where(
-                                                              (element) =>
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .bookReviewss![
-                                                                          index]
-                                                                      .rate ==
-                                                                  2,
-                                                            )).length /
-                                                    (BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .length !=
-                                                            0
-                                                        ? BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length
-                                                        : 1),
-                                                minHeight: 5,
-                                                color: Colors.amber,
-                                                backgroundColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      SizedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              '1  ',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 10),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: LinearProgressIndicator(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                value: List.generate(
-                                                        BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length,
-                                                        (index) =>
-                                                            BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .where(
-                                                              (element) =>
-                                                                  BookDetailState
-                                                                      .bookDetail!
-                                                                      .bookReviewss![
-                                                                          index]
-                                                                      .rate ==
-                                                                  1,
-                                                            )).length /
-                                                    (BookDetailState
-                                                                .bookDetail!
-                                                                .bookReviewss!
-                                                                .length !=
-                                                            0
-                                                        ? BookDetailState
-                                                            .bookDetail!
-                                                            .bookReviewss!
-                                                            .length
-                                                        : 1),
-                                                minHeight: 5,
-                                                color: Colors.amber,
-                                                backgroundColor:
-                                                    Colors.grey[300],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Consumer<BookDetailState>(
+                  //   builder: (context, value, child) => Padding(
+                  //     padding: const EdgeInsets.only(
+                  //         left: 15, right: 15, bottom: 5, top: 5),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //           color: backgroundColor,
+                  //           borderRadius: BorderRadius.circular(10)),
+                  //       child: Column(
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.all(10),
+                  //             child: Row(
+                  //               mainAxisAlignment:
+                  //                   MainAxisAlignment.spaceBetween,
+                  //               children: [
+                  //                 Column(
+                  //                   crossAxisAlignment:
+                  //                       CrossAxisAlignment.start,
+                  //                   children: [
+                  //                     Row(
+                  //                       mainAxisSize: MainAxisSize.min,
+                  //                       mainAxisAlignment:
+                  //                           MainAxisAlignment.end,
+                  //                       children: [
+                  //                         Padding(
+                  //                           padding: const EdgeInsets.only(
+                  //                               bottom: 5),
+                  //                           child: Icon(
+                  //                             Icons.star,
+                  //                             color: Colors.amber,
+                  //                           ),
+                  //                         ),
+                  //                         Text(
+                  //                           '  ${BookDetailState.bookDetail!.rating.toString()}' +
+                  //                               " از " +
+                  //                               "5",
+                  //                           style: GoogleFonts.vazirmatn(
+                  //                               fontWeight: FontWeight.bold,
+                  //                               fontSize: 12),
+                  //                         )
+                  //                       ],
+                  //                     ),
+                  //                     Padding(
+                  //                       padding:
+                  //                           const EdgeInsets.only(right: 5),
+                  //                       child: Text(
+                  //                         "بر اساس رأی ${BookDetailState.bookDetail!.bookReviewss!.length.toString()} مخاطب",
+                  //                         style: GoogleFonts.vazirmatn(
+                  //                             fontWeight: FontWeight.bold,
+                  //                             fontSize: 10),
+                  //                       ),
+                  //                     )
+                  //                   ],
+                  //                 ),
+                  //                 SizedBox(
+                  //                   width: 165,
+                  //                   child: Column(
+                  //                     children: [
+                  //                       SizedBox(
+                  //                         height: 10,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         child: Row(
+                  //                           children: [
+                  //                             Text(
+                  //                               '5  ',
+                  //                               style: GoogleFonts.vazirmatn(
+                  //                                   fontSize: 10),
+                  //                             ),
+                  //                             SizedBox(
+                  //                               width: 150,
+                  //                               child: LinearProgressIndicator(
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(10),
+                  //                                 value: List.generate(
+                  //                                         BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length,
+                  //                                         (index) =>
+                  //                                             BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .where(
+                  //                                               (element) =>
+                  //                                                   BookDetailState
+                  //                                                       .bookDetail!
+                  //                                                       .bookReviewss![
+                  //                                                           index]
+                  //                                                       .rate ==
+                  //                                                   5,
+                  //                                             )).length /
+                  //                                     (BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .length !=
+                  //                                             0
+                  //                                         ? BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length
+                  //                                         : 1),
+                  //                                 minHeight: 5,
+                  //                                 color: Colors.amber,
+                  //                                 backgroundColor:
+                  //                                     Colors.grey[300],
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 8,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         child: Row(
+                  //                           children: [
+                  //                             Text(
+                  //                               '4  ',
+                  //                               style: GoogleFonts.vazirmatn(
+                  //                                   fontSize: 10),
+                  //                             ),
+                  //                             SizedBox(
+                  //                               width: 150,
+                  //                               child: LinearProgressIndicator(
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(10),
+                  //                                 value: List.generate(
+                  //                                         BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length,
+                  //                                         (index) =>
+                  //                                             BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .where(
+                  //                                               (element) =>
+                  //                                                   BookDetailState
+                  //                                                       .bookDetail!
+                  //                                                       .bookReviewss![
+                  //                                                           index]
+                  //                                                       .rate ==
+                  //                                                   4,
+                  //                                             )).length /
+                  //                                     (BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .length !=
+                  //                                             0
+                  //                                         ? BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length
+                  //                                         : 1),
+                  //                                 minHeight: 5,
+                  //                                 color: Colors.amber,
+                  //                                 backgroundColor:
+                  //                                     Colors.grey[300],
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 8,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         child: Row(
+                  //                           children: [
+                  //                             Text(
+                  //                               '3  ',
+                  //                               style: GoogleFonts.vazirmatn(
+                  //                                   fontSize: 10),
+                  //                             ),
+                  //                             SizedBox(
+                  //                               width: 150,
+                  //                               child: LinearProgressIndicator(
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(10),
+                  //                                 value: List.generate(
+                  //                                         BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length,
+                  //                                         (index) =>
+                  //                                             BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .where(
+                  //                                               (element) =>
+                  //                                                   BookDetailState
+                  //                                                       .bookDetail!
+                  //                                                       .bookReviewss![
+                  //                                                           index]
+                  //                                                       .rate ==
+                  //                                                   3,
+                  //                                             )).length /
+                  //                                     (BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .length !=
+                  //                                             0
+                  //                                         ? BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length
+                  //                                         : 1),
+                  //                                 minHeight: 5,
+                  //                                 color: Colors.amber,
+                  //                                 backgroundColor:
+                  //                                     Colors.grey[300],
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 8,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         child: Row(
+                  //                           children: [
+                  //                             Text(
+                  //                               '2  ',
+                  //                               style: GoogleFonts.vazirmatn(
+                  //                                   fontSize: 10),
+                  //                             ),
+                  //                             SizedBox(
+                  //                               width: 150,
+                  //                               child: LinearProgressIndicator(
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(10),
+                  //                                 value: List.generate(
+                  //                                         BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length,
+                  //                                         (index) =>
+                  //                                             BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .where(
+                  //                                               (element) =>
+                  //                                                   BookDetailState
+                  //                                                       .bookDetail!
+                  //                                                       .bookReviewss![
+                  //                                                           index]
+                  //                                                       .rate ==
+                  //                                                   2,
+                  //                                             )).length /
+                  //                                     (BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .length !=
+                  //                                             0
+                  //                                         ? BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length
+                  //                                         : 1),
+                  //                                 minHeight: 5,
+                  //                                 color: Colors.amber,
+                  //                                 backgroundColor:
+                  //                                     Colors.grey[300],
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                       SizedBox(
+                  //                         height: 8,
+                  //                       ),
+                  //                       SizedBox(
+                  //                         child: Row(
+                  //                           children: [
+                  //                             Text(
+                  //                               '1  ',
+                  //                               style: GoogleFonts.vazirmatn(
+                  //                                   fontSize: 10),
+                  //                             ),
+                  //                             SizedBox(
+                  //                               width: 150,
+                  //                               child: LinearProgressIndicator(
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(10),
+                  //                                 value: List.generate(
+                  //                                         BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length,
+                  //                                         (index) =>
+                  //                                             BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .where(
+                  //                                               (element) =>
+                  //                                                   BookDetailState
+                  //                                                       .bookDetail!
+                  //                                                       .bookReviewss![
+                  //                                                           index]
+                  //                                                       .rate ==
+                  //                                                   1,
+                  //                                             )).length /
+                  //                                     (BookDetailState
+                  //                                                 .bookDetail!
+                  //                                                 .bookReviewss!
+                  //                                                 .length !=
+                  //                                             0
+                  //                                         ? BookDetailState
+                  //                                             .bookDetail!
+                  //                                             .bookReviewss!
+                  //                                             .length
+                  //                                         : 1),
+                  //                                 minHeight: 5,
+                  //                                 color: Colors.amber,
+                  //                                 backgroundColor:
+                  //                                     Colors.grey[300],
+                  //                               ),
+                  //                             ),
+                  //                           ],
+                  //                         ),
+                  //                       ),
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           SizedBox(height: 10),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   BookDetailState.bookDetail!.bookReviewss!.length != 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 5, top: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: backgroundColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: ListView.builder(
-                              itemCount: BookDetailState
-                                  .bookDetail!.bookReviewss!.length,
-                              itemBuilder: (context, index) => Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                      ? Consumer<BookDetailState>(
+                          builder: (context, value, child) => Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, bottom: 5, top: 5),
+                            child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  color: backgroundColor,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListView.builder(
+                                  itemCount: BookDetailState
+                                      .bookDetail!.bookReviewss!.length,
+                                  itemBuilder: (context, index) => Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Container(
-                                            width: 30,
-                                            height: 30,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(4),
-                                              child: Image(
-                                                image: AssetImage(
-                                                    'lib/assets/images/iconcm.png'),
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.grey.shade400),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
                                           Row(
                                             children: [
-                                              Text(
-                                                BookDetailState
-                                                    .bookDetail!
-                                                    .bookReviewss![index]
-                                                    .userFirstName
-                                                    .toString(),
-                                                style: GoogleFonts.vazirmatn(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                              Container(
+                                                width: 30,
+                                                height: 30,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4),
+                                                  child: Image(
+                                                    image: AssetImage(
+                                                        'lib/assets/images/iconcm.png'),
+                                                  ),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color:
+                                                        Colors.grey.shade400),
                                               ),
                                               SizedBox(
                                                 width: 5,
                                               ),
-                                              Text(
-                                                BookDetailState
-                                                    .bookDetail!
-                                                    .bookReviewss![index]
-                                                    .userLastName
-                                                    .toString(),
-                                                style: GoogleFonts.vazirmatn(
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    BookDetailState
+                                                        .bookDetail!
+                                                        .bookReviewss![index]
+                                                        .userFirstName
+                                                        .toString(),
+                                                    style:
+                                                        GoogleFonts.vazirmatn(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    BookDetailState
+                                                        .bookDetail!
+                                                        .bookReviewss![index]
+                                                        .userLastName
+                                                        .toString(),
+                                                    style:
+                                                        GoogleFonts.vazirmatn(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "1402-05-05",
-                                            style: GoogleFonts.vazirmatn(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '5 ',
-                                            style: GoogleFonts.vazirmatn(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 22,
+                                          Row(
+                                            children: [
+                                              Text(
+                                                BookDetailState.bookDetail!
+                                                    .bookReviewss![index].rate
+                                                    .toString(),
+                                                style: GoogleFonts.vazirmatn(
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                                size: 22,
+                                              )
+                                            ],
                                           )
                                         ],
-                                      )
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500),
+                                          BookDetailState.bookDetail!
+                                              .bookReviewss![index].message
+                                              .toString()),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Divider(
+                                          thickness: 0.5,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      // Padding(
+                                      //   padding: const EdgeInsets.symmetric(
+                                      //       horizontal: 8),
+                                      //   child: Row(
+                                      //     mainAxisAlignment:
+                                      //         MainAxisAlignment.spaceBetween,
+                                      //     children: [
+                                      //       Row(
+                                      //         children: [
+                                      //           Image(
+                                      //             image: AssetImage(
+                                      //                 'lib/assets/images/like.png'),
+                                      //             width: 20,
+                                      //             height: 20,
+                                      //           ),
+                                      //           SizedBox(
+                                      //             width: 5,
+                                      //           ),
+                                      //           Text(
+                                      //             '10',
+                                      //             style: GoogleFonts.vazirmatn(
+                                      //                 color: Colors.grey,
+                                      //                 fontSize: 12),
+                                      //           ),
+                                      //           SizedBox(
+                                      //             width: 15,
+                                      //           ),
+                                      //           Image(
+                                      //             image: AssetImage(
+                                      //                 'lib/assets/images/pm.png'),
+                                      //             width: 21,
+                                      //             height: 21,
+                                      //           ),
+                                      //           SizedBox(
+                                      //             width: 5,
+                                      //           ),
+                                      //           Text(
+                                      //             '10',
+                                      //             style: GoogleFonts.vazirmatn(
+                                      //                 color: Colors.grey,
+                                      //                 fontSize: 12),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //       Padding(
+                                      //         padding: const EdgeInsets.only(
+                                      //             bottom: 5),
+                                      //         child: Image(
+                                      //           image: AssetImage(
+                                      //               'lib/assets/images/!.png'),
+                                      //           fit: BoxFit.cover,
+                                      //           width: 21,
+                                      //           height: 21,
+                                      //         ),
+                                      //       )
+                                      //     ],
+                                      //   ),
+                                      // )
                                     ],
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                      BookDetailState.bookDetail!
-                                          .bookReviewss![index].message
-                                          .toString()),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Divider(
-                                      thickness: 0.5,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.symmetric(
-                                  //       horizontal: 8),
-                                  //   child: Row(
-                                  //     mainAxisAlignment:
-                                  //         MainAxisAlignment.spaceBetween,
-                                  //     children: [
-                                  //       Row(
-                                  //         children: [
-                                  //           Image(
-                                  //             image: AssetImage(
-                                  //                 'lib/assets/images/like.png'),
-                                  //             width: 20,
-                                  //             height: 20,
-                                  //           ),
-                                  //           SizedBox(
-                                  //             width: 5,
-                                  //           ),
-                                  //           Text(
-                                  //             '10',
-                                  //             style: GoogleFonts.vazirmatn(
-                                  //                 color: Colors.grey,
-                                  //                 fontSize: 12),
-                                  //           ),
-                                  //           SizedBox(
-                                  //             width: 15,
-                                  //           ),
-                                  //           Image(
-                                  //             image: AssetImage(
-                                  //                 'lib/assets/images/pm.png'),
-                                  //             width: 21,
-                                  //             height: 21,
-                                  //           ),
-                                  //           SizedBox(
-                                  //             width: 5,
-                                  //           ),
-                                  //           Text(
-                                  //             '10',
-                                  //             style: GoogleFonts.vazirmatn(
-                                  //                 color: Colors.grey,
-                                  //                 fontSize: 12),
-                                  //           ),
-                                  //         ],
-                                  //       ),
-                                  //       Padding(
-                                  //         padding: const EdgeInsets.only(
-                                  //             bottom: 5),
-                                  //         child: Image(
-                                  //           image: AssetImage(
-                                  //               'lib/assets/images/!.png'),
-                                  //           fit: BoxFit.cover,
-                                  //           width: 21,
-                                  //           height: 21,
-                                  //         ),
-                                  //       )
-                                  //     ],
-                                  //   ),
-                                  // )
-                                ],
+                                ),
                               ),
                             ),
                           ),
@@ -2942,23 +3005,23 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'همه',
-                                          style: GoogleFonts.vazirmatn(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 10,
-                                        )
-                                      ],
-                                    )
+                                    // Row(
+                                    //   children: [
+                                    //     Text(
+                                    //       'همه',
+                                    //       style: GoogleFonts.vazirmatn(
+                                    //           fontSize: 10,
+                                    //           fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //     SizedBox(
+                                    //       width: 5,
+                                    //     ),
+                                    //     Icon(
+                                    //       Icons.arrow_forward_ios,
+                                    //       size: 10,
+                                    //     )
+                                    //   ],
+                                    // )
                                   ],
                                 ),
                               ),

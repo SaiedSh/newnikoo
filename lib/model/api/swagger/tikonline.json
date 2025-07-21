@@ -826,19 +826,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/Index": {
@@ -866,19 +855,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/Detail": {
@@ -916,19 +894,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/Add": {
@@ -1576,19 +1543,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/adddd": {
@@ -1636,19 +1592,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/SavedBooks": {
@@ -1685,19 +1630,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/SaveBook": {
@@ -1742,19 +1676,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/AddBookReview": {
@@ -1806,19 +1729,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/MyReviews": {
@@ -1846,19 +1758,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Book/SearchandFilter": {
@@ -1910,19 +1811,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Category/List": {
@@ -1960,19 +1850,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Category/Add": {
@@ -2024,19 +1903,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/WalletCharge": {
@@ -2074,19 +1942,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/VerifyPaymentWallet": {
@@ -2173,19 +2030,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/VerifyPaymentSub": {
@@ -2265,19 +2111,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/VerifyShopCardPayment": {
@@ -2340,19 +2175,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/UserTransactions": {
@@ -2380,19 +2204,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/Payment": {
@@ -2436,19 +2249,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/Payment/VerifyPayment": {
@@ -2526,19 +2328,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/ShopCard/AddorRemoveItem": {
@@ -2583,19 +2374,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/ShopCard/PayShopCard": {
@@ -2639,19 +2419,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/ShopCard/GetUserOrders": {
@@ -2679,19 +2448,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/ShopCard/GetItemsOfOrder": {
@@ -2729,19 +2487,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/User/getProfile": {
@@ -2769,19 +2516,8 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
-          {
-            "OAuth2": [ ]
-          }
-        ]
+        }
       }
     },
     "/api/v1/User/UpdateProfile": {
@@ -2938,19 +2674,53 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
           }
-        },
-        "security": [
+        }
+      }
+    },
+    "/api/v1/User/ChangePass": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
           {
-            "OAuth2": [ ]
+            "name": "u",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "p",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResult"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },

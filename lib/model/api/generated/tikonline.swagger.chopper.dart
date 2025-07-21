@@ -1010,4 +1010,24 @@ final class _$Tikonline extends Tikonline {
     );
     return client.send<ApiResult, ApiResult>($request);
   }
+
+  @override
+  Future<Response<ApiResult>> _apiV1UserChangePassGet({
+    String? u,
+    String? p,
+  }) {
+    final Uri $url =
+        Uri.parse('https://api.tikonline.net/api/v1/User/ChangePass');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'u': u,
+      'p': p,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<ApiResult, ApiResult>($request);
+  }
 }

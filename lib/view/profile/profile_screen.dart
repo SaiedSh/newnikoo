@@ -4,6 +4,7 @@ import 'package:bookapp/controller/api/payment/walletcharge.dart';
 import 'package:bookapp/controller/api/profile/get_profile.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
 import 'package:bookapp/controller/provider/profile_state.dart';
+import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/provider/wallet_payment.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/controller/service/split_number.dart';
@@ -33,9 +34,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     getUserProfile(
       context: context,
+    ).then(
+      (value) {
+        pervImage = ProfileState.profile!.userAvatar!;
+      },
     );
   }
 
+  String? pervImage;
   Future<void> removeToken() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
 
@@ -94,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(105),
+            preferredSize: Size.fromHeight(110),
             child: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: backgroundColor,
@@ -105,12 +111,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: 15,
-                        ),
+                        SizedBox(height: 25),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: Directionality(
@@ -140,6 +144,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Row(
                                   children: [
+                                    Consumer<ShopCardState>(
+                                      builder: (context, cartProvider, child) {
+                                        int itemCount = 0;
+
+                                        if (ShopCardState.shopCardList !=
+                                                null &&
+                                            ShopCardState.shopCardList!
+                                                    .shopCardItems !=
+                                                null) {
+                                          itemCount = ShopCardState
+                                              .shopCardList!
+                                              .shopCardItems!
+                                              .length;
+                                        }
+
+                                        return Stack(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () async {
+                                                Navigator.pushNamed(context,
+                                                    MyRoutes.shopCardScreen);
+                                              },
+                                              icon: Image.asset(
+                                                'lib/assets/images/handbag.png',
+                                                width: 17,
+                                              ),
+                                            ),
+                                            if (itemCount > 0)
+                                              Positioned(
+                                                right: 4,
+                                                top: 4,
+                                                child: Container(
+                                                  padding: EdgeInsets.all(2),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 16,
+                                                    minHeight: 16,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10.5,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                      width: 1,
+                                      child: VerticalDivider(),
+                                    ),
                                     IconButton(
                                       icon: Icon(
                                         Icons.home_outlined,
@@ -149,21 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             MyRoutes.navigationBarScreen);
                                       },
                                     ),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: VerticalDivider(),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, MyRoutes.shopCardScreen);
-                                        },
-                                        icon: Image(
-                                          image: AssetImage(
-                                              'lib/assets/images/handbag.png'),
-                                          width: 15,
-                                        )),
                                   ],
                                 ),
 
@@ -175,6 +230,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         Directionality(
                           textDirection: TextDirection.rtl,
@@ -261,20 +319,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Consumer<ProfileState>(
                             builder: (context, value, child) => Row(
                               children: [
-                                Container(
-                                  width: 38,
-                                  height: 38,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image(
-                                        image: AssetImage(
-                                            'lib/assets/images/iconcm.png')),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
+                                pervImage != null
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          // loadingBuilder: (context, child,
+                                          //         loadingProgress) =>
+                                          //     Center(
+                                          //         child:
+                                          //             CircularProgressIndicator(
+                                          //   strokeWidth: 0.2,
+                                          // )),
+                                          pervImage.toString(),
+                                          fit: BoxFit.fill,
+                                          width: 38,
+                                          height: 38,
+                                        ))
+                                    : Container(
+                                        width: 38,
+                                        height: 38,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                              image: AssetImage(
+                                                  'lib/assets/images/iconcm.png')),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade400,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -482,55 +557,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           Directionality(
                                             textDirection: TextDirection.rtl,
-                                            child: Container(
-                                              height: 40,
-                                              child: TextField(
-                                                controller: price,
-                                                enabled: true,
-                                                textAlignVertical:
-                                                    TextAlignVertical.center,
-                                                decoration: InputDecoration(
-                                                  label: Text(
-                                                    'مبلغ دلخواه (تومان)',
-                                                    style:
-                                                        GoogleFonts.vazirmatn(
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w500,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  height: 40,
+                                                  child: TextField(
+                                                    controller: price,
+                                                    enabled: true,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly, // فقط اعداد انگلیسی
+                                                    ],
+                                                    textAlign: TextAlign
+                                                        .center, // مرکزچین کردن متن و کرسر
+                                                    textAlignVertical:
+                                                        TextAlignVertical
+                                                            .center,
+                                                    decoration: InputDecoration(
+                                                      label: Text(
+                                                        'مبلغ دلخواه (تومان)',
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 1,
                                                             color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 1,
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      floatingLabelBehavior:
+                                                          FloatingLabelBehavior
+                                                              .auto,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 1,
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical:
+                                                                  10), // تنظیم فاصله داخلی
+                                                    ),
                                                   ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  width: 1,
-                                                                  color: Colors
-                                                                      .grey),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  width: 1,
-                                                                  color: Colors
-                                                                      .grey),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8)),
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior
-                                                          .auto,
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          width: 1,
-                                                          color: Colors.grey),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ),
                                           SizedBox(

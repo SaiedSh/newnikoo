@@ -93,6 +93,56 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
     }
   }
 
+  int? selectedCheckbox = 1; // 1 یا 2 برای شناسایی انتخاب
+
+  void _handleAction() {
+    if (selectedCheckbox == 1) {
+      handlePayment(context);
+      print("چک‌باکس اول انتخاب شده");
+      // اینجا اکشن مخصوص چک‌باکس اول
+    } else if (selectedCheckbox == 2) {
+      ProfileState.profile!.walletAmount! <
+              ShopCardState.shopCardList!.totalPrice!
+          ? showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                child: Container(
+                  width: 280,
+                  height: 300,
+                  child: Center(
+                    child: Text(
+                      "موجودی کیف پول کافی نیست",
+                      style: GoogleFonts.vazirmatn(
+                          fontSize: 18, color: Colors.red),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : payment(context: context, wallet: true);
+
+      print("چک‌باکس دوم انتخاب شده");
+      // اینجا اکشن مخصوص چک‌باکس دوم
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          child: Container(
+            width: 280,
+            height: 300,
+            child: Center(
+              child: Text(
+                "شیوه پرداخت را انتخاب کنید",
+                style: GoogleFonts.vazirmatn(fontSize: 18, color: Colors.black),
+              ),
+            ),
+          ),
+        ),
+      );
+      print("هیچ گزینه‌ای انتخاب نشده");
+    }
+  }
+
   TextEditingController searchNumber = TextEditingController();
   int finalValue = 0;
   @override
@@ -106,215 +156,233 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          bottomSheet: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 55,
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 8),
-              child: RawMaterialButton(
-                fillColor: Colors.black,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 0),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'پرداخت',
-                          style: GoogleFonts.vazirmatn(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18),
-                        ),
-                        SizedBox(
-                            height: 20,
-                            child: VerticalDivider(
-                              thickness: 2,
-                              color: Colors.white,
-                            )),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 2),
-                              child: Consumer<ShopCardState>(
-                                builder: (context, value, child) => Text(
-                                  ShopCardState.shopCardList!.totalPrice != null
-                                      ? ShopCardState.shopCardList!.totalPrice
-                                          .toString()
-                                          .toPersianNumbers()
-                                          .formatNumber()
-                                      : "0",
-                                  style: GoogleFonts.vazirmatn(
-                                      fontSize: 18, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                'تومان',
+          bottomSheet: ShopCardState.shopCardList!.shopCardItems!.length != 0
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 55,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 8, bottom: 8),
+                    child: RawMaterialButton(
+                      onPressed: _handleAction,
+                      fillColor: Colors.black,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 0),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'پرداخت',
                                 style: GoogleFonts.vazirmatn(
-                                    fontSize: 14, color: Colors.white),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(3)),
-                onPressed: () async {
-                  ProfileState.profile!.walletAmount! >=
-                          ShopCardState.shopCardList!.totalPrice!
-                      ? showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            child: Container(
-                              height: 400,
-                              child: Column(
+                              SizedBox(
+                                  height: 20,
+                                  child: VerticalDivider(
+                                    thickness: 2,
+                                    color: Colors.white,
+                                  )),
+                              Row(
                                 children: [
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 3),
-                                          child: Text(
-                                            'موجودی کیف پول : ',
-                                            style: GoogleFonts.vazirmatn(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Text(
-                                          ProfileState.profile!.walletAmount
-                                              .toString()
-                                              .formatNumber(),
-                                          style: GoogleFonts.vazirmatn(
-                                              fontSize: 15,
-                                              color: Colors.black),
-                                        ),
-                                        SizedBox(
-                                          width: 3,
-                                        ),
-                                        Text(
-                                          'تومان',
-                                          style: GoogleFonts.vazirmatn(
-                                              fontSize: 14,
-                                              color: Colors.black),
-                                        ),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Consumer<ShopCardState>(
+                                      builder: (context, value, child) => Text(
+                                        ShopCardState
+                                                    .shopCardList!.totalPrice !=
+                                                null
+                                            ? ShopCardState
+                                                .shopCardList!.totalPrice
+                                                .toString()
+                                                .toPersianNumbers()
+                                                .formatNumber()
+                                            : "0",
+                                        style: GoogleFonts.vazirmatn(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 100,
+                                    width: 5,
                                   ),
-                                  MaterialButton(
-                                    color: Colors.black,
-                                    minWidth: 180,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4),
                                     child: Text(
-                                      'پرداخت با کیف پول',
+                                      'تومان',
                                       style: GoogleFonts.vazirmatn(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: 14, color: Colors.white),
                                     ),
-                                    onPressed: () {
-                                      ShopCardState.shopCardList!.shopCardItems!
-                                                  .length !=
-                                              0
-                                          ? payment(
-                                              context: context, wallet: true)
-                                          : showDialog(
-                                              context: context,
-                                              builder: (context) => Dialog(
-                                                child: Container(
-                                                  height: 250,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'سبد خرید خالی است',
-                                                      style:
-                                                          GoogleFonts.vazirmatn(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.red),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                    },
                                   ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  MaterialButton(
-                                    color: Colors.black,
-                                    minWidth: 180,
-                                    child: Text(
-                                      'پرداخت با درگاه',
-                                      style: GoogleFonts.vazirmatn(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onPressed: () {
-                                      ShopCardState.shopCardList!.shopCardItems!
-                                                  .length !=
-                                              0
-                                          ? handlePayment(context)
-                                          : showDialog(
-                                              context: context,
-                                              builder: (context) => Dialog(
-                                                child: Container(
-                                                  height: 250,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'سبد خرید خالی است',
-                                                      style:
-                                                          GoogleFonts.vazirmatn(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.red),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                      ;
-                                    },
-                                  )
                                 ],
                               ),
-                            ),
+                            ],
                           ),
-                        )
-                      : handlePayment(context);
-                  ;
-                },
-              ),
-            ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(0), color: Colors.white),
-          ),
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3)),
+                      // onPressed: () async {
+                      //   ProfileState.profile!.walletAmount! >=
+                      //           ShopCardState.shopCardList!.totalPrice!
+                      //       ? showDialog(
+                      //           context: context,
+                      //           builder: (context) => Dialog(
+                      //             child: Container(
+                      //               height: 400,
+                      //               child: Column(
+                      //                 children: [
+                      //                   SizedBox(
+                      //                     height: 30,
+                      //                   ),
+                      //                   Directionality(
+                      //                     textDirection: TextDirection.rtl,
+                      //                     child: Row(
+                      //                       mainAxisAlignment:
+                      //                           MainAxisAlignment.center,
+                      //                       children: [
+                      //                         Padding(
+                      //                           padding: const EdgeInsets.only(
+                      //                               bottom: 3),
+                      //                           child: Text(
+                      //                             'موجودی کیف پول : ',
+                      //                             style: GoogleFonts.vazirmatn(
+                      //                                 color: Colors.black,
+                      //                                 fontWeight:
+                      //                                     FontWeight.bold,
+                      //                                 fontSize: 16),
+                      //                           ),
+                      //                         ),
+                      //                         Text(
+                      //                           ProfileState
+                      //                               .profile!.walletAmount
+                      //                               .toString()
+                      //                               .formatNumber(),
+                      //                           style: GoogleFonts.vazirmatn(
+                      //                               fontSize: 15,
+                      //                               color: Colors.black),
+                      //                         ),
+                      //                         SizedBox(
+                      //                           width: 3,
+                      //                         ),
+                      //                         Text(
+                      //                           'تومان',
+                      //                           style: GoogleFonts.vazirmatn(
+                      //                               fontSize: 14,
+                      //                               color: Colors.black),
+                      //                         ),
+                      //                       ],
+                      //                     ),
+                      //                   ),
+                      //                   SizedBox(
+                      //                     height: 100,
+                      //                   ),
+                      //                   MaterialButton(
+                      //                     color: Colors.black,
+                      //                     minWidth: 180,
+                      //                     child: Text(
+                      //                       'پرداخت با کیف پول',
+                      //                       style: GoogleFonts.vazirmatn(
+                      //                           color: Colors.white,
+                      //                           fontWeight: FontWeight.bold),
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       ShopCardState
+                      //                                   .shopCardList!
+                      //                                   .shopCardItems!
+                      //                                   .length !=
+                      //                               0
+                      //                           ? payment(
+                      //                               context: context,
+                      //                               wallet: true)
+                      //                           : showDialog(
+                      //                               context: context,
+                      //                               builder: (context) =>
+                      //                                   Dialog(
+                      //                                 child: Container(
+                      //                                   height: 250,
+                      //                                   child: Center(
+                      //                                     child: Text(
+                      //                                       'سبد خرید خالی است',
+                      //                                       style: GoogleFonts
+                      //                                           .vazirmatn(
+                      //                                               fontSize:
+                      //                                                   18,
+                      //                                               fontWeight:
+                      //                                                   FontWeight
+                      //                                                       .bold,
+                      //                                               color: Colors
+                      //                                                   .red),
+                      //                                     ),
+                      //                                   ),
+                      //                                 ),
+                      //                               ),
+                      //                             );
+                      //                     },
+                      //                   ),
+                      //                   SizedBox(
+                      //                     height: 10,
+                      //                   ),
+                      //                   MaterialButton(
+                      //                     color: Colors.black,
+                      //                     minWidth: 180,
+                      //                     child: Text(
+                      //                       'پرداخت با درگاه',
+                      //                       style: GoogleFonts.vazirmatn(
+                      //                           color: Colors.white,
+                      //                           fontWeight: FontWeight.bold),
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       ShopCardState
+                      //                                   .shopCardList!
+                      //                                   .shopCardItems!
+                      //                                   .length !=
+                      //                               0
+                      //                           ? handlePayment(context)
+                      //                           : showDialog(
+                      //                               context: context,
+                      //                               builder: (context) =>
+                      //                                   Dialog(
+                      //                                 child: Container(
+                      //                                   height: 250,
+                      //                                   child: Center(
+                      //                                     child: Text(
+                      //                                       'سبد خرید خالی است',
+                      //                                       style: GoogleFonts
+                      //                                           .vazirmatn(
+                      //                                               fontSize:
+                      //                                                   18,
+                      //                                               fontWeight:
+                      //                                                   FontWeight
+                      //                                                       .bold,
+                      //                                               color: Colors
+                      //                                                   .red),
+                      //                                     ),
+                      //                                   ),
+                      //                                 ),
+                      //                               ),
+                      //                             );
+                      //                       ;
+                      //                     },
+                      //                   )
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         )
+                      //       : handlePayment(context);
+                      //   ;
+                      // },
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0),
+                      color: Colors.white),
+                )
+              : SizedBox.shrink(),
           appBar: PreferredSize(
               preferredSize: Size.fromHeight(110),
               child: AppBar(
@@ -327,11 +395,11 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 15,
+                            height: 25,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
@@ -362,7 +430,7 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                                         icon: Image(
                                           image: AssetImage(
                                               'lib/assets/images/miniicon.png'),
-                                          width: 15,
+                                          width: 17,
                                         )),
                                   ],
                                 ),
@@ -394,6 +462,9 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                                 // )
                               ],
                             ),
+                          ),
+                          SizedBox(
+                            height: 5,
                           ),
                           Directionality(
                             textDirection: TextDirection.rtl,
@@ -458,528 +529,739 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
               )),
           backgroundColor: backgroundColor,
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Consumer<ShopCardState>(
-                  builder: (context, value, child) => ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: ShopCardState.shopCardList!.shopCardItems != null
-                        ? ShopCardState.shopCardList!.shopCardItems!.length
-                        : 0,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15, right: 15, bottom: 5, top: 15),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Image(
-                                  //   image: AssetImage(
-                                  //       'lib/assets/images/book.png'),
-                                  //   fit: BoxFit.fill,
-                                  //   width: 120,
-                                  //   height: 100,
-                                  // ),
-                                  Image.network(
-                                    errorBuilder: (BuildContext context,
-                                        Object error, StackTrace? stackTrace) {
-                                      return Center(
-                                        child: Text(
-                                          'تصویر بارگذاری نشد',
-                                          style: GoogleFonts.vazirmatn(
-                                              fontSize: 16, color: Colors.grey),
-                                        ),
-                                      );
-                                    },
-                                    fit: BoxFit.fill,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        // تصویر لود شده است
-                                        return child;
-                                      }
-                                      // تصویر هنوز در حال لود است
-                                      return CircularProgressIndicator();
-                                    },
-                                    ShopCardState.shopCardList!.shopCardItems !=
-                                            null
-                                        ? ShopCardState.shopCardList!
-                                            .shopCardItems![index].bookImageUrl
-                                            .toString()
-                                        : "",
-                                    width: 120,
-                                    height: 100,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: 180,
-                                          child: AutoSizeText(
-                                            maxLines: 3,
-                                            minFontSize: 10,
-                                            textDirection: getTextDirection(
-                                                ShopCardState
-                                                    .shopCardList!
-                                                    .shopCardItems![index]
-                                                    .bookTitle
-                                                    .toString()),
-                                            ShopCardState.shopCardList!
-                                                        .shopCardItems !=
-                                                    null
-                                                ? ShopCardState
-                                                    .shopCardList!
-                                                    .shopCardItems![index]
-                                                    .bookTitle
-                                                    .toString()
-                                                : "",
-                                            style: GoogleFonts.vazirmatn(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: primaryColor),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        SizedBox(
-                                          width: 180,
-                                          child: AutoSizeText(
-                                            maxLines: 3,
-                                            minFontSize: 10,
-                                            textDirection: getTextDirection(
-                                                ShopCardState
-                                                    .shopCardList!
-                                                    .shopCardItems![index]
-                                                    .bookNevisande
-                                                    .toString()),
-                                            ShopCardState
-                                                        .shopCardList!
-                                                        .shopCardItems![index]
-                                                        .bookNevisande !=
-                                                    null
-                                                ? ShopCardState
-                                                    .shopCardList!
-                                                    .shopCardItems![index]
-                                                    .bookNevisande
-                                                    .toString()
-                                                    .replaceAll("*", "")
-                                                : "",
-                                            style: GoogleFonts.vazirmatn(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey),
-                                          ),
-                                        ),
-                                        // Text(
-                                        //   ShopCardState
-                                        //               .shopCardList!
-                                        //               .shopCardItems![index]
-                                        //               .bookNevisande !=
-                                        //           null
-                                        //       ? ShopCardState
-                                        //           .shopCardList!
-                                        //           .shopCardItems![index]
-                                        //           .bookNevisande
-                                        //           .toString()
-                                        //       : "",
-                                        //   style: GoogleFonts.vazirmatn(
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.w500,
-                                        //       color: Colors.black),
-                                        // ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+            child: ShopCardState.shopCardList!.shopCardItems!.length != 0
+                ? Column(
+                    children: [
+                      Consumer<ShopCardState>(
+                        builder: (context, value, child) => ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount:
+                              ShopCardState.shopCardList!.shopCardItems != null
+                                  ? ShopCardState
+                                      .shopCardList!.shopCardItems!.length
+                                  : 0,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, bottom: 5, top: 15),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        addOrRemoveBook(
-                                                context: context,
-                                                bookId: ShopCardState
-                                                    .shopCardList!
-                                                    .shopCardItems![index]
-                                                    .bookId,
-                                                remove: true)
-                                            .then(
-                                          (value) {
-                                            getShopCardList(context: context);
-                                          },
-                                        );
-                                      },
-                                      child: Container(
-                                        width: 70,
-                                        height: 30,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                Icons.delete_forever,
-                                                color: Colors.red,
-                                                size: 23,
-                                              ),
-                                              Text(
-                                                'حذف',
-                                                style: GoogleFonts.vazirmatn(
-                                                    fontSize: 16),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border:
-                                                Border.all(color: Colors.grey)),
-                                      ),
-                                    ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          style: GoogleFonts.vazirmatn(
-                                              fontWeight: FontWeight.bold),
+                                        // Image(
+                                        //   image: AssetImage(
+                                        //       'lib/assets/images/book.png'),
+                                        //   fit: BoxFit.fill,
+                                        //   width: 120,
+                                        //   height: 100,
+                                        // ),
+                                        Image.network(
+                                          errorBuilder: (BuildContext context,
+                                              Object error,
+                                              StackTrace? stackTrace) {
+                                            return Center(
+                                              child: Text(
+                                                'تصویر بارگذاری نشد',
+                                                style: GoogleFonts.vazirmatn(
+                                                    fontSize: 16,
+                                                    color: Colors.grey),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.fill,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              // تصویر لود شده است
+                                              return child;
+                                            }
+                                            // تصویر هنوز در حال لود است
+                                            return CircularProgressIndicator();
+                                          },
                                           ShopCardState.shopCardList!
                                                       .shopCardItems !=
                                                   null
                                               ? ShopCardState
                                                   .shopCardList!
                                                   .shopCardItems![index]
-                                                  .bookTotalPrice
+                                                  .bookImageUrl
                                                   .toString()
-                                                  .toPersianNumbers()
-                                                  .formatNumber()
                                               : "",
+                                          width: 120,
+                                          height: 100,
                                         ),
                                         SizedBox(
-                                          width: 3,
+                                          width: 10,
                                         ),
-                                        Text(
-                                          'تومان',
-                                          style: GoogleFonts.vazirmatn(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 5),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 180,
+                                                child: AutoSizeText(
+                                                  maxLines: 3,
+                                                  minFontSize: 10,
+                                                  textDirection:
+                                                      getTextDirection(
+                                                          ShopCardState
+                                                              .shopCardList!
+                                                              .shopCardItems![
+                                                                  index]
+                                                              .bookTitle
+                                                              .toString()),
+                                                  ShopCardState.shopCardList!
+                                                              .shopCardItems !=
+                                                          null
+                                                      ? ShopCardState
+                                                          .shopCardList!
+                                                          .shopCardItems![index]
+                                                          .bookTitle
+                                                          .toString()
+                                                      : "",
+                                                  style: GoogleFonts.vazirmatn(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: primaryColor),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              SizedBox(
+                                                width: 180,
+                                                child: AutoSizeText(
+                                                  maxLines: 3,
+                                                  minFontSize: 10,
+                                                  textDirection:
+                                                      getTextDirection(
+                                                          ShopCardState
+                                                              .shopCardList!
+                                                              .shopCardItems![
+                                                                  index]
+                                                              .bookNevisande
+                                                              .toString()),
+                                                  ShopCardState
+                                                              .shopCardList!
+                                                              .shopCardItems![
+                                                                  index]
+                                                              .bookNevisande !=
+                                                          null
+                                                      ? ShopCardState
+                                                          .shopCardList!
+                                                          .shopCardItems![index]
+                                                          .bookNevisande
+                                                          .toString()
+                                                          .replaceAll("*", "")
+                                                      : "",
+                                                  style: GoogleFonts.vazirmatn(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.grey),
+                                                ),
+                                              ),
+                                              // Text(
+                                              //   ShopCardState
+                                              //               .shopCardList!
+                                              //               .shopCardItems![index]
+                                              //               .bookNevisande !=
+                                              //           null
+                                              //       ? ShopCardState
+                                              //           .shopCardList!
+                                              //           .shopCardItems![index]
+                                              //           .bookNevisande
+                                              //           .toString()
+                                              //       : "",
+                                              //   style: GoogleFonts.vazirmatn(
+                                              //       fontSize: 12,
+                                              //       fontWeight: FontWeight.w500,
+                                              //       color: Colors.black),
+                                              // ),
+                                            ],
+                                          ),
                                         )
                                       ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              addOrRemoveBook(
+                                                      context: context,
+                                                      bookId: ShopCardState
+                                                          .shopCardList!
+                                                          .shopCardItems![index]
+                                                          .bookId,
+                                                      remove: true)
+                                                  .then(
+                                                (value) {
+                                                  getShopCardList(
+                                                      context: context);
+                                                },
+                                              );
+                                            },
+                                            child: Container(
+                                              width: 70,
+                                              height: 30,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.delete_forever,
+                                                      color: Colors.red,
+                                                      size: 23,
+                                                    ),
+                                                    Text(
+                                                      'حذف',
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              fontSize: 16),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  border: Border.all(
+                                                      color: Colors.grey)),
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                style: GoogleFonts.vazirmatn(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                ShopCardState.shopCardList!
+                                                            .shopCardItems !=
+                                                        null
+                                                    ? ShopCardState
+                                                        .shopCardList!
+                                                        .shopCardItems![index]
+                                                        .bookTotalPrice
+                                                        .toString()
+                                                        .toPersianNumbers()
+                                                        .formatNumber()
+                                                    : "",
+                                              ),
+                                              SizedBox(
+                                                width: 3,
+                                              ),
+                                              Text(
+                                                'تومان',
+                                                style: GoogleFonts.vazirmatn(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15, right: 15, bottom: 5, top: 15),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'شیوه پرداخت',
-                                style: GoogleFonts.vazirmatn(fontSize: 18),
-                              )
-                            ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, bottom: 5, top: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'فاکتور',
+                                      style: GoogleFonts.vazirmatn(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Divider(),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'جمع کل',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Consumer<ShopCardState>(
+                                          builder: (context, value, child) =>
+                                              Text(
+                                            '( ${ShopCardState.shopCardList!.shopCardItems != null ? ShopCardState.shopCardList!.shopCardItems!.length.toString() : '0'} عنوان )',
+                                            style: GoogleFonts.vazirmatn(
+                                                fontSize: 14,
+                                                color: Colors.grey.shade600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 2),
+                                          child: Consumer<ShopCardState>(
+                                            builder: (context, value, child) =>
+                                                Text(
+                                              ShopCardState.shopCardList!
+                                                          .shopCardItems !=
+                                                      null
+                                                  ? ShopCardState
+                                                      .shopCardList!.rawPrice
+                                                      .toString()
+                                                      .toPersianNumbers()
+                                                      .formatNumber()
+                                                  : "",
+                                              style: GoogleFonts.vazirmatn(
+                                                  fontSize: 15,
+                                                  color: Colors.grey.shade600),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Text(
+                                            'تومان',
+                                            style: GoogleFonts.vazirmatn(
+                                                fontSize: 13,
+                                                color: Colors.grey.shade600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'سود شما از این خرید',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          finalValue
+                                              .toString()
+                                              .formatNumber()
+                                              .toPersianNumbers(),
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 15,
+                                              color: Colors.grey.shade600),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Text(
+                                            'تومان',
+                                            style: GoogleFonts.vazirmatn(
+                                                fontSize: 13,
+                                                color: Colors.grey.shade600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'قابل پرداخت',
+                                          style: GoogleFonts.vazirmatn(
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Consumer<ShopCardState>(
+                                          builder: (context, value, child) =>
+                                              Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 2),
+                                            child: Text(
+                                              ShopCardState.shopCardList!
+                                                          .totalPrice !=
+                                                      null
+                                                  ? ShopCardState
+                                                      .shopCardList!.totalPrice
+                                                      .toString()
+                                                      .toPersianNumbers()
+                                                      .formatNumber()
+                                                  : "0",
+                                              style: GoogleFonts.vazirmatn(
+                                                  fontSize: 18,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Text(
+                                            'تومان',
+                                            style: GoogleFonts.vazirmatn(
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                              height: 50,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Column(
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, bottom: 5, top: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'شیوه پرداخت را انتخاب کنید',
+                                      style:
+                                          GoogleFonts.vazirmatn(fontSize: 18),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCheckbox =
+                                          selectedCheckbox == 1 ? null : 1;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Container(
+                                      height: 50,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Checkbox(
-                                            fillColor: WidgetStateProperty.all(
-                                                primaryColor),
-                                            shape: CircleBorder(),
-                                            value: true,
-                                            onChanged: (value) {},
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SizedBox(
+                                                  width: 15,
+                                                  child: Checkbox(
+                                                    activeColor: Colors.black,
+                                                    shape: CircleBorder(),
+                                                    value:
+                                                        selectedCheckbox == 1,
+                                                    onChanged: (bool? value) {
+                                                      setState(() {
+                                                        selectedCheckbox =
+                                                            value! ? 1 : null;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'درگاه پرداخت آنلاین',
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      'پرداخت با همه کارت های عضوشتاب',
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.grey),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                FaIcon(
+                                                  FontAwesomeIcons
+                                                      .solidCreditCard,
+                                                  color: Colors.blue,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(4),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'درگاه پرداخت آنلاین',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 14),
-                                            ),
-                                            Text(
-                                              'پرداخت با همه کارت های عضوشتاب',
-                                              style: GoogleFonts.vazirmatn(
-                                                  fontSize: 12,
-                                                  color: Colors.grey),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        FaIcon(
-                                          FontAwesomeIcons.solidCreditCard,
-                                          color: Colors.blue,
-                                        )
-                                      ],
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade800),
+                                          borderRadius:
+                                              BorderRadius.circular(4)),
                                     ),
                                   ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey.shade800),
-                                  borderRadius: BorderRadius.circular(4)),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCheckbox =
+                                          selectedCheckbox == 2 ? null : 2;
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Container(
+                                      height: 50,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SizedBox(
+                                                  width: 15,
+                                                  child: Checkbox(
+                                                    activeColor: Colors.black,
+                                                    shape: CircleBorder(),
+                                                    value:
+                                                        selectedCheckbox == 2,
+                                                    onChanged: (bool? value) {
+                                                      setState(() {
+                                                        selectedCheckbox =
+                                                            value! ? 2 : null;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'پرداخت با کیف پول',
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              fontSize: 14),
+                                                    ),
+                                                    Directionality(
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 3),
+                                                            child: Text(
+                                                              'موجودی کیف پول : ',
+                                                              style: GoogleFonts
+                                                                  .vazirmatn(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .grey),
+                                                            ),
+                                                          ),
+                                                          Consumer<
+                                                              ProfileState>(
+                                                            builder: (context,
+                                                                    value,
+                                                                    child) =>
+                                                                Text(
+                                                              ProfileState
+                                                                  .profile!
+                                                                  .walletAmount
+                                                                  .toString()
+                                                                  .formatNumber(),
+                                                              style: GoogleFonts
+                                                                  .vazirmatn(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .grey),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 3,
+                                                          ),
+                                                          Text(
+                                                            'تومان',
+                                                            style: GoogleFonts
+                                                                .vazirmatn(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .grey),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                FaIcon(
+                                                  FontAwesomeIcons.wallet,
+                                                  color: Colors.blue,
+                                                  size: 27,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade800),
+                                          borderRadius:
+                                              BorderRadius.circular(4)),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 15,
-                          )
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15, right: 15, bottom: 5, top: 15),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'فاکتور',
-                                style: GoogleFonts.vazirmatn(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Divider(),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'جمع کل',
-                                    style: GoogleFonts.vazirmatn(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Consumer<ShopCardState>(
-                                    builder: (context, value, child) => Text(
-                                      '( ${ShopCardState.shopCardList!.shopCardItems != null ? ShopCardState.shopCardList!.shopCardItems!.length.toString() : '0'} عنوان )',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 14,
-                                          color: Colors.grey.shade600),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Consumer<ShopCardState>(
-                                      builder: (context, value, child) => Text(
-                                        ShopCardState.shopCardList!
-                                                    .shopCardItems !=
-                                                null
-                                            ? ShopCardState
-                                                .shopCardList!.rawPrice
-                                                .toString()
-                                                .toPersianNumbers()
-                                                .formatNumber()
-                                            : "",
-                                        style: GoogleFonts.vazirmatn(
-                                            fontSize: 15,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'تومان',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 13,
-                                          color: Colors.grey.shade600),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'سود شما از این خرید',
-                                    style: GoogleFonts.vazirmatn(
-                                        fontSize: 14,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    finalValue
-                                        .toString()
-                                        .formatNumber()
-                                        .toPersianNumbers(),
-                                    style: GoogleFonts.vazirmatn(
-                                        fontSize: 15,
-                                        color: Colors.grey.shade600),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'تومان',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 13,
-                                          color: Colors.grey.shade600),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'قابل پرداخت',
-                                    style: GoogleFonts.vazirmatn(
-                                        fontSize: 14, color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Consumer<ShopCardState>(
-                                    builder: (context, value, child) => Padding(
-                                      padding: const EdgeInsets.only(top: 2),
-                                      child: Text(
-                                        ShopCardState
-                                                    .shopCardList!.totalPrice !=
-                                                null
-                                            ? ShopCardState
-                                                .shopCardList!.totalPrice
-                                                .toString()
-                                                .toPersianNumbers()
-                                                .formatNumber()
-                                            : "0",
-                                        style: GoogleFonts.vazirmatn(
-                                            fontSize: 18, color: Colors.black),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      'تومان',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontSize: 14, color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
+                      SizedBox(
+                        height: 200,
+                      )
+                    ],
+                  )
+                : Column(
+                    children: [
+                      SizedBox(
+                        height: 280,
                       ),
-                    ),
+                      Center(
+                        child: Text(
+                          'سبد شما خالی است',
+                          style: GoogleFonts.vazirmatn(fontSize: 20),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 200,
-                )
-              ],
-            ),
           ),
         ),
       ),

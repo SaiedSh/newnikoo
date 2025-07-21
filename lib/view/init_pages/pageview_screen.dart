@@ -1,10 +1,8 @@
 import 'package:bookapp/controller/api/auth/login_controller_post.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/global/global.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,6 +15,48 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _phoneController = TextEditingController();
   final PageController _controller = PageController(initialPage: 0);
   bool visible = true;
+  bool isValid = false;
+  bool isLoading = false; // برای نشون دادن لودینگ روی دکمه
+
+  void _checkPhoneNumber(String value) {
+    if (value.length == 11 && value.startsWith('09')) {
+      setState(() {
+        isValid = true;
+      });
+    } else {
+      setState(() {
+        isValid = false;
+      });
+    }
+  }
+
+  void _onLoginPressed() async {
+    if (!isValid) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final result = await login(
+      phoneNumber: _phoneController.text,
+      context: context,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (result.isSuccess == true) {
+      Navigator.pushNamed(
+        context,
+        MyRoutes.otpScreen,
+        arguments: _phoneController.text,
+      );
+    }
+    // اینجا میتونی مثلا اگه isSuccess == false بود یک ارور نشون بدی
+  }
+
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,144 +326,97 @@ class _MyHomePageState extends State<MyHomePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: SizedBox(
-                            width: 300,
-                            height: 45,
-                            child: TextField(
-                              controller: _phoneController,
-                              keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
-                                suffixIcon: Padding(
-                                  padding: const EdgeInsets.all(3),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                color: Colors.grey))),
-                                    child: Directionality(
-                                      textDirection: TextDirection.ltr,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 0),
-                                        child: CountryCodePicker(
-                                          padding: const EdgeInsets.all(0),
-                                          flagDecoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          textStyle: GoogleFonts.vazirmatn(
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                          onChanged: (countryCode) {
-                                            setState(() {
-                                              _countryCode = countryCode
-                                                      .dialCode ??
-                                                  '+98'; // Default to +98 if null
-                                            });
-                                          },
-                                          initialSelection:
-                                              'IR', // Default to Iran
-                                          favorite: [
-                                            '+98',
-                                            'IR'
-                                          ], // Favorite country (Iran)
-                                        ),
-                                      ),
-                                    ),
+                      Form(
+                        key: _formKey,
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: SizedBox(
+                              width: 300,
+                              child: TextFormField(
+                                onChanged: _checkPhoneNumber,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'لطفاً این فیلد را پر کنید';
+                                  } else if (value.length < 11) {
+                                    return 'شماره موبایل را به درستی وارد کنید';
+                                  }
+                                  return null;
+                                },
+                                controller: _phoneController,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  hintText: 'شماره موبایل',
+                                  hintStyle: GoogleFonts.vazirmatn(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                ),
-                                hintText: 'شماره موبایل',
-                                hintStyle: GoogleFonts.vazirmatn(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Visibility(
-                        visible: visible,
-                        replacement: SizedBox(
-                          height: 45,
-                          width: 300,
-                          child: RawMaterialButton(
-                              fillColor: Colors.grey.shade300,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: LoadingAnimationWidget.fourRotatingDots(
-                                    color: primaryColor, size: 20),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              onPressed: null),
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          height: 45,
-                          child: RawMaterialButton(
-                            fillColor: Colors.grey.shade300,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 3),
-                                    child: Icon(
-                                      Icons.arrow_back,
-                                      size: 15,
-                                      color: Colors.grey,
-                                    ),
+                      SizedBox(
+                        width: 300,
+                        height: 45,
+                        child: RawMaterialButton(
+                          fillColor:
+                              isValid ? secondaryColor : Colors.grey.shade300,
+                          child: isLoading
+                              ? SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.5,
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'ورود',
-                                    style: GoogleFonts.vazirmatn(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            onPressed: () async {
-                              setState(() {
-                                visible = false;
-                              });
-                              login(
-                                      phoneNumber: _phoneController.text,
-                                      context: context)
-                                  .then(
-                                (value) {
-                                  if (value.isSuccess == true) {
-                                    Navigator.pushNamed(
-                                        context, MyRoutes.otpScreen,
-                                        arguments: _phoneController.text);
-                                  }
-                                },
-                              );
-                            },
-                          ),
+                                )
+                              : Text(
+                                  'ورود',
+                                  style: GoogleFonts.vazirmatn(
+                                      color:
+                                          isValid ? Colors.white : Colors.grey,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          onPressed:
+                              isValid && !isLoading ? _onLoginPressed : null,
+                          // onPressed: () async {
+                          //   if (_formKey.currentState!.validate()) {
+                          //     // همه‌چی درسته
+                          //     setState(() {
+                          //       visible = false;
+                          //     });
+                          //     login(
+                          //             phoneNumber: _phoneController.text,
+                          //             context: context)
+                          //         .then(
+                          //       (value) {
+                          //         if (value.isSuccess == true) {
+                          //           Navigator.pushNamed(
+                          //               context, MyRoutes.otpScreen,
+                          //               arguments: _phoneController.text);
+                          //         }
+                          //       },
+                          //     );
+                          //   } else {
+                          //     // یکی از فیلدها ایراد داره
+                          //     print('لطفاً خطاها را برطرف کنید');
+                          //   }
+                          // },
                         ),
                       ),
                       SizedBox(
                         height: 40,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 100),
-                        child: Divider(),
-                      ),
+
                       // Padding(
                       //   padding: const EdgeInsets.symmetric(horizontal: 25),
                       //   child: Row(
