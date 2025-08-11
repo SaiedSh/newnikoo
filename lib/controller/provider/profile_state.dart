@@ -8,3 +8,11 @@ class ProfileState extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class SubState extends ChangeNotifier {
+  static SubscriptionDto? sub;
+  getSub({required SubscriptionDto newSub}) {
+    sub = newSub;
+    notifyListeners();
+  }
+}

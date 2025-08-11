@@ -38,8 +38,6 @@ Future<UserDtoApiResult> getUserProfile({
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = UserDtoApiResult.fromJson(postResult.body!.toJson());

@@ -191,7 +191,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40),
+            preferredSize: Size.fromHeight(55),
             child: AppBar(
               automaticallyImplyLeading: false,
               backgroundColor: backgroundColor,
@@ -202,11 +202,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 15,
+                          height: 25,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
@@ -236,20 +236,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.home_outlined,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pushNamed(context,
-                                            MyRoutes.navigationBarScreen);
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: VerticalDivider(),
-                                    ),
                                     Consumer<ShopCardState>(
                                       builder: (context, cartProvider, child) {
                                         int itemCount = 0;
@@ -309,6 +295,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               ),
                                           ],
                                         );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                      width: 1,
+                                      child: VerticalDivider(),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.home_outlined,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(context,
+                                            MyRoutes.navigationBarScreen);
                                       },
                                     ),
                                   ],

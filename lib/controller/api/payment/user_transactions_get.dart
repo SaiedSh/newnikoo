@@ -32,8 +32,6 @@ Future<PaymentTransactionsDtoListApiResult> getTransactions({
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response =

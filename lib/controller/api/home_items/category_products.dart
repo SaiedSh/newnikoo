@@ -32,8 +32,6 @@ Future<CategoryDtoListApiResult> getCategories(
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = CategoryDtoListApiResult.fromJson(postResult.body!.toJson());
@@ -72,8 +70,6 @@ Future<BookDtoListApiResult> getProductsByCategory(
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = BookDtoListApiResult.fromJson(postResult.body!.toJson());

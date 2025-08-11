@@ -17,7 +17,6 @@ import 'package:bookapp/view/product/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     getShopCardList(context: context);
-    _timer = Timer.periodic(Duration(seconds: 2), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (_currentPage < 3) {
         _currentPage++;
       } else {
@@ -57,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 100),
+        duration: Duration(seconds: 100),
         curve: Curves.ease,
       );
     });
@@ -369,168 +368,176 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 20,
               ),
-              Consumer<IndexItemsState>(builder: (context, value, child) {
-                return Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: IndexItemsState.IndexLists != null
-                      ? SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: 220,
-                          child: PageView(
-                            controller: _pageController,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage(
-                                      'lib/assets/images/banner.jpg'),
-                                )),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    // Text(
-                                    //   IndexItemsState
-                                    //       .IndexLists!.indexInfo!.banner1Title
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontWeight: FontWeight.w500,
-                                    //       fontSize: 20,
-                                    //       color: Colors.white),
-                                    // ),
-                                    // Padding(
-                                    //   padding: const EdgeInsets.symmetric(
-                                    //       horizontal: 100),
-                                    //   child: Divider(),
-                                    // ),
-                                    // Text(
-                                    //   IndexItemsState.IndexLists!.indexInfo!
-                                    //       .banner1Description
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontSize: 14,
-                                    //       color: Colors.grey.shade300),
-                                    // ),
-                                    SizedBox(
-                                      height: 160,
-                                    ),
-                                    AnimatedSmoothIndicator(
-                                      activeIndex: 0,
-                                      count: 3,
-                                      effect: ExpandingDotsEffect(
-                                          activeDotColor: secondaryColor,
-                                          dotHeight: 10,
-                                          dotWidth: 10,
-                                          dotColor: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: AssetImage(
-                                            'lib/assets/images/banner2.jpg'))),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    // Text(
-                                    //   IndexItemsState
-                                    //       .IndexLists!.indexInfo!.banner2Title
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontWeight: FontWeight.w500,
-                                    //       fontSize: 20,
-                                    //       color: Colors.black),
-                                    // ),
-                                    // Padding(
-                                    //   padding: const EdgeInsets.symmetric(
-                                    //       horizontal: 100),
-                                    //   child: Divider(),
-                                    // ),
-                                    // Text(
-                                    //   IndexItemsState.IndexLists!.indexInfo!
-                                    //       .banner2Description
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontSize: 14, color: Colors.grey),
-                                    // ),
-                                    SizedBox(
-                                      height: 160,
-                                    ),
-                                    AnimatedSmoothIndicator(
-                                      activeIndex: 1,
-                                      count: 3,
-                                      effect: ExpandingDotsEffect(
-                                          activeDotColor: secondaryColor,
-                                          dotHeight: 10,
-                                          dotWidth: 10,
-                                          dotColor: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: AssetImage(
-                                            'lib/assets/images/banner3.jpg'))),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    // Text(
-                                    //   IndexItemsState
-                                    //       .IndexLists!.indexInfo!.banner3Title
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontWeight: FontWeight.w500,
-                                    //       fontSize: 20,
-                                    //       color: Colors.white),
-                                    // ),
-                                    // Padding(
-                                    //   padding: const EdgeInsets.symmetric(
-                                    //       horizontal: 100),
-                                    //   child: Divider(),
-                                    // ),
-                                    // Text(
-                                    //   IndexItemsState.IndexLists!.indexInfo!
-                                    //       .banner3Description
-                                    //       .toString(),
-                                    //   style: GoogleFonts.vazirmatn(
-                                    //       fontSize: 14,
-                                    //       color: Colors.grey.shade300),
-                                    // ),
-                                    SizedBox(
-                                      height: 160,
-                                    ),
-                                    AnimatedSmoothIndicator(
-                                      activeIndex: 2,
-                                      count: 3,
-                                      effect: ExpandingDotsEffect(
-                                          activeDotColor: secondaryColor,
-                                          dotHeight: 10,
-                                          dotWidth: 10,
-                                          dotColor: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : SizedBox(
-                          height: 220,
-                        ),
-                );
-              }),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 220,
+                child: Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage('lib/assets/images/bb.jpg'),
+                ))),
+              ),
+              // Consumer<IndexItemsState>(builder: (context, value, child) {
+              //   return Padding(
+              //     padding: const EdgeInsets.all(0),
+              //     child: IndexItemsState.IndexLists != null
+              //         ? SizedBox(
+              //             width: MediaQuery.of(context).size.width,
+              //             height: 220,
+              //             child: PageView(
+              //               children: [
+              //                 Container(
+              //                   decoration: BoxDecoration(
+              //                       image: DecorationImage(
+              //                     fit: BoxFit.fill,
+              //                     image: AssetImage('lib/assets/images/bb.jpg'),
+              //                   )),
+              //                   child: Column(
+              //                     children: [
+              //                       SizedBox(
+              //                         height: 40,
+              //                       ),
+              //                       // Text(
+              //                       //   IndexItemsState
+              //                       //       .IndexLists!.indexInfo!.banner1Title
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontWeight: FontWeight.w500,
+              //                       //       fontSize: 20,
+              //                       //       color: Colors.white),
+              //                       // ),
+              //                       // Padding(
+              //                       //   padding: const EdgeInsets.symmetric(
+              //                       //       horizontal: 100),
+              //                       //   child: Divider(),
+              //                       // ),
+              //                       // Text(
+              //                       //   IndexItemsState.IndexLists!.indexInfo!
+              //                       //       .banner1Description
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontSize: 14,
+              //                       //       color: Colors.grey.shade300),
+              //                       // ),
+              //                       SizedBox(
+              //                         height: 160,
+              //                       ),
+              //                       // AnimatedSmoothIndicator(
+              //                       //   activeIndex: 0,
+              //                       //   count: 3,
+              //                       //   effect: ExpandingDotsEffect(
+              //                       //       activeDotColor: secondaryColor,
+              //                       //       dotHeight: 10,
+              //                       //       dotWidth: 10,
+              //                       //       dotColor: Colors.grey),
+              //                       // )
+              //                     ],
+              //                   ),
+              //                 ),
+              //                 Container(
+              //                   decoration: BoxDecoration(
+              //                       image: DecorationImage(
+              //                           fit: BoxFit.fill,
+              //                           image: AssetImage(
+              //                               'lib/assets/images/bb.jpg'))),
+              //                   child: Column(
+              //                     children: [
+              //                       SizedBox(
+              //                         height: 40,
+              //                       ),
+              //                       // Text(
+              //                       //   IndexItemsState
+              //                       //       .IndexLists!.indexInfo!.banner2Title
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontWeight: FontWeight.w500,
+              //                       //       fontSize: 20,
+              //                       //       color: Colors.black),
+              //                       // ),
+              //                       // Padding(
+              //                       //   padding: const EdgeInsets.symmetric(
+              //                       //       horizontal: 100),
+              //                       //   child: Divider(),
+              //                       // ),
+              //                       // Text(
+              //                       //   IndexItemsState.IndexLists!.indexInfo!
+              //                       //       .banner2Description
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontSize: 14, color: Colors.grey),
+              //                       // ),
+              //                       SizedBox(
+              //                         height: 160,
+              //                       ),
+              //                       AnimatedSmoothIndicator(
+              //                         activeIndex: 1,
+              //                         count: 3,
+              //                         effect: ExpandingDotsEffect(
+              //                             activeDotColor: secondaryColor,
+              //                             dotHeight: 10,
+              //                             dotWidth: 10,
+              //                             dotColor: Colors.grey),
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ),
+              //                 Container(
+              //                   decoration: BoxDecoration(
+              //                       image: DecorationImage(
+              //                           fit: BoxFit.fill,
+              //                           image: AssetImage(
+              //                               'lib/assets/images/bb.jpg'))),
+              //                   child: Column(
+              //                     children: [
+              //                       SizedBox(
+              //                         height: 40,
+              //                       ),
+              //                       // Text(
+              //                       //   IndexItemsState
+              //                       //       .IndexLists!.indexInfo!.banner3Title
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontWeight: FontWeight.w500,
+              //                       //       fontSize: 20,
+              //                       //       color: Colors.white),
+              //                       // ),
+              //                       // Padding(
+              //                       //   padding: const EdgeInsets.symmetric(
+              //                       //       horizontal: 100),
+              //                       //   child: Divider(),
+              //                       // ),
+              //                       // Text(
+              //                       //   IndexItemsState.IndexLists!.indexInfo!
+              //                       //       .banner3Description
+              //                       //       .toString(),
+              //                       //   style: GoogleFonts.vazirmatn(
+              //                       //       fontSize: 14,
+              //                       //       color: Colors.grey.shade300),
+              //                       // ),
+              //                       SizedBox(
+              //                         height: 160,
+              //                       ),
+              //                       AnimatedSmoothIndicator(
+              //                         activeIndex: 2,
+              //                         count: 3,
+              //                         effect: ExpandingDotsEffect(
+              //                             activeDotColor: secondaryColor,
+              //                             dotHeight: 10,
+              //                             dotWidth: 10,
+              //                             dotColor: Colors.grey),
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           )
+              //         : SizedBox(
+              //             height: 220,
+              //           ),
+              //   );
+              // }),
 
               // SizedBox(
               //   height: 20,

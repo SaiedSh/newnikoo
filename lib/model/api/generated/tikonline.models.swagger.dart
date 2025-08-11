@@ -2571,6 +2571,7 @@ extension $ExpertiseDtoExtension on ExpertiseDto {
 class IndexDto {
   const IndexDto({
     this.discountBooks,
+    this.nikooBooks,
     this.freeBooks,
     this.mostViewedBooks,
     this.indexInfo,
@@ -2585,6 +2586,8 @@ class IndexDto {
   @JsonKey(
       name: 'discountBooks', includeIfNull: false, defaultValue: <BookDto>[])
   final List<BookDto>? discountBooks;
+  @JsonKey(name: 'nikooBooks', includeIfNull: false, defaultValue: <BookDto>[])
+  final List<BookDto>? nikooBooks;
   @JsonKey(name: 'freeBooks', includeIfNull: false, defaultValue: <BookDto>[])
   final List<BookDto>? freeBooks;
   @JsonKey(
@@ -2601,6 +2604,9 @@ class IndexDto {
             (identical(other.discountBooks, discountBooks) ||
                 const DeepCollectionEquality()
                     .equals(other.discountBooks, discountBooks)) &&
+            (identical(other.nikooBooks, nikooBooks) ||
+                const DeepCollectionEquality()
+                    .equals(other.nikooBooks, nikooBooks)) &&
             (identical(other.freeBooks, freeBooks) ||
                 const DeepCollectionEquality()
                     .equals(other.freeBooks, freeBooks)) &&
@@ -2618,6 +2624,7 @@ class IndexDto {
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(discountBooks) ^
+      const DeepCollectionEquality().hash(nikooBooks) ^
       const DeepCollectionEquality().hash(freeBooks) ^
       const DeepCollectionEquality().hash(mostViewedBooks) ^
       const DeepCollectionEquality().hash(indexInfo) ^
@@ -2627,11 +2634,13 @@ class IndexDto {
 extension $IndexDtoExtension on IndexDto {
   IndexDto copyWith(
       {List<BookDto>? discountBooks,
+      List<BookDto>? nikooBooks,
       List<BookDto>? freeBooks,
       List<BookDto>? mostViewedBooks,
       SettingDto? indexInfo}) {
     return IndexDto(
         discountBooks: discountBooks ?? this.discountBooks,
+        nikooBooks: nikooBooks ?? this.nikooBooks,
         freeBooks: freeBooks ?? this.freeBooks,
         mostViewedBooks: mostViewedBooks ?? this.mostViewedBooks,
         indexInfo: indexInfo ?? this.indexInfo);
@@ -2639,12 +2648,14 @@ extension $IndexDtoExtension on IndexDto {
 
   IndexDto copyWithWrapped(
       {Wrapped<List<BookDto>?>? discountBooks,
+      Wrapped<List<BookDto>?>? nikooBooks,
       Wrapped<List<BookDto>?>? freeBooks,
       Wrapped<List<BookDto>?>? mostViewedBooks,
       Wrapped<SettingDto?>? indexInfo}) {
     return IndexDto(
         discountBooks:
             (discountBooks != null ? discountBooks.value : this.discountBooks),
+        nikooBooks: (nikooBooks != null ? nikooBooks.value : this.nikooBooks),
         freeBooks: (freeBooks != null ? freeBooks.value : this.freeBooks),
         mostViewedBooks: (mostViewedBooks != null
             ? mostViewedBooks.value
@@ -4141,6 +4152,90 @@ extension $SubscriptionDtoExtension on SubscriptionDto {
         discountPrice:
             (discountPrice != null ? discountPrice.value : this.discountPrice),
         id: (id != null ? id.value : this.id));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class SubscriptionDtoApiResult {
+  const SubscriptionDtoApiResult({
+    this.data,
+    this.isSuccess,
+    this.statusCode,
+    this.message,
+  });
+
+  factory SubscriptionDtoApiResult.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionDtoApiResultFromJson(json);
+
+  static const toJsonFactory = _$SubscriptionDtoApiResultToJson;
+  Map<String, dynamic> toJson() => _$SubscriptionDtoApiResultToJson(this);
+
+  @JsonKey(name: 'data', includeIfNull: false)
+  final SubscriptionDto? data;
+  @JsonKey(name: 'isSuccess', includeIfNull: false)
+  final bool? isSuccess;
+  @JsonKey(
+    name: 'statusCode',
+    includeIfNull: false,
+    toJson: apiResultStatusCodeNullableToJson,
+    fromJson: apiResultStatusCodeNullableFromJson,
+  )
+  final enums.ApiResultStatusCode? statusCode;
+  @JsonKey(name: 'message', includeIfNull: false)
+  final String? message;
+  static const fromJsonFactory = _$SubscriptionDtoApiResultFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is SubscriptionDtoApiResult &&
+            (identical(other.data, data) ||
+                const DeepCollectionEquality().equals(other.data, data)) &&
+            (identical(other.isSuccess, isSuccess) ||
+                const DeepCollectionEquality()
+                    .equals(other.isSuccess, isSuccess)) &&
+            (identical(other.statusCode, statusCode) ||
+                const DeepCollectionEquality()
+                    .equals(other.statusCode, statusCode)) &&
+            (identical(other.message, message) ||
+                const DeepCollectionEquality().equals(other.message, message)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(data) ^
+      const DeepCollectionEquality().hash(isSuccess) ^
+      const DeepCollectionEquality().hash(statusCode) ^
+      const DeepCollectionEquality().hash(message) ^
+      runtimeType.hashCode;
+}
+
+extension $SubscriptionDtoApiResultExtension on SubscriptionDtoApiResult {
+  SubscriptionDtoApiResult copyWith(
+      {SubscriptionDto? data,
+      bool? isSuccess,
+      enums.ApiResultStatusCode? statusCode,
+      String? message}) {
+    return SubscriptionDtoApiResult(
+        data: data ?? this.data,
+        isSuccess: isSuccess ?? this.isSuccess,
+        statusCode: statusCode ?? this.statusCode,
+        message: message ?? this.message);
+  }
+
+  SubscriptionDtoApiResult copyWithWrapped(
+      {Wrapped<SubscriptionDto?>? data,
+      Wrapped<bool?>? isSuccess,
+      Wrapped<enums.ApiResultStatusCode?>? statusCode,
+      Wrapped<String?>? message}) {
+    return SubscriptionDtoApiResult(
+        data: (data != null ? data.value : this.data),
+        isSuccess: (isSuccess != null ? isSuccess.value : this.isSuccess),
+        statusCode: (statusCode != null ? statusCode.value : this.statusCode),
+        message: (message != null ? message.value : this.message));
   }
 }
 

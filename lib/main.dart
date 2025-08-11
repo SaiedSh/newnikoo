@@ -6,6 +6,7 @@ import 'package:bookapp/controller/provider/book_list_state.dart';
 import 'package:bookapp/controller/provider/book_review_state.dart';
 import 'package:bookapp/controller/provider/book_saved_state.dart';
 import 'package:bookapp/controller/provider/category_product_state.dart';
+import 'package:bookapp/controller/provider/discountCheck.dart';
 import 'package:bookapp/controller/provider/index_items_state.dart';
 import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/provider/search_fillter_state.dart';
@@ -81,6 +82,12 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => WalletChargeState(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => DiscountCheckState(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => SubState(),
     ),
   ], child: const MyApp()));
 }

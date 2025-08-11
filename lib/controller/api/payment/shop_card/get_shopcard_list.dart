@@ -15,7 +15,7 @@ Future<ShopCardDtoApiResult> getShopCardList({
   final postResult = await api.apiV1ShopCardGetShopCardGet();
   print(postResult);
   if (postResult.isSuccessful == true) {
-    print('Right');
+    print('Rightsdfghjmk,.');
     // loader maybe <====
     // QuickAlert.show(
     //   context: context,
@@ -32,8 +32,6 @@ Future<ShopCardDtoApiResult> getShopCardList({
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = ShopCardDtoApiResult.fromJson(postResult.body!.toJson());

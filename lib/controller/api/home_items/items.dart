@@ -30,8 +30,6 @@ Future<IndexDtoApiResult> getIndexItems({required BuildContext context}) async {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = IndexDtoApiResult.fromJson(postResult.body!.toJson());

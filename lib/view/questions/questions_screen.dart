@@ -35,12 +35,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        SizedBox(height: 5),
+                        SizedBox(height: 25),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.only(top: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -54,7 +54,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                       icon: Image(
                                         image: AssetImage(
                                             'lib/assets/images/miniicon.png'),
-                                        width: 15,
+                                        width: 17,
                                       )),
                                   SizedBox(
                                     height: 20,
@@ -145,6 +145,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                               // )
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: 5,
                         ),
                         Directionality(
                           textDirection: TextDirection.rtl,

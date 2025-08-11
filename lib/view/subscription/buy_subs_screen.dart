@@ -1,6 +1,8 @@
 import 'package:bookapp/controller/api/payment/buy_subscriptions.dart';
 import 'package:bookapp/controller/api/payment/get_subscriptions.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
+import 'package:bookapp/controller/api/sub/sub_get.dart';
+import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/provider/subscriptions_state.dart';
 import 'package:bookapp/controller/provider/wallet_payment.dart';
@@ -28,6 +30,7 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
     // TODO: implement initState
     super.initState();
     getSubscriptions(context: context);
+    subGet(context: context);
   }
 
   TextEditingController searchNumber = TextEditingController();
@@ -77,614 +80,899 @@ class _BuySubsScreenState extends State<BuySubsScreen> {
           // بازگشت غیرفعال می‌شود
           return false;
         },
-        child: Scaffold(
-          appBar: PreferredSize(
-              preferredSize: Size.fromHeight(110),
-              child: AppBar(
-                automaticallyImplyLeading: false,
-                backgroundColor: backgroundColor,
-                flexibleSpace: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 25),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, MyRoutes.profileScreen);
-                                        },
-                                        icon: Image(
-                                          image: AssetImage(
-                                              'lib/assets/images/miniicon.png'),
-                                          width: 17,
-                                        )),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: VerticalDivider(),
-                                    ),
-                                    Consumer<ShopCardState>(
-                                      builder: (context, cartProvider, child) {
-                                        int itemCount = 0;
-
-                                        if (ShopCardState.shopCardList !=
-                                                null &&
-                                            ShopCardState.shopCardList!
-                                                    .shopCardItems !=
-                                                null) {
-                                          itemCount = ShopCardState
-                                              .shopCardList!
-                                              .shopCardItems!
-                                              .length;
-                                        }
-
-                                        return Stack(
+        child: Consumer<SubState>(
+          builder: (context, value, child) => SubState.sub == null
+              ? Scaffold(
+                  appBar: PreferredSize(
+                      preferredSize: Size.fromHeight(110),
+                      child: AppBar(
+                        automaticallyImplyLeading: false,
+                        backgroundColor: backgroundColor,
+                        flexibleSpace: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 25),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
                                           children: [
                                             IconButton(
-                                              onPressed: () async {
-                                                Navigator.pushNamed(context,
-                                                    MyRoutes.shopCardScreen);
-                                              },
-                                              icon: Image.asset(
-                                                'lib/assets/images/handbag.png',
-                                                width: 17,
-                                              ),
+                                                onPressed: () {
+                                                  Navigator.pushNamed(context,
+                                                      MyRoutes.profileScreen);
+                                                },
+                                                icon: Image(
+                                                  image: AssetImage(
+                                                      'lib/assets/images/miniicon.png'),
+                                                  width: 17,
+                                                )),
+                                            SizedBox(
+                                              height: 20,
+                                              width: 1,
+                                              child: VerticalDivider(),
                                             ),
-                                            if (itemCount > 0)
-                                              Positioned(
-                                                right: 4,
-                                                top: 4,
-                                                child: Container(
-                                                  padding: EdgeInsets.all(2),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  constraints: BoxConstraints(
-                                                    minWidth: 16,
-                                                    minHeight: 16,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${ShopCardState.shopCardList!.shopCardItems!.length}',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10.5,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                      textAlign:
-                                                          TextAlign.center,
+                                            Consumer<ShopCardState>(
+                                              builder: (context, cartProvider,
+                                                  child) {
+                                                int itemCount = 0;
+
+                                                if (ShopCardState
+                                                            .shopCardList !=
+                                                        null &&
+                                                    ShopCardState.shopCardList!
+                                                            .shopCardItems !=
+                                                        null) {
+                                                  itemCount = ShopCardState
+                                                      .shopCardList!
+                                                      .shopCardItems!
+                                                      .length;
+                                                }
+
+                                                return Stack(
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () async {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            MyRoutes
+                                                                .shopCardScreen);
+                                                      },
+                                                      icon: Image.asset(
+                                                        'lib/assets/images/handbag.png',
+                                                        width: 17,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ),
+                                                    if (itemCount > 0)
+                                                      Positioned(
+                                                        right: 4,
+                                                        top: 4,
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(2),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            minWidth: 16,
+                                                            minHeight: 16,
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      10.5,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
                                           ],
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'خرید اشتراک',
-                                      style: GoogleFonts.vazirmatn(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: Icon(
-                                        Icons.close,
-                                        size: 20,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                // Image(
-                                //   image: AssetImage(
-                                //       'lib/assets/images/logo.png'),
-                                //   width: 70,
-                                // )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: SizedBox(
-                              height: 45,
-                              width: MediaQuery.of(context).size.width - 30,
-                              child: TextField(
-                                style: GoogleFonts.vazirmatn(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                controller: searchNumber,
-                                onSubmitted: (value) {
-                                  searchAndFillter(
-                                    context: context,
-                                    body:
-                                        BookSearchDto(name: searchNumber.text),
-                                  ).then(
-                                    (value) {
-                                      Navigator.pushNamed(context,
-                                          MyRoutes.searchFillterScreen);
-                                    },
-                                  );
-                                },
-                                cursorHeight: 20,
-                                textAlignVertical: TextAlignVertical
-                                    .center, // مرکز قرار دادن عمودی متن
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    size: 18,
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 12), // تنظیم عمودی محتوا
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.never,
-                                  floatingLabelAlignment:
-                                      FloatingLabelAlignment.center,
-                                  label: Text(
-                                    'جستجو در نیکو بوک',
-                                    style: GoogleFonts.vazirmatn(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: backgroundColor,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )),
-          backgroundColor: backgroundColor,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Consumer<SubscriptionsState>(
-                  builder: (context, value, child) => SizedBox(
-                    height: 260,
-                    child: ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: SubscriptionsState.subscriptions.length != 0
-                          ? SubscriptionsState.subscriptions.length
-                          : 0,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15, right: 15, bottom: 5, top: 15),
-                        child: Stack(
-                          alignment: Alignment.topLeft,
-                          children: [
-                            Container(
-                              height: 110,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          height: 5,
                                         ),
                                         Row(
                                           children: [
-                                            Image(
-                                              image: AssetImage(
-                                                  'lib/assets/images/plus.png'),
-                                              width: 45,
-                                              height: 45,
-                                              color: secondaryColor,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
                                             Text(
-                                              SubscriptionsState
-                                                  .subscriptions[index].name
-                                                  .toString(),
+                                              'خرید اشتراک',
                                               style: GoogleFonts.vazirmatn(
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                  color: secondaryColor),
+                                                  fontSize: 14),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 20,
+                                              ),
                                             ),
                                           ],
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 11),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                SubscriptionsState
-                                                    .subscriptions[index].price
-                                                    .toString()
-                                                    .formatNumber(),
-                                                style: GoogleFonts.vazirmatn(
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 7,
-                                              ),
-                                              Text(
-                                                SubscriptionsState
-                                                    .subscriptions[index]
-                                                    .discountPrice
-                                                    .toString()
-                                                    .formatNumber(),
-                                                style: GoogleFonts.vazirmatn(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 3,
-                                              ),
-                                              Text(
-                                                'تومان',
-                                                style: GoogleFonts.vazirmatn(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                                         )
+                                        // Image(
+                                        //   image: AssetImage(
+                                        //       'lib/assets/images/logo.png'),
+                                        //   width: 70,
+                                        // )
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 22,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: SizedBox(
+                                      height: 45,
+                                      width: MediaQuery.of(context).size.width -
+                                          30,
+                                      child: TextField(
+                                        style: GoogleFonts.vazirmatn(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        controller: searchNumber,
+                                        onSubmitted: (value) {
+                                          searchAndFillter(
+                                            context: context,
+                                            body: BookSearchDto(
+                                                name: searchNumber.text),
+                                          ).then(
+                                            (value) {
+                                              Navigator.pushNamed(context,
+                                                  MyRoutes.searchFillterScreen);
+                                            },
+                                          );
+                                        },
+                                        cursorHeight: 20,
+                                        textAlignVertical: TextAlignVertical
+                                            .center, // مرکز قرار دادن عمودی متن
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            size: 18,
                                           ),
-                                          SizedBox(
-                                            width: 100,
-                                            height: 40,
-                                            child: RawMaterialButton(
-                                              child: Center(
-                                                child: Text(
-                                                  'خرید اشتراک',
-                                                  style: GoogleFonts.vazirmatn(
-                                                      color: Colors.white,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              fillColor: secondaryColor,
-                                              onPressed: () {
-                                                handlePayment(
-                                                    context,
-                                                    SubscriptionsState
-                                                        .subscriptions[index].id
-                                                        .toString());
-                                              },
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical:
+                                                  12), // تنظیم عمودی محتوا
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.never,
+                                          floatingLabelAlignment:
+                                              FloatingLabelAlignment.center,
+                                          label: Text(
+                                            'جستجو در نیکو بوک',
+                                            style: GoogleFonts.vazirmatn(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                        ],
+                                          filled: true,
+                                          fillColor: backgroundColor,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
                                       ),
-                                    )
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                  backgroundColor: backgroundColor,
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Consumer<SubscriptionsState>(
+                          builder: (context, value, child) => SizedBox(
+                            child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount:
+                                  SubscriptionsState.subscriptions.length != 0
+                                      ? SubscriptionsState.subscriptions.length
+                                      : 0,
+                              itemBuilder: (context, index) => Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 15, right: 15, bottom: 5, top: 15),
+                                child: Stack(
+                                  alignment: Alignment.topLeft,
+                                  children: [
+                                    Container(
+                                      height: 110,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Image(
+                                                      image: AssetImage(
+                                                          'lib/assets/images/plus.png'),
+                                                      width: 45,
+                                                      height: 45,
+                                                      color: secondaryColor,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      SubscriptionsState
+                                                          .subscriptions[index]
+                                                          .name
+                                                          .toString(),
+                                                      style:
+                                                          GoogleFonts.vazirmatn(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 15,
+                                                              color:
+                                                                  secondaryColor),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 11),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        SubscriptionsState
+                                                            .subscriptions[
+                                                                index]
+                                                            .price
+                                                            .toString()
+                                                            .formatNumber(),
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .lineThrough,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 7,
+                                                      ),
+                                                      Text(
+                                                        SubscriptionsState
+                                                            .subscriptions[
+                                                                index]
+                                                            .discountPrice
+                                                            .toString()
+                                                            .formatNumber(),
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 3,
+                                                      ),
+                                                      Text(
+                                                        'تومان',
+                                                        style: GoogleFonts
+                                                            .vazirmatn(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 22,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 100,
+                                                    height: 40,
+                                                    child: RawMaterialButton(
+                                                      child: Center(
+                                                        child: Text(
+                                                          'خرید اشتراک',
+                                                          style: GoogleFonts
+                                                              .vazirmatn(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                        ),
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5)),
+                                                      fillColor: secondaryColor,
+                                                      onPressed: () {
+                                                        handlePayment(
+                                                            context,
+                                                            SubscriptionsState
+                                                                .subscriptions[
+                                                                    index]
+                                                                .id
+                                                                .toString());
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    // Positioned(
+                                    //     left: 17,
+                                    //     child: Image(
+                                    //       image: AssetImage(
+                                    //           'lib/assets/images/discount.png'),
+                                    //       width: 25,
+                                    //       height: 25,
+                                    //     ))
                                   ],
                                 ),
                               ),
                             ),
-                            // Positioned(
-                            //     left: 17,
-                            //     child: Image(
-                            //       image: AssetImage(
-                            //           'lib/assets/images/discount.png'),
-                            //       width: 25,
-                            //       height: 25,
-                            //     ))
-                          ],
+                          ),
                         ),
-                      ),
+                        // SizedBox(
+                        //   height: 22,
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.start,
+                        //     children: [
+                        //       Text(
+                        //         'سوال دارید؟ جواب اینجاست:',
+                        //         style: GoogleFonts.vazirmatn(
+                        //             fontWeight: FontWeight.bold, fontSize: 14),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   height: 22,
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 0),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'نیکو پلاس چیست؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'چطور مشترک نیکو پلاس شوم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'چه کتاب هایی در نیکو پلاس موجود است؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'چرا باید برای استفاده از نیکو پلاس اشتراک بخرم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'چطور از نیکو پلاس استفاده کنم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'اگر اشتراکم تمام شود باز به کتاب های نیکو پلاس دسترسی دارم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'می توانم کتاب ها را بدون اینترنت بشنوم یا بخوانم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(
+                        //       left: 15, right: 15, bottom: 5, top: 3),
+                        //   child: Container(
+                        //     height: 45,
+                        //     decoration: BoxDecoration(
+                        //         color: Colors.white,
+                        //         borderRadius: BorderRadius.circular(10)),
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.all(10),
+                        //       child: Row(
+                        //         children: [
+                        //           Icon(
+                        //             Icons.add,
+                        //             color: secondaryColor,
+                        //           ),
+                        //           SizedBox(
+                        //             width: 4,
+                        //           ),
+                        //           Text(
+                        //             'میتوانم اشتراکم را لغو کنم؟',
+                        //             style: GoogleFonts.vazirmatn(
+                        //                 fontWeight: FontWeight.bold, fontSize: 12),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ),
+                )
+              : Scaffold(
+                  backgroundColor: backgroundColor,
+                  appBar: PreferredSize(
+                      preferredSize: Size.fromHeight(110),
+                      child: AppBar(
+                        automaticallyImplyLeading: false,
+                        backgroundColor: backgroundColor,
+                        flexibleSpace: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 25),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(context,
+                                                      MyRoutes.profileScreen);
+                                                },
+                                                icon: Image(
+                                                  image: AssetImage(
+                                                      'lib/assets/images/miniicon.png'),
+                                                  width: 17,
+                                                )),
+                                            SizedBox(
+                                              height: 20,
+                                              width: 1,
+                                              child: VerticalDivider(),
+                                            ),
+                                            Consumer<ShopCardState>(
+                                              builder: (context, cartProvider,
+                                                  child) {
+                                                int itemCount = 0;
+
+                                                if (ShopCardState
+                                                            .shopCardList !=
+                                                        null &&
+                                                    ShopCardState.shopCardList!
+                                                            .shopCardItems !=
+                                                        null) {
+                                                  itemCount = ShopCardState
+                                                      .shopCardList!
+                                                      .shopCardItems!
+                                                      .length;
+                                                }
+
+                                                return Stack(
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () async {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            MyRoutes
+                                                                .shopCardScreen);
+                                                      },
+                                                      icon: Image.asset(
+                                                        'lib/assets/images/handbag.png',
+                                                        width: 17,
+                                                      ),
+                                                    ),
+                                                    if (itemCount > 0)
+                                                      Positioned(
+                                                        right: 4,
+                                                        top: 4,
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(2),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            minWidth: 16,
+                                                            minHeight: 16,
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              '${ShopCardState.shopCardList!.shopCardItems!.length}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      10.5,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'خرید اشتراک',
+                                              style: GoogleFonts.vazirmatn(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: Icon(
+                                                Icons.close,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        // Image(
+                                        //   image: AssetImage(
+                                        //       'lib/assets/images/logo.png'),
+                                        //   width: 70,
+                                        // )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: SizedBox(
+                                      height: 45,
+                                      width: MediaQuery.of(context).size.width -
+                                          30,
+                                      child: TextField(
+                                        style: GoogleFonts.vazirmatn(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        controller: searchNumber,
+                                        onSubmitted: (value) {
+                                          searchAndFillter(
+                                            context: context,
+                                            body: BookSearchDto(
+                                                name: searchNumber.text),
+                                          ).then(
+                                            (value) {
+                                              Navigator.pushNamed(context,
+                                                  MyRoutes.searchFillterScreen);
+                                            },
+                                          );
+                                        },
+                                        cursorHeight: 20,
+                                        textAlignVertical: TextAlignVertical
+                                            .center, // مرکز قرار دادن عمودی متن
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            size: 18,
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical:
+                                                  12), // تنظیم عمودی محتوا
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.never,
+                                          floatingLabelAlignment:
+                                              FloatingLabelAlignment.center,
+                                          label: Text(
+                                            'جستجو در نیکو بوک',
+                                            style: GoogleFonts.vazirmatn(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          filled: true,
+                                          fillColor: backgroundColor,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                  body: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "شما ${SubState.sub!.name} را خریداری کرده اید",
+                            style: GoogleFonts.vazirmatn(
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${SubState.sub!.duration}",
+                            style: GoogleFonts.vazirmatn(
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                // SizedBox(
-                //   height: 22,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.start,
-                //     children: [
-                //       Text(
-                //         'سوال دارید؟ جواب اینجاست:',
-                //         style: GoogleFonts.vazirmatn(
-                //             fontWeight: FontWeight.bold, fontSize: 14),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 22,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 0),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'نیکو پلاس چیست؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'چطور مشترک نیکو پلاس شوم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'چه کتاب هایی در نیکو پلاس موجود است؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'چرا باید برای استفاده از نیکو پلاس اشتراک بخرم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'چطور از نیکو پلاس استفاده کنم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'اگر اشتراکم تمام شود باز به کتاب های نیکو پلاس دسترسی دارم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'می توانم کتاب ها را بدون اینترنت بشنوم یا بخوانم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.only(
-                //       left: 15, right: 15, bottom: 5, top: 3),
-                //   child: Container(
-                //     height: 45,
-                //     decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(10)),
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.add,
-                //             color: secondaryColor,
-                //           ),
-                //           SizedBox(
-                //             width: 4,
-                //           ),
-                //           Text(
-                //             'میتوانم اشتراکم را لغو کنم؟',
-                //             style: GoogleFonts.vazirmatn(
-                //                 fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
         ),
       ),
     );

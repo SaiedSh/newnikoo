@@ -580,6 +580,10 @@ IndexDto _$IndexDtoFromJson(Map<String, dynamic> json) => IndexDto(
               ?.map((e) => BookDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      nikooBooks: (json['nikooBooks'] as List<dynamic>?)
+              ?.map((e) => BookDto.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       freeBooks: (json['freeBooks'] as List<dynamic>?)
               ?.map((e) => BookDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -597,6 +601,9 @@ Map<String, dynamic> _$IndexDtoToJson(IndexDto instance) => <String, dynamic>{
       if (instance.discountBooks?.map((e) => e.toJson()).toList()
           case final value?)
         'discountBooks': value,
+      if (instance.nikooBooks?.map((e) => e.toJson()).toList()
+          case final value?)
+        'nikooBooks': value,
       if (instance.freeBooks?.map((e) => e.toJson()).toList() case final value?)
         'freeBooks': value,
       if (instance.mostViewedBooks?.map((e) => e.toJson()).toList()
@@ -933,6 +940,28 @@ Map<String, dynamic> _$SubscriptionDtoToJson(SubscriptionDto instance) =>
       if (instance.price case final value?) 'price': value,
       if (instance.discountPrice case final value?) 'discountPrice': value,
       if (instance.id case final value?) 'id': value,
+    };
+
+SubscriptionDtoApiResult _$SubscriptionDtoApiResultFromJson(
+        Map<String, dynamic> json) =>
+    SubscriptionDtoApiResult(
+      data: json['data'] == null
+          ? null
+          : SubscriptionDto.fromJson(json['data'] as Map<String, dynamic>),
+      isSuccess: json['isSuccess'] as bool?,
+      statusCode: apiResultStatusCodeNullableFromJson(json['statusCode']),
+      message: json['message'] as String?,
+    );
+
+Map<String, dynamic> _$SubscriptionDtoApiResultToJson(
+        SubscriptionDtoApiResult instance) =>
+    <String, dynamic>{
+      if (instance.data?.toJson() case final value?) 'data': value,
+      if (instance.isSuccess case final value?) 'isSuccess': value,
+      if (apiResultStatusCodeNullableToJson(instance.statusCode)
+          case final value?)
+        'statusCode': value,
+      if (instance.message case final value?) 'message': value,
     };
 
 SubscriptionDtoListApiResult _$SubscriptionDtoListApiResultFromJson(

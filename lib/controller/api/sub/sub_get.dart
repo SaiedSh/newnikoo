@@ -1,4 +1,4 @@
-import 'package:bookapp/controller/provider/book_saved_state.dart';
+import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/routes/routes.dart';
 import 'package:bookapp/model/api/generated/tikonline.swagger.dart';
 import 'package:bookapp/model/services/token.dart';
@@ -7,14 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-Future<BookDtoListApiResult> getSaved(
-    {required BuildContext context, SaveType? st}) async {
+Future<SubscriptionDtoApiResult> subGet({
+  required BuildContext context,
+}) async {
   final api = Tikonline.create(interceptors: [TokenInterceptor('accessToken')]);
 
-  final postResult = await api.apiV1BookSavedBooksGet(st: st);
+  final postResult = await api.apiV1PaymentUserSubGet();
   print(postResult);
   if (postResult.isSuccessful == true) {
-    print('Right');
+    print('Hereleeeey');
     // loader maybe <====
     // QuickAlert.show(
     //   context: context,
@@ -33,9 +34,9 @@ Future<BookDtoListApiResult> getSaved(
       type: QuickAlertType.error,
     );
   }
-  final response = BookDtoListApiResult.fromJson(postResult.body!.toJson());
+  final response = SubscriptionDtoApiResult.fromJson(postResult.body!.toJson());
   print(response.data);
-  context.read<BookSavedState>().getSavedBook(value: response.data!);
+  context.read<SubState>().getSub(newSub: response.data!);
 
   return response;
 }

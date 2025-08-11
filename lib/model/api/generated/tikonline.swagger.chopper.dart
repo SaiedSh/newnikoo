@@ -755,6 +755,20 @@ final class _$Tikonline extends Tikonline {
   }
 
   @override
+  Future<Response<ApiResult>> _apiV1PaymentCheckDiscountGet({String? code}) {
+    final Uri $url =
+        Uri.parse('https://api.tikonline.net/api/v1/Payment/CheckDiscount');
+    final Map<String, dynamic> $params = <String, dynamic>{'Code': code};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<ApiResult, ApiResult>($request);
+  }
+
+  @override
   Future<Response<StringApiResult>> _apiV1PaymentShopCardPaymentPost(
       {bool? wallet}) {
     final Uri $url =
@@ -803,6 +817,19 @@ final class _$Tikonline extends Tikonline {
     );
     return client.send<SubscriptionDtoListApiResult,
         SubscriptionDtoListApiResult>($request);
+  }
+
+  @override
+  Future<Response<SubscriptionDtoApiResult>> _apiV1PaymentUserSubGet() {
+    final Uri $url =
+        Uri.parse('https://api.tikonline.net/api/v1/Payment/UserSub');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client
+        .send<SubscriptionDtoApiResult, SubscriptionDtoApiResult>($request);
   }
 
   @override

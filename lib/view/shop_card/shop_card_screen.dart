@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bookapp/controller/api/discount_Code/disocuntCheck.dart';
 import 'package:bookapp/controller/api/payment/shop_card/buy_book.dart';
 import 'package:bookapp/controller/api/payment/shop_card/final_payment.dart';
 import 'package:bookapp/controller/api/payment/shop_card/get_shopcard_list.dart';
 import 'package:bookapp/controller/api/payment/shop_card/payment.dart';
 import 'package:bookapp/controller/api/profile/get_profile.dart';
 import 'package:bookapp/controller/api/search_fillter/search_fillter.dart';
+import 'package:bookapp/controller/provider/discountCheck.dart';
 import 'package:bookapp/controller/provider/profile_state.dart';
 import 'package:bookapp/controller/provider/shop_card_state.dart';
 import 'package:bookapp/controller/provider/wallet_payment.dart';
@@ -13,11 +15,11 @@ import 'package:bookapp/controller/service/replace.dart';
 import 'package:bookapp/controller/service/split_number.dart';
 import 'package:bookapp/model/api/generated/tikonline.models.swagger.dart';
 import 'package:bookapp/model/global/global.dart';
+import 'package:bookapp/view/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ShopCardScreen extends StatefulWidget {
   const ShopCardScreen({
@@ -47,6 +49,9 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
     );
   }
 
+  bool massageVisible = false;
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController discountCodeController = TextEditingController();
   TextDirection getTextDirection(String text) {
     // بررسی حروف فارسی و عربی
     final rtlRegex = RegExp(r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]');
@@ -59,39 +64,59 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
 
   Future<void> handlePayment(BuildContext context) async {
     try {
-      // final finalSubId = price;
-      // if (price == null) {
-      //   // اگر مقدار قیمت معتبر نبود، کاری انجام نده
-      //   return;
-      // }
-
       final value = await shopCardPayment(
         wallet: false,
         context: context,
       );
 
-      final String paymentUrl =
-          ShopCardChargeState.link.toString(); // لینک درگاه پرداخت
+      final String paymentUrl = ShopCardChargeState.link.toString();
 
-      // باز کردن لینک با Custom Tabs
-      await launchUrl(
-        Uri.parse(paymentUrl),
-        mode: LaunchMode
-            .externalApplication, // باز کردن در برنامه‌های خارجی مانند کروم
-      );
-
-      // پس از باز شدن درگاه پرداخت، کاربر را به صفحه دیگری هدایت می‌کنیم
-      Navigator.pushNamed(
+      // هدایت کاربر به صفحه پرداخت داخلی با WebView
+      Navigator.push(
         context,
-        MyRoutes.navigationBarScreen,
+        MaterialPageRoute(
+          builder: (context) => PaymentWebViewPage(paymentUrl: paymentUrl),
+        ),
       );
     } catch (e) {
-      // در صورت بروز خطا، پیام خطا را نشان بده
       print("Error: $e");
-    } finally {
-      // در نهایت، فیلد قیمت را پاک می‌کنیم
     }
   }
+  // Future<void> handlePayment(BuildContext context) async {
+  //   try {
+  //     // final finalSubId = price;
+  //     // if (price == null) {
+  //     //   // اگر مقدار قیمت معتبر نبود، کاری انجام نده
+  //     //   return;
+  //     // }
+
+  //     final value = await shopCardPayment(
+  //       wallet: false,
+  //       context: context,
+  //     );
+
+  //     final String paymentUrl =
+  //         ShopCardChargeState.link.toString(); // لینک درگاه پرداخت
+
+  //     // باز کردن لینک با Custom Tabs
+  //     await launchUrl(
+  //       Uri.parse(paymentUrl),
+  //       mode: LaunchMode
+  //           .externalApplication, // باز کردن در برنامه‌های خارجی مانند کروم
+  //     );
+
+  //     // پس از باز شدن درگاه پرداخت، کاربر را به صفحه دیگری هدایت می‌کنیم
+  //     Navigator.pushNamed(
+  //       context,
+  //       MyRoutes.navigationBarScreen,
+  //     );
+  //   } catch (e) {
+  //     // در صورت بروز خطا، پیام خطا را نشان بده
+  //     print("Error: $e");
+  //   } finally {
+  //     // در نهایت، فیلد قیمت را پاک می‌کنیم
+  //   }
+  // }
 
   int? selectedCheckbox = 1; // 1 یا 2 برای شناسایی انتخاب
 
@@ -984,6 +1009,139 @@ class _ShopCardScreenState extends State<ShopCardScreen> {
                                       ],
                                     ),
                                   ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, bottom: 5, top: 15),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'کد تخفیف',
+                                      style: GoogleFonts.vazirmatn(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Form(
+                                      key: _formKey,
+                                      child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: SizedBox(
+                                          width: 250,
+                                          height: 50,
+                                          child: TextFormField(
+                                            onChanged: (value) {
+                                              setState(() {
+                                                massageVisible = false;
+                                              });
+                                            },
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'لطفاً این فیلد را پر کنید';
+                                              }
+                                              return null;
+                                            },
+                                            controller: discountCodeController,
+                                            decoration: InputDecoration(
+                                              hintText: 'کد تخفیف را وارد کنید',
+                                              hintStyle: GoogleFonts.vazirmatn(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              errorStyle: TextStyle(
+                                                  height:
+                                                      0.4), // کوچیک‌تر کن ولی فضا باشه
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    SizedBox(
+                                      width: 60,
+                                      height: 45,
+                                      child: RawMaterialButton(
+                                          child: Text(
+                                            'ثبت',
+                                            style: GoogleFonts.vazirmatn(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          fillColor: secondaryColor,
+                                          onPressed: () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              setState(() {
+                                                massageVisible = true;
+                                              }); // اگر معتبر بود، متد رو اجرا کن
+                                              discountCheck(
+                                                context: context,
+                                                code:
+                                                    discountCodeController.text,
+                                              ).then(
+                                                (value) {
+                                                  getShopCardList(
+                                                      context: context);
+                                                },
+                                              );
+                                            }
+                                          }),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Visibility(
+                                  visible: massageVisible,
+                                  child: Row(
+                                    children: [
+                                      Consumer<DiscountCheckState>(
+                                        builder: (context, value, child) =>
+                                            Text(
+                                                style: GoogleFonts.vazirmatn(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                DiscountCheckState.discountCheck
+                                                    .toString()),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),

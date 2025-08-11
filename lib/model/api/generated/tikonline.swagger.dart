@@ -1101,6 +1101,21 @@ abstract class Tikonline extends ChopperService {
   });
 
   ///
+  ///@param Code
+  Future<chopper.Response<ApiResult>> apiV1PaymentCheckDiscountGet(
+      {String? code}) {
+    generatedMapping.putIfAbsent(ApiResult, () => ApiResult.fromJsonFactory);
+
+    return _apiV1PaymentCheckDiscountGet(code: code);
+  }
+
+  ///
+  ///@param Code
+  @Get(path: 'https://api.tikonline.net/api/v1/Payment/CheckDiscount')
+  Future<chopper.Response<ApiResult>> _apiV1PaymentCheckDiscountGet(
+      {@Query('Code') String? code});
+
+  ///
   ///@param Wallet
   Future<chopper.Response<StringApiResult>> apiV1PaymentShopCardPaymentPost(
       {bool? wallet}) {
@@ -1156,6 +1171,18 @@ abstract class Tikonline extends ChopperService {
   @Get(path: 'https://api.tikonline.net/api/v1/Payment/SubscriptionList')
   Future<chopper.Response<SubscriptionDtoListApiResult>>
       _apiV1PaymentSubscriptionListGet();
+
+  ///
+  Future<chopper.Response<SubscriptionDtoApiResult>> apiV1PaymentUserSubGet() {
+    generatedMapping.putIfAbsent(SubscriptionDtoApiResult,
+        () => SubscriptionDtoApiResult.fromJsonFactory);
+
+    return _apiV1PaymentUserSubGet();
+  }
+
+  ///
+  @Get(path: 'https://api.tikonline.net/api/v1/Payment/UserSub')
+  Future<chopper.Response<SubscriptionDtoApiResult>> _apiV1PaymentUserSubGet();
 
   ///
   Future<chopper.Response<PaymentTransactionsDtoListApiResult>>

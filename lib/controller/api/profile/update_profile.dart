@@ -58,8 +58,6 @@ Future<ApiResult> updateProfile({
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = ApiResult.fromJson(postResult.body!.toJson());

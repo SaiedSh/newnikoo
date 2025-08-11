@@ -907,6 +907,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                       minWidth: 180,
                                       color: Colors.black,
                                       onPressed: () async {
+                                        addBookSave(
+                                            context: context,
+                                            bookId:
+                                                BookDetailState.bookDetail!.id,
+                                            st: SaveType.read);
                                         Navigator.pushNamed(
                                             context, MyRoutes.pdfScreen,
                                             arguments: BookDetailState
@@ -986,8 +991,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                 minWidth: 180,
                                                 color: Colors.black,
                                                 onPressed: () async {
-                                                  getShopCardList(
-                                                      context: context);
                                                   setState(() {
                                                     loadingVisible = false;
                                                   });
@@ -1002,6 +1005,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                                       .then(
                                                     (value) {
                                                       setState(() {
+                                                        getShopCardList(
+                                                            context: context);
                                                         BookDetailState
                                                                 .bookDetail!
                                                                 .shopCard ==
@@ -1073,14 +1078,29 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Text(
-                                            'شما این کتاب را خریده اید',
-                                            style: GoogleFonts.vazirmatn(
-                                                color: Color.fromARGB(
-                                                    255, 30, 133, 56),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 11),
-                                          ),
+                                          BookDetailState.bookDetail!.buy ==
+                                                      true &&
+                                                  BookDetailState
+                                                          .bookDetail!.niko ==
+                                                      true
+                                              ? Text(
+                                                  'این کتاب در اشتراک نیکو پلاس است',
+                                                  style: GoogleFonts.vazirmatn(
+                                                      color: Color.fromARGB(
+                                                          255, 30, 133, 56),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 11),
+                                                )
+                                              : Text(
+                                                  'شما این کتاب را خریده اید',
+                                                  style: GoogleFonts.vazirmatn(
+                                                      color: Color.fromARGB(
+                                                          255, 30, 133, 56),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 11),
+                                                ),
                                         ],
                                       ),
                                     ),

@@ -366,7 +366,7 @@ class _BookCardWidgetState extends State<BookCardWidget> {
       Visibility(
         visible: nikoPlusVisible,
         child: Positioned(
-            left: 12,
+            left: 150,
             child: Image(
               image: AssetImage('lib/assets/images/plusicon.png'),
               width: 20,

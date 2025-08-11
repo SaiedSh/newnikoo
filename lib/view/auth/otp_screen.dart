@@ -28,6 +28,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   Timer? _timer;
   bool visible = true;
+  bool timerVisible = false;
   int _start = 60;
   // Set the initial countdown value (30 seconds)
   @override
@@ -37,12 +38,14 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void startTimer() {
+    timerVisible = true;
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
           setState(() {
+            timerVisible = false;
             timer.cancel();
 
             setState(() {
@@ -177,7 +180,9 @@ class _OtpScreenState extends State<OtpScreen> {
                           borderRadius: BorderRadius.circular(5)),
                       onPressed: () {
                         setState(() {
+                          otp.clear();
                           visible = true;
+
                           startTimer();
                         });
                         login(
@@ -210,17 +215,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '$_start ثانیه',
-                                style: GoogleFonts.vazirmatn(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'تا پایان اعتبار کد',
+                                'ورود',
                                 style: GoogleFonts.vazirmatn(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -243,7 +238,38 @@ class _OtpScreenState extends State<OtpScreen> {
                       },
                     ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Visibility(
+                  visible: timerVisible,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '$_start ثانیه',
+                          style: GoogleFonts.vazirmatn(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: primaryColor),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'تا پایان اعتبار کد',
+                          style: GoogleFonts.vazirmatn(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: primaryColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(

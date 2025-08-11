@@ -31,8 +31,6 @@ Future<BookDtoApiResult> getBookDetails(
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = BookDtoApiResult.fromJson(postResult.body!.toJson());

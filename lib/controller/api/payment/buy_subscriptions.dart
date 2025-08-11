@@ -32,8 +32,6 @@ Future<StringApiResult> buySubscriptions(
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
-      title: 'Oops2...',
-      text: postResult.toString(),
     );
   }
   final response = StringApiResult.fromJson(postResult.body!.toJson());
